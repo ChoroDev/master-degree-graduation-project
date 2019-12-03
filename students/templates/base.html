@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <title>Students</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <h1 class="mt-2">Students</h1>
+                    {% if user.is_authenticated %}
+                    <p class="text-right">
+                        Hello, {{ user.username }}
+                        <a href="/students/logout">Log out</a> |
+                        <a href="/students/password-change">Change password</a>
+                    </p>
+                    {% else %}
+                    <p class="text-right">
+                        <a href="/students/login">Log in</a> |
+                        <a href="/students/register">Register</a>
+                    </p>
+                    {% endif %}
+                    <hr class="mt-0 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            {% block main %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+    {% block main %}
+        <h4 class="card-title">Add student:</h4>
+        {% if error_message %}
+            <p class="alert alert-danger">
+                <strong>{{ error_message }}</strong>
+            </p>
+        {% endif %}
+        {% if user.is_superuser != 1 %}
+            <p class="alert alert-danger">
+                <strong>Sorry, you cannot do that! Contact your administrator.</strong>
+            </p>
+        {% else %}
+            <form action="add_new_student/" method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="name" placeholder="Student name" />
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="surname" placeholder="Student surname" />
+                </div>
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control" name="group" placeholder="Student group" />
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="faculty" placeholder="Student faculty" />
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="specialty" placeholder="Student specialty" />
+                </div>
+                <div class="input-group mb-3">
+                    <input type="date" class="form-control" name="entry_date" placeholder="Entry date" />
+                </div>
+                <br>
+                <input class="btn btn-success" type="submit" value="Add student" />
+            </form>
+        {% endif %}
+    {% endblock %}
