@@ -22,16 +22,10 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('', views.index, name='home'),
     path('admin/', admin.site.urls),
-    re_path(r'^about', TemplateView.as_view(template_name="about.html",
-                                            extra_context={"header": "О сайте"})),
-    re_path(r'^contact', TemplateView.as_view(template_name="contact.html")),
-    # re_path(r'^system', views.system),
-    # re_path(r'^system/messages', views.system_messages),
-    # https://metanit.com/python/django/3.2.php - Определение маршрутов
-    # https://metanit.com/python/django/3.3.php - Параметры представлений
-
-
-    # Authorization
+    path('store', views.store, name='store'),
+    path('storage', views.storage, name='storage'),
+    path('transportations', views.transportations, name='transportations'),
+    path('about', views.about, name='about'),
+    path('contact', views.contact, name='contact'),
     path('accounts/', include('django.contrib.auth.urls')),
-    # Registration
 ]
