@@ -5,7 +5,7 @@
 <div id="welcome">
   <h1>WELCOME TO AUTOMATED SHELF SPACE MANAGEMENT SYSTEM</h1>
   {% if user.is_authenticated %}
-  <p class="regular__item">System status:</p>
+  <p class="regular__item">System status: {{ current_status|default:"undefined" }}</p>
   {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
   <p class="regular__item">Documents awaiting signature:</p>
   {% endif %}

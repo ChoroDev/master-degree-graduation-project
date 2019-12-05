@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import UserForm
+from .mgmt import db_manager
 
 
 is_active = "class=is-active"
@@ -12,8 +13,9 @@ def index(request):
         # age = request.POST.get("age")     # получение значения поля age
         return HttpResponse("<h2>Hello, {0}</h2>".format(name))
     else:
+        currentStatus = db_manager.get_current_status()
         userform = UserForm()
-        return render(request, "index.html", {"form": userform, "home_is_active": is_active})
+        return render(request, "index.html", {"form": userform, "home_is_active": is_active, "current_status": currentStatus})
 
 
 def store(request):
