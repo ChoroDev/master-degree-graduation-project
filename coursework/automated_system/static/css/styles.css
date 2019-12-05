@@ -102,6 +102,10 @@ h1 {
   margin: 0.5em;
 }
 
+.regular__item {
+  margin: 0.5em;
+}
+
 /* modules/paragraph.css */
 
 p {
@@ -112,4 +116,8 @@ p {
 .greeting {
   font-size: 0.5em;
   color: gray;
+}
+
+#welcome {
+  padding-left: 30px;
 }

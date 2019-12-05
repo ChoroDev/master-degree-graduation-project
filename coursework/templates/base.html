@@ -1,4 +1,5 @@
 {% load static %}
+{% load auth_filter %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,9 +16,13 @@
           <nav class="navigation">
             <ul class="navigation__list navigation__list--inline">
               <li class="navigation__item"><a href="/" {{ home_is_active|default:"" }}>Home</a><li>
+              {% if user.is_authenticated %}
               <li class="navigation__item"><a href="/store" {{ store_is_active|default:"" }}>Store</a></li>
               <li class="navigation__item"><a href="/storage" {{ storage_is_active|default:"" }}>Storage</a></li>
-              <li class="navigation__item"><a href="/transportations" {{ transportations_is_active|default:"" }}>Transportations</a></li>
+                {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                <li class="navigation__item"><a href="/transportations" {{ transportations_is_active|default:"" }}  >Transportations</a></li>
+                {% endif %}
+              {% endif %}
               <li class="navigation__item"><a href="/about" {{ about_is_active|default:"" }}>About</a></li>
               <li class="navigation__item"><a href="/contact" {{ contact_is_active|default:"" }}>Contact</a></li>
               {% if user.is_authenticated %}

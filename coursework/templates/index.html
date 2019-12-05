@@ -1,11 +1,24 @@
 {% extends "base.html" %}
+{% load auth_filter %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-<form method="POST">
-  {% csrf_token %}
-  <table>
-    {{ form }}
-  </table>
-  <input type="submit" value="Send" />
-</form>
+<div id="welcome">
+  <h1>WELCOME TO AUTOMATED SHELF SPACE MANAGEMENT SYSTEM</h1>
+  {% if user.is_authenticated %}
+  <p class="regular__item">System status:</p>
+  {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+  <p class="regular__item">Documents awaiting signature:</p>
+  {% endif %}
+  {% comment %} <form method="POST">
+    {% csrf_token %}
+    <table>
+      {{ form }}
+    </table>
+    <input type="submit" value="Send" />
+  </form> {% endcomment %}
+  {% else %}
+  <p class="regular__item">You should be authenticated to continue work with it</p>
+  {% endif %}
+</div>
+
 {% endblock content %}

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Store{% endblock title %}
 {% block content %}
-<p>Store page</p>
+{% if user.is_authenticated %}
+<h1 class='regular__item'>Store</h1>
+{% else %}
+<h1 class='regular__item'>You are not authenticated to see this page</h1>
+{% endif %}
 {% endblock content %}

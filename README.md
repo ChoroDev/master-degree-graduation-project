@@ -21,3 +21,11 @@
 1. Change something in models.py
 2. python manage.py makemigrations
 3. python manage.py migrate
+
+## Users and passwords
+
+`Login` == `Password`
+admin == admin
+business_manager == bm_login_1
+store_manager == sm_login_1
+merchandiser == md_login_1
