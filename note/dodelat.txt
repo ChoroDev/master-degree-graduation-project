@@ -1,0 +1,1 @@
+У store не хватает поля product_count
