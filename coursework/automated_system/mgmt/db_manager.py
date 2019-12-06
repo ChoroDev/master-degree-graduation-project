@@ -112,5 +112,9 @@ def remove_product():
     models.Product.objects.filter(id=1).delete()
 
 
+def update_store():
+    models.Store.objects.filter(id=1).update(product_count=10)
+
+
 def get_current_status():
     return "OK"

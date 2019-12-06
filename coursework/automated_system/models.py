@@ -18,13 +18,14 @@ class CargoTransportation(models.Model):
 
 class Storage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_count = models.IntegerField()
+    product_count = models.IntegerField(default=0)
     delivery = models.ForeignKey(CargoTransportation, on_delete=models.CASCADE)
 
 
 class Store(models.Model):
     shelf_number = models.IntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_count = models.IntegerField(default=0)
 
 
 class Staff(models.Model):
