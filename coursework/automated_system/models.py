@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import Group
 
 
 class Product(models.Model):
@@ -32,6 +33,7 @@ class Staff(models.Model):
     name = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     position = models.CharField(max_length=50)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, default="")
 
 
 class Equipment(models.Model):
@@ -40,3 +42,4 @@ class Equipment(models.Model):
     cost = models.FloatField()
     last_maintainance_date = models.DateTimeField()
     warranty_period_years = models.IntegerField()
+    maintainer = models.ForeignKey(Staff, on_delete=models.CASCADE, default="")

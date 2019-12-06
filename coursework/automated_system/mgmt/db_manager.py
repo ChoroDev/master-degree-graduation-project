@@ -116,5 +116,9 @@ def update_store():
     models.Store.objects.filter(id=1).update(product_count=10)
 
 
+def update_references():
+    models.Staff.objects.filter(id=1).update(group_id=1)
+
+
 def get_current_status():
     return "OK"
