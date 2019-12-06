@@ -117,7 +117,7 @@ def update_store():
 
 
 def update_references():
-    models.Staff.objects.filter(id=1).update(group_id=1)
+    models.Store.objects.filter(id=1).update(maintainer_id=3)
 
 
 def get_current_status():

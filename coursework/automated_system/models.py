@@ -23,17 +23,19 @@ class Storage(models.Model):
     delivery = models.ForeignKey(CargoTransportation, on_delete=models.CASCADE)
 
 
-class Store(models.Model):
-    shelf_number = models.IntegerField()
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_count = models.IntegerField(default=0)
-
-
 class Staff(models.Model):
     name = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     position = models.CharField(max_length=50)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, default="")
+
+
+class Store(models.Model):
+    shelf_number = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_count = models.IntegerField(default=0)
+    maintainer = models.ForeignKey(
+        Staff, on_delete=models.SET_NULL, null=True, default=None)
 
 
 class Equipment(models.Model):
