@@ -120,5 +120,58 @@ def update_references():
     models.Store.objects.filter(id=1).update(maintainer_id=3)
 
 
+def checkStore():
+    statusString = ""
+    status = "fine"
+    shelf = models.Store.objects.all()
+    for product in shelf:
+        currentProduct = models.Product.objects.get(id=product.product_id)
+        if product.product_count < 5:
+            statusString = "Product: " + currentProduct.name + \
+                ": insufficient count of product on shelf"
+            if status != "error":
+                status = "warning"
+            print(product.product_count)
+            # externalModule.orderProductFromStorage
+        elif product.product_count == 0:
+            statusString = "Product: " + currentProduct.name + ": shelf is out of this product"
+            status = "error"
+            # externalModule.orderProductFromStorage
+    if not statusString:
+        statusString = "fine"
+    return {"data": "Store: " + statusString + "; ", "status": status}
+
+
+def checkStorage():
+    statusString = ""
+    status = "fine"
+    storage = models.Storage.objects.all()
+    for product in storage:
+        currentProduct = models.Product.objects.get(id=product.product_id)
+        if product.product_count < 50:
+            statusString = "Product: " + currentProduct.name + \
+                ": insufficient count of product in storage"
+            if status != "error":
+                status = "warning"
+            print(product.product_count)
+            # externalModule.orderProductFromExternal
+        elif product.product_count == 0:
+            statusString = "Product: " + currentProduct.name + \
+                ": storage is out of this product"
+            status = "error"
+            # externalModule.orderProductFromExternal
+            # externalModule.notifyManagement
+    if not statusString:
+        statusString = "fine"
+    return {"data": "Storage: " + statusString + "; ", "status": status}
+
+
+def checkEquipment():
+    return {"data": "Equipment fine; ", "status": "fine"}
+
+
 def get_current_status():
-    return "OK"
+    storeStatus = checkStore()
+    storageStatus = checkStorage()
+    equipmentStatus = checkEquipment()
+    return {"store": storeStatus, "storage": storageStatus, "equipment": equipmentStatus}
