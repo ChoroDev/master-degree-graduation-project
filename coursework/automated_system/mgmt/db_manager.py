@@ -1,5 +1,6 @@
 from .. import models
 from datetime import datetime
+from datetime import date
 
 
 def fill_in_product():
@@ -167,7 +168,29 @@ def checkStorage():
 
 
 def checkEquipment():
-    return {"data": "Equipment fine; ", "status": "fine"}
+    statusString = ""
+    status = "fine"
+    equipment = models.Equipment.objects.all()
+    for item in equipment:
+        currentDate = datetime.now()
+        lastMaintainanceYear = item.last_maintainance_date.year
+        warrantyExpirationDate = item.last_maintainance_date.replace(
+            year=lastMaintainanceYear+item.warranty_period_years, tzinfo=None)
+        daysToExpire = abs((currentDate-warrantyExpirationDate).days)
+        if daysToExpire < 30 and daysToExpire > 0:
+            statusString = "Equipment: " + item.name + \
+                ": warranty is about to expire"
+            if status != "error":
+                status = "warning"
+            # externalModule.notifyManagement
+        elif daysToExpire < 0:
+            statusString = "Equipment: " + item.name + \
+                ": warranty expired"
+            status = "error"
+            # externalModule.notifyManagement
+    if not statusString:
+        statusString = "fine"
+    return {"data": "Equipment: " + statusString + "; ", "status": status}
 
 
 def get_current_status():
