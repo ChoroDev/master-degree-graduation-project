@@ -39,7 +39,8 @@ def storage(request):
 
 
 def transportations(request):
-    return render(request, "transportations.html", {"transportations_is_active": is_active})
+    transpos = db_manager.get_transportations_info()
+    return render(request, "transportations.html", {"transportations_is_active": is_active, "transportations": transpos})
 
 
 def about(request):

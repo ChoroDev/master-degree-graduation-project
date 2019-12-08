@@ -229,7 +229,6 @@ def get_storage_products_for_page():
         last_delivery = models.CargoTransportation.objects.get(
             id=item.delivery_id).delivery_date
         image_name = product_name.lower().replace(' ', '_')
-        print(image_name)
         storageProduct.append({"product_name": product_name, "product_count": product_count,
                                "last_delivery": last_delivery, "image_name": image_name})
     return storageProduct
@@ -240,4 +239,9 @@ def get_store_products():
 
 
 def get_transportations_info():
-    return models.CargoTransportation.objects.all()
+    transpos = []
+    for transp in models.CargoTransportation.objects.all():
+        product_name = models.Product.objects.get(id=transp.product_id).name
+        transpos.append({"product_name": product_name, "company_name": transp.company_name,
+                         "delivery_date": transp.delivery_date, "delivered_count": transp.delivered_count})
+    return transpos
