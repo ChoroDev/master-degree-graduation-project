@@ -114,7 +114,24 @@ def remove_product():
 
 
 def update_store():
-    models.Store.objects.filter(id=1).update(product_count=10)
+    models.Store.objects.filter(id=1).update(product_count=9)
+    models.Store.objects.filter(id=2).update(product_count=5)
+    models.Store.objects.filter(id=3).update(product_count=7)
+    models.Store.objects.filter(id=4).update(product_count=5)
+    models.Store.objects.filter(id=5).update(product_count=8)
+    models.Store.objects.filter(id=6).update(product_count=9)
+    models.Store.objects.filter(id=7).update(product_count=9)
+    models.Store.objects.filter(id=8).update(product_count=6)
+
+
+def update_store_products(product_id, product_count):
+    models.Store.objects.filter(id=product_id).update(
+        product_count=product_count)
+
+
+def update_storage_products(product_id, product_count):
+    models.Storage.objects.filter(id=product_id).update(
+        product_count=product_count)
 
 
 def update_references():
@@ -198,3 +215,29 @@ def get_current_status():
     storageStatus = checkStorage()
     equipmentStatus = checkEquipment()
     return {"store": storeStatus, "storage": storageStatus, "equipment": equipmentStatus}
+
+
+def get_storage_products():
+    return models.Storage.objects.all()
+
+
+def get_storage_products_for_page():
+    storageProduct = []
+    for item in models.Storage.objects.all():
+        product_name = models.Product.objects.get(id=item.product_id).name
+        product_count = models.Storage.objects.get(id=item.id).product_count
+        last_delivery = models.CargoTransportation.objects.get(
+            id=item.delivery_id).delivery_date
+        image_name = product_name.lower().replace(' ', '_')
+        print(image_name)
+        storageProduct.append({"product_name": product_name, "product_count": product_count,
+                               "last_delivery": last_delivery, "image_name": image_name})
+    return storageProduct
+
+
+def get_store_products():
+    return models.Store.objects.all()
+
+
+def get_transportations_info():
+    return models.CargoTransportation.objects.all()

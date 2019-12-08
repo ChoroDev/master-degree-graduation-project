@@ -1,28 +1,41 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.core import serializers
 from .forms import UserForm
 from .mgmt import db_manager
+import json
 
 
 is_active = "class=is-active"
 
 
 def index(request):
-    if request.method == "POST":
-        # remove product from store
-        print('kek')
-    else:
-        currentStatus = db_manager.get_current_status()
-        userform = UserForm()
-        return render(request, "index.html", {"form": userform, "home_is_active": is_active, "current_status": currentStatus})
+    currentStatus = db_manager.get_current_status()
+    userform = UserForm()
+    return render(request, "index.html", {"form": userform, "home_is_active": is_active, "current_status": currentStatus})
 
 
 def store(request):
-    return render(request, "store.html", {"store_is_active": is_active})
+    if request.method == 'POST':
+        print('custom post')
+        db_manager.update_store_products(request.POST.get(
+            'product_id'), request.POST.get('storeProducts'))
+        print(request.POST.get('storeProducts'))
+        print(request.POST.get('storageProducts'))
+        db_manager.update_storage_products(request.POST.get(
+            'product_id'), request.POST.get('storageProducts'))
+        return HttpResponse('')
+    else:
+        storageProducts = db_manager.get_storage_products()
+        storageProducts = serializers.serialize('json', storageProducts)
+        storeProducts = db_manager.get_store_products()
+        storeProducts = serializers.serialize('json', storeProducts)
+        return render(request, "store.html", {"store_is_active": is_active, "storageProducts": storageProducts, "storeProducts": storeProducts})
 
 
 def storage(request):
-    return render(request, "storage.html", {"storage_is_active": is_active})
+    storageProducts = db_manager.get_storage_products_for_page()
+    return render(request, "storage.html", {"storage_is_active": is_active, "products_in_storage": storageProducts})
 
 
 def transportations(request):
