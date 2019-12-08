@@ -8,9 +8,13 @@ is_active = "class=is-active"
 
 
 def index(request):
-    currentStatus = db_manager.get_current_status()
-    userform = UserForm()
-    return render(request, "index.html", {"form": userform, "home_is_active": is_active, "current_status": currentStatus})
+    if request.method == "POST":
+        # remove product from store
+        print('kek')
+    else:
+        currentStatus = db_manager.get_current_status()
+        userform = UserForm()
+        return render(request, "index.html", {"form": userform, "home_is_active": is_active, "current_status": currentStatus})
 
 
 def store(request):

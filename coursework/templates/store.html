@@ -3,45 +3,71 @@
 {% block title %}Store{% endblock title %}
 {% block content %}
 <script>
-  let isReady = true
-  let isFillRequest = false
+  let isFillRequest = [undefined, false, false, false, false, false, false, false, false]
   let deleteElemIndex = 1
   let fillElemIndex = 1
-  let shelf
-  let shelfFiller
   let currentFillingElem = 3
-  let emptyCount = 0
-  let takeButton
-  let fillInterval
+  let emptyCounts = [undefined, 0, 0, 0, 0, 0, 0, 0, 0]
+  let fillIntervals = []
+  let products = [undefined,
+    `<img src={% static 'images/apple.png' %} height=30>`,
+    `<img src={% static 'images/pineapple.png' %} height=30>`,
+    `<img src={% static 'images/carrot.png' %} height=30>`,
+    `<img src={% static 'images/cucumber.png' %} height=30>`,
+    `<img src={% static 'images/milk.png' %} height=30>`,
+    `<img src={% static 'images/orange_huice.png' %} height=30>`,
+    `<img src={% static 'images/potato.png' %} height=30>`,
+    `<img src={% static 'images/tomato.png' %} height=30>`,
+  ]
+  let isReady = [undefined, true, true, true, true, true, true, true, true]
 
 
   window.addEventListener('load', () => {
-    takeButton = document.getElementById('take-button')
-    shelf = document.getElementById('shelf')
-    shelf.childNodes.forEach(element => {
-      element.style = 'animation: none;'
-    })
-    shelfFiller = document.getElementById('shelf_up')
-    shelfFiller.style = 'left: -85px'
-    shelfFiller.childNodes.forEach(element => {
-      element.style = 'animation: none;'
-    })
+    for (let i = 1; i < 9; i++) {
+      let shelf = document.getElementById('shelf' + i)
+      shelf.childNodes.forEach(element => {
+        element.style = 'animation: none;'
+      })
+      fillIntervals[i] = setInterval(() => {
+        if (emptyCounts[i] > 5) {
+          clearInterval(fillIntervals[i])
+          fillShelf('shelf' + i)
+        }
+      })
+      let shelfFiller = document.getElementById('shelf_up' + i)
+      shelfFiller.style = 'left: -85px'
+      shelfFiller.childNodes.forEach(element => {
+        element.style = 'animation: none;'
+      })
+    }
   })
 
 
-  function take() {
+  function fillShelf(shelfId) {
+    isReady[shelfId.slice(-1)] = false
+    isFillRequest[shelfId.slice(-1)] = true
+    fillIntervals[shelfId.slice(-1)] = setInterval(() => {
+      let takeButton = document.getElementById('take-button' + shelfId.slice(-1))
+      takeButton.innerHTML = 'Filling<br>wait...<br>🡄◼◼◼'
+      takeButton.disabled = true
+      fill(shelfId)
+    }, 1000)
+  }
+
+
+  function take(shelfId) {
     let elementsTook = 1
-    if (isReady && emptyCount < 9) {
-      isReady = false
+    let shelf = document.getElementById(shelfId)
+    if (isReady[shelfId.slice(-1)] && emptyCounts[shelfId.slice(-1)] < 9) {
+      isReady[shelfId.slice(-1)] = false
       let lastChild = shelf.childNodes.item(shelf.childNodes.length - 2)
       let animationEnd = () => {
         shelf.childNodes.item(deleteElemIndex).innerHTML = ""
-        lastChild.innerHTML = `<img src="{% static 'images/apple.png' %}" height=30>`
-        if (emptyCount == 9) {
+        lastChild.innerHTML = products[shelfId.slice(-1)]
+        if (emptyCounts[shelfId.slice(-1)] == 9) {
           lastChild.innerHTML = ``
         }
-        isReady = true
-        console.log(emptyCount)
+        isReady[shelfId.slice(-1)] = true
         lastChild.removeEventListener('animationend', animationEnd)
       }
       let animationEndGeneric = (event) => {
@@ -57,27 +83,25 @@
       })
 
       deleteElemIndex += 2
-      emptyCount++
-    } else if (isReady) {
-      isReady = false
-      isFillRequest = true
-      fillInterval = setInterval(() => {
-        fill()
-      }, 1000)
+      emptyCounts[shelfId.slice(-1)]++
+    } else if (isReady[shelfId.slice(-1)]) {
+      fillShelf(shelfId)
     }
   }
 
 
-  function fill() {
+  function fill(shelfId) {
+    let takeButton = document.getElementById('take-button' + shelfId.slice(-1))
     let elementsGave = 1
-    if (isReady && emptyCount > 0) {
-      isReady = false
+    let shelfUpId = 'shelf_up' + shelfId.slice(-1)
+    let shelfFiller = document.getElementById(shelfUpId)
+    if (isReady[shelfId.slice(-1)] && emptyCounts[shelfId.slice(-1)] > 0) {
+      isReady[shelfId.slice(-1)] = false
       let firstChild = shelfFiller.childNodes.item(currentFillingElem)
       let animationEnd = () => {
-        firstChild.innerHTML = `<img src="{% static 'images/apple.png' %}" height=30>`
-        isReady = true
+        firstChild.innerHTML = products[shelfId.slice(-1)]
+        isReady[shelfId.slice(-1)] = true
         firstChild.removeEventListener('animationend', animationEnd)
-        firstChild.removeEventListener('animationend', fill)
       }
       let animationEndGeneric = (event) => {
         event.currentTarget.style = 'animation: none;'
@@ -85,92 +109,109 @@
       }
 
       firstChild.addEventListener('animationend', animationEnd)
-      firstChild.addEventListener('animationend', fill)
       shelfFiller.childNodes.forEach(element => {
         element.style = 'animation: ""; animation-iteration-count: ' + elementsGave + ';'
         element.addEventListener('animationend', animationEndGeneric)
       })
       currentFillingElem += 2
-      emptyCount--
-    } else if (isReady) {
-      clearInterval(fillInterval)
+      emptyCounts[shelfId.slice(-1)]--
+    } else if (emptyCounts[shelfId.slice(-1)] > 0 && isFillRequest[shelfId.slice(-1)]) {
+      isFillRequest[shelfId.slice(-1)] = false
+      isReady[shelfId.slice(-1)] = true
+    } else if (isReady[shelfId.slice(-1)]) {
+      clearInterval(fillIntervals[shelfId.slice(-1)])
       deleteElemIndex = 1
       currentFillingElem = 3
+      let shelf = document.getElementById(shelfId)
       shelf.childNodes.forEach(element => {
-        element.innerHTML = `<img src="{% static 'images/apple.png' %}" height=30>`
+        element.innerHTML = products[shelfId.slice(-1)]
       })
       shelfFiller.childNodes.forEach(element => {
         element.innerHTML = ''
       })
+      fillIntervals[shelfId.slice(-1)] = setInterval(() => {
+        if (emptyCounts[shelfId.slice(-1)] > 5) {
+          clearInterval(fillIntervals[shelfId.slice(-1)])
+          fillShelf(shelfId)
+        }
+      })
+      takeButton.innerHTML = 'Take<br>🡄◼◼◼'
       takeButton.disabled = false
-    } else if (emptyCount > 0 && isFillRequest) {
-      isFillRequest = false
-      takeButton.disabled = true
-      isReady = true
     }
   }
 </script>
 <link rel="stylesheet" href="{% static 'css/store_load.css' %}" />
 {% if user.is_authenticated %}
 <h1 class='regular__item'>Store</h1>
-<p class='regular__item'>Shelf №1<br>========================</p>
-<div class='shelf'>
-  <div class="lds-ellipsis" id='shelf'>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-  </div>
-  <div class="lds-ellipsis" id='shelf_up'>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-</div>
-<p class='regular__item'>========================</p>
-<p class='regular__item'>Shelf №2<br>========================</p>
-<div class='shelf'>
-  <div class="lds-ellipsis" id='shelf2'>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-    <div><img src="{% static 'images/apple.png' %}" height=30></div>
-  </div>
-  <div class="lds-ellipsis" id='shelf_up2'>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-</div>
-<p class='regular__item'>========================</p>
-
-<button onclick="take()" id='take-button'>Take</button>
+<table>
+  <tr>
+    <td>
+      <p class='regular__item'>Shelf №1<br>========================</p>
+      <div class="lds-ellipsis" id='shelf1'>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+        <div><img src="{% static 'images/apple.png' %}" height=30></div>
+      </div>
+      <div class="lds-ellipsis" id='shelf_up1'>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <p class='regular__item'>========================</p>
+    </td>
+    <td>
+      <form>
+        {% csrf_token %}
+        <button class='button7' onclick="take('shelf1')" id='take-button1'>Take<br>🡄◼◼◼</button>
+      </form>
+    </td>
+    <td>
+      <p class='regular__item'>Shelf №2<br>========================</p>
+      <div class="lds-ellipsis" id='shelf2'>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+        <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
+      </div>
+      <div class="lds-ellipsis" id='shelf_up2'>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <p class='regular__item'>========================</p>
+    </td>
+    <td>
+      <button class='button7' onclick="take('shelf2')" id='take-button2'>Take<br>🡄◼◼◼</button>
+    </td>
+  </tr>
+</table>
 {% else %}
 <h1 class='regular__item'>You are not authenticated to see this page</h1>
 {% endif %}
