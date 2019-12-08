@@ -1,8 +1,176 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Store{% endblock title %}
 {% block content %}
+<script>
+  let isReady = true
+  let isFillRequest = false
+  let deleteElemIndex = 1
+  let fillElemIndex = 1
+  let shelf
+  let shelfFiller
+  let currentFillingElem = 3
+  let emptyCount = 0
+  let takeButton
+  let fillInterval
+
+
+  window.addEventListener('load', () => {
+    takeButton = document.getElementById('take-button')
+    shelf = document.getElementById('shelf')
+    shelf.childNodes.forEach(element => {
+      element.style = 'animation: none;'
+    })
+    shelfFiller = document.getElementById('shelf_up')
+    shelfFiller.style = 'left: -85px'
+    shelfFiller.childNodes.forEach(element => {
+      element.style = 'animation: none;'
+    })
+  })
+
+
+  function take() {
+    let elementsTook = 1
+    if (isReady && emptyCount < 9) {
+      isReady = false
+      let lastChild = shelf.childNodes.item(shelf.childNodes.length - 2)
+      let animationEnd = () => {
+        shelf.childNodes.item(deleteElemIndex).innerHTML = ""
+        lastChild.innerHTML = `<img src="{% static 'images/apple.png' %}" height=30>`
+        if (emptyCount == 9) {
+          lastChild.innerHTML = ``
+        }
+        isReady = true
+        console.log(emptyCount)
+        lastChild.removeEventListener('animationend', animationEnd)
+      }
+      let animationEndGeneric = (event) => {
+        event.currentTarget.style = 'animation: none;'
+        event.currentTarget.removeEventListener('animationend', animationEndGeneric)
+      }
+
+      lastChild.innerHTML = ''
+      lastChild.addEventListener('animationend', animationEnd)
+      shelf.childNodes.forEach(element => {
+        element.style = 'animation: ""; animation-iteration-count: ' + elementsTook + ';'
+        element.addEventListener('animationend', animationEndGeneric)
+      })
+
+      deleteElemIndex += 2
+      emptyCount++
+    } else if (isReady) {
+      isReady = false
+      isFillRequest = true
+      fillInterval = setInterval(() => {
+        fill()
+      }, 1000)
+    }
+  }
+
+
+  function fill() {
+    let elementsGave = 1
+    if (isReady && emptyCount > 0) {
+      isReady = false
+      let firstChild = shelfFiller.childNodes.item(currentFillingElem)
+      let animationEnd = () => {
+        firstChild.innerHTML = `<img src="{% static 'images/apple.png' %}" height=30>`
+        isReady = true
+        firstChild.removeEventListener('animationend', animationEnd)
+        firstChild.removeEventListener('animationend', fill)
+      }
+      let animationEndGeneric = (event) => {
+        event.currentTarget.style = 'animation: none;'
+        event.currentTarget.removeEventListener('animationend', animationEndGeneric)
+      }
+
+      firstChild.addEventListener('animationend', animationEnd)
+      firstChild.addEventListener('animationend', fill)
+      shelfFiller.childNodes.forEach(element => {
+        element.style = 'animation: ""; animation-iteration-count: ' + elementsGave + ';'
+        element.addEventListener('animationend', animationEndGeneric)
+      })
+      currentFillingElem += 2
+      emptyCount--
+    } else if (isReady) {
+      clearInterval(fillInterval)
+      deleteElemIndex = 1
+      currentFillingElem = 3
+      shelf.childNodes.forEach(element => {
+        element.innerHTML = `<img src="{% static 'images/apple.png' %}" height=30>`
+      })
+      shelfFiller.childNodes.forEach(element => {
+        element.innerHTML = ''
+      })
+      takeButton.disabled = false
+    } else if (emptyCount > 0 && isFillRequest) {
+      isFillRequest = false
+      takeButton.disabled = true
+      isReady = true
+    }
+  }
+</script>
+<link rel="stylesheet" href="{% static 'css/store_load.css' %}" />
 {% if user.is_authenticated %}
 <h1 class='regular__item'>Store</h1>
+<p class='regular__item'>Shelf №1<br>========================</p>
+<div class='shelf'>
+  <div class="lds-ellipsis" id='shelf'>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+  </div>
+  <div class="lds-ellipsis" id='shelf_up'>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<p class='regular__item'>========================</p>
+<p class='regular__item'>Shelf №2<br>========================</p>
+<div class='shelf'>
+  <div class="lds-ellipsis" id='shelf2'>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+    <div><img src="{% static 'images/apple.png' %}" height=30></div>
+  </div>
+  <div class="lds-ellipsis" id='shelf_up2'>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<p class='regular__item'>========================</p>
+
+<button onclick="take()" id='take-button'>Take</button>
 {% else %}
 <h1 class='regular__item'>You are not authenticated to see this page</h1>
 {% endif %}
