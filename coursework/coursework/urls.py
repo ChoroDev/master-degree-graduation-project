@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from automated_system import views
 from django.views.generic import TemplateView
+import debug_toolbar
 
 
 urlpatterns = [
@@ -28,4 +29,5 @@ urlpatterns = [
     path('about', views.about, name='about'),
     path('contact', views.contact, name='contact'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
 ]
