@@ -1,4 +1,4 @@
-# coursework-4-grade
+# Graduation project
 
 ## Requirements
 
