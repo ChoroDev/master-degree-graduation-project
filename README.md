@@ -25,8 +25,8 @@
 
 ## Users and passwords
 
-`Login` == `Password` 
-admin == admin 
-business_manager == bm_login_1 
-store_manager == sm_login_1 
-merchandiser == md_login_1 
+`Login` == `Password`  
+admin == admin  
+business_manager == bm_login_1  
+store_manager == sm_login_1  
+merchandiser == md_login_1  
