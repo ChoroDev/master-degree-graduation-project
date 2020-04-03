@@ -2,46 +2,72 @@ from django.db import models
 from django.contrib.auth.models import Group
 
 
+class User(models.Model):
+    login = models.CharField(max_length=30)
+    password = models.CharField(max_length=100)
+    email = models.CharField(max_length=100, blank=True)
+    last_access = models.DateTimeField(auto_now=True)
+    USER_GROUPS = (
+        ('P', 'personel'),
+        ('M', 'management'),
+        ('A', 'admin')
+    )
+    group = models.CharField(max_length=1, choices=USER_GROUPS, default='P')
+
+
+class Statistics(models.Model):
+    day = models.DateField(null=True)
+    revenue = models.DecimalField(default=0.0, max_digits=30, decimal_places=2)
+    sold_count = models.IntegerField(default=0)
+    is_stock_day = models.BooleanField(default=False)
+    failures_count = models.IntegerField(default=0)
+
+
+class Failure(models.Model):
+    text = models.TextField(blank=True)
+    severity = models.IntegerField(default=1)
+    timestamp = models.DateTimeField(auto_now=True)
+
+
 class Product(models.Model):
-    name = models.CharField(max_length=20)
-    price = models.FloatField()
-    production_date = models.DateTimeField()
-    expiration_days = models.IntegerField()
-    product_type = models.CharField(max_length=20, default="None")
-
-
-class CargoTransportation(models.Model):
-    company_name = models.CharField(max_length=100)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    delivered_count = models.IntegerField()
-    delivery_date = models.DateTimeField()
+    name = models.CharField(max_length=30, blank=True)
+    digit_code = models.BigIntegerField(null=True)
+    shelf_life = models.DateTimeField(null=True)
+    width = models.FloatField(default=0.0)
+    height = models.FloatField(default=0.0)
+    length = models.FloatField(default=0.0)
+    weight = models.FloatField(default=0.0)
+    price = models.FloatField(default=0.0)
+    stackable = models.BooleanField(default=False)
 
 
 class Storage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_count = models.IntegerField(default=0)
-    delivery = models.ForeignKey(CargoTransportation, on_delete=models.CASCADE)
+    delivery_timestamp = models.DateTimeField(auto_now=True)
 
 
-class Staff(models.Model):
-    name = models.CharField(max_length=40)
-    surname = models.CharField(max_length=40)
-    position = models.CharField(max_length=50)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, default="")
+class Sales(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    sold_price = models.FloatField(default=0.0)
+    sold_date = models.DateTimeField(auto_now=True)
+    sold_count = models.IntegerField(default=0)
 
 
 class Store(models.Model):
-    shelf_number = models.IntegerField()
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL)
     product_count = models.IntegerField(default=0)
-    maintainer = models.ForeignKey(
-        Staff, on_delete=models.SET_NULL, null=True, default=None)
+    width = models.FloatField(default=0.0)
+    height = models.FloatField(default=0.0)
+    length = models.FloatField(default=0.0)
+    carrying_capacity = models.FloatField(default=0.0)
+    shelf_number = models.IntegerField(default=0)
+    last_charge = models.DateTimeField(auto_now=True)
 
 
-class Equipment(models.Model):
-    name = models.CharField(max_length=20)
-    equipment_type = models.CharField(max_length=20, default="None")
-    cost = models.FloatField()
-    last_maintainance_date = models.DateTimeField()
-    warranty_period_years = models.IntegerField()
-    maintainer = models.ForeignKey(Staff, on_delete=models.CASCADE, default="")
+class Stock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    shelf = models.ForeignKey(Store, on_delete=models.SET_NULL)
+    stock_price = models.FloatField(default=0.0)
+    start_timestamp = models.DateTimeField(auto_now=True)
+    end_timestamp = models.DateTimeField()
