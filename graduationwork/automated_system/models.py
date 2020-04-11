@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import Group
 
 
 class User(models.Model):
@@ -27,6 +26,11 @@ class Failure(models.Model):
     text = models.TextField(blank=True)
     severity = models.IntegerField(default=1)
     timestamp = models.DateTimeField(auto_now=True)
+    possible_cause = models.TextField(blank=True)
+    possible_solution = models.TextField(blank=True)
+    stack_trace = models.TextField(blank=True)
+    is_solved = models.BooleanField(default=False)
+    assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 
 class Product(models.Model):
@@ -55,7 +59,7 @@ class Sales(models.Model):
 
 
 class Store(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     product_count = models.IntegerField(default=0)
     width = models.FloatField(default=0.0)
     height = models.FloatField(default=0.0)
@@ -67,7 +71,7 @@ class Store(models.Model):
 
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    shelf = models.ForeignKey(Store, on_delete=models.SET_NULL)
+    shelf = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True)
     stock_price = models.FloatField(default=0.0)
     start_timestamp = models.DateTimeField(auto_now=True)
     end_timestamp = models.DateTimeField()
