@@ -2,15 +2,16 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from .forms import UserForm
-from .mgmt import db_manager
+# from .mgmt import db_manager
 import json
 
 
-is_active = "class=is-active"
+is_active = "nav_item_active"
 
 
 def index(request):
-    currentStatus = db_manager.get_current_status()
+    # currentStatus = db_manager.get_current_status()
+    currentStatus = ""
     userform = UserForm()
     return render(request, "index.html", {"form": userform, "home_is_active": is_active, "current_status": currentStatus})
 
@@ -18,28 +19,32 @@ def index(request):
 def store(request):
     if request.method == 'POST':
         print('custom post')
-        db_manager.update_store_products(request.POST.get(
-            'product_id'), request.POST.get('storeProducts'))
+        # db_manager.update_store_products(request.POST.get(
+        #     'product_id'), request.POST.get('storeProducts'))
         print(request.POST.get('storeProducts'))
         print(request.POST.get('storageProducts'))
-        db_manager.update_storage_products(request.POST.get(
-            'product_id'), request.POST.get('storageProducts'))
+        # db_manager.update_storage_products(request.POST.get(
+        #     'product_id'), request.POST.get('storageProducts'))
         return HttpResponse('')
     else:
-        storageProducts = db_manager.get_storage_products()
-        storageProducts = serializers.serialize('json', storageProducts)
-        storeProducts = db_manager.get_store_products()
-        storeProducts = serializers.serialize('json', storeProducts)
+        # storageProducts = db_manager.get_storage_products()
+        # storageProducts = serializers.serialize('json', storageProducts)
+        storageProducts = ""
+        # storeProducts = db_manager.get_store_products()
+        # storeProducts = serializers.serialize('json', storeProducts)
+        storeProducts = ""
         return render(request, "store.html", {"store_is_active": is_active, "storageProducts": storageProducts, "storeProducts": storeProducts})
 
 
 def storage(request):
-    storageProducts = db_manager.get_storage_products_for_page()
+    # storageProducts = db_manager.get_storage_products_for_page()
+    storageProducts = ""
     return render(request, "storage.html", {"storage_is_active": is_active, "products_in_storage": storageProducts})
 
 
 def transportations(request):
-    transpos = db_manager.get_transportations_info()
+    # transpos = db_manager.get_transportations_info()
+    transpos = ""
     return render(request, "transportations.html", {"transportations_is_active": is_active, "transportations": transpos})
 
 

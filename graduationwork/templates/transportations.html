@@ -4,7 +4,7 @@
 {% block content %}
 {% if user.is_authenticated %}
 {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-<h1 class='regular__item'>Transportations</h1>
+<h1>Transportations</h1>
 <table style='width: 100%; border: 2px solid'>
   <thead>
     <tr>
@@ -26,9 +26,9 @@
   </tbody>
 </table>
 {% else %}
-<h1 class='regular__item'>You are not authorized to see this page</h1>
+<h1>You are not authorized to see this page</h1>
 {% endif %}
 {% else %}
-<h1 class='regular__item'>You are not authenticated to see this page</h1>
+<h1>You are not authenticated to see this page</h1>
 {% endif %}
 {% endblock content %}

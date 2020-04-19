@@ -1,45 +1,55 @@
 {% load static %}
 {% load auth_filter %}
+
 <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8" />
-  <title>{% block title %}Default title{% endblock title %}</title>
+  <title>{% block title %}АСУППС{% endblock title %}</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 </head>
 
-<body background="{% static 'images/background.jpg' %}">
-  <h1>
-    {% block header %}
-    <header class="header sticky sticky--top js-header">
-      <div class="grid">
-        <nav class="navigation">
-          <ul class="navigation__list navigation__list--inline">
-            <li class="navigation__item"><a href="/" {{ home_is_active|default:"" }}>Home</a></li>
-            {% if user.is_authenticated %}
-            <li class="navigation__item"><a href="/store" {{ store_is_active|default:"" }}>Store</a></li>
-            <li class="navigation__item"><a href="/storage" {{ storage_is_active|default:"" }}>Storage</a></li>
-            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-            <li class="navigation__item"><a href="/transportations"
-                {{ transportations_is_active|default:"" }}>Transportations</a></li>
-            {% endif %}
-            {% endif %}
-            <li class="navigation__item"><a href="/about" {{ about_is_active|default:"" }}>About</a></li>
-            <li class="navigation__item"><a href="/contact" {{ contact_is_active|default:"" }}>Contact</a></li>
-            {% if user.is_authenticated %}
-            <li class="navigation__item greeting">Hello, {{ user.get_username }}</li>
-            <li class="navigation__item"><a href="{% url 'logout' %}">Logout</a></li>
-            {% else %}
-            <li class="navigation__item auth-button"><a href="{% url 'login' %}">Login</a></li>
-            {% endif %}
-          </ul>
-        </nav>
-      </div>
-    </header>
-    {% endblock header %}
-  </h1>
-  <div>{% block content %}{% endblock content %}</div>
+<body background="{% static 'images/background.png' %}">
+  {% block header %}
+  <header class="header">
+    <div class="center width">
+      <table>
+        <tr>
+          <td width="100%">
+            <nav class="navigation">
+              <ul class="navigation__list navigation__list--inline">
+                <li class="{{ home_is_active|default:"nav_item" }}"><a href="/">Домашняя</a></li>
+                {% if user.is_authenticated %}
+                  <li class="{{ store_is_active|default:"nav_item" }}"><a href="/store">Магазин</a></li>
+                  <li class="{{ storage_is_active|default:"nav_item" }}"><a href="/storage">Склад</a></li>
+                  {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                    <!-- <li class="nav_item"><a href="/transportations" {{ transportations_is_active|default:"" }}>Transportations</a></li> -->
+                  {% endif %}
+                {% endif %}
+                <li class="{{ about_is_active|default:"nav_item" }}"><a href="/about">О нас</a></li>
+                <li class="{{ contact_is_active|default:"nav_item" }}"><a href="/contact" >Контакты</a></li>
+              </ul>
+            </nav>
+          </td>
+          <td width="100%">
+            <nav class="navigation">
+              <ul class="navigation__list navigation__list--inline auth-area">
+                {% if user.is_authenticated %}
+                  <li class="greeting">Привет, {{ user.get_username }}!</li>
+                  <li class="nav_item"><a href="/logout">Выйти</a></li>
+                {% else %}
+                  <li class="{{ form.login_is_active|default:"nav_item" }}"><a href="/login">Войти</a></li>
+                {% endif %}
+              </ul>
+            </nav>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </header>
+  {% endblock header %}
+  <div class="center width">{% block content %}{% endblock content %}</div>
 </body>
 
 </html>

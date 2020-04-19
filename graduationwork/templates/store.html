@@ -244,11 +244,11 @@
 </script>
 <link rel="stylesheet" href="{% static 'css/store_load.css' %}" />
 {% if user.is_authenticated %}
-<h1 class='regular__item'>Store</h1>
+<h1>Store</h1>
 <table>
   <tr>
     <td>
-      <p class='regular__item'>Shelf №1<br>========================</p>
+      <p>Shelf №1<br>========================</p>
       <div class="lds-ellipsis" id='shelf1'>
         <div><img src="{% static 'images/apple.png' %}" height=30></div>
         <div><img src="{% static 'images/apple.png' %}" height=30></div>
@@ -273,7 +273,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form1'>
@@ -282,7 +282,7 @@
       </form>
     </td>
     <td>
-      <p class='regular__item'>Shelf №2<br>========================</p>
+      <p>Shelf №2<br>========================</p>
       <div class="lds-ellipsis" id='shelf2'>
         <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
         <div><img src="{% static 'images/pineapple.png' %}" height=30></div>
@@ -307,7 +307,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form2'>
@@ -316,7 +316,7 @@
       </form>
     </td>
     <td>
-      <p class='regular__item'>Shelf №3<br>========================</p>
+      <p>Shelf №3<br>========================</p>
       <div class="lds-ellipsis" id='shelf3'>
         <div><img src="{% static 'images/carrot.png' %}" height=30></div>
         <div><img src="{% static 'images/carrot.png' %}" height=30></div>
@@ -341,7 +341,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form3'>
@@ -350,7 +350,7 @@
       </form>
     </td>
     <td>
-      <p class='regular__item'>Shelf №4<br>========================</p>
+      <p>Shelf №4<br>========================</p>
       <div class="lds-ellipsis" id='shelf4'>
         <div><img src="{% static 'images/cucumber.png' %}" height=30></div>
         <div><img src="{% static 'images/cucumber.png' %}" height=30></div>
@@ -375,7 +375,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form4'>
@@ -386,7 +386,7 @@
   </tr>
   <tr>
     <td>
-      <p class='regular__item'>Shelf №5<br>========================</p>
+      <p>Shelf №5<br>========================</p>
       <div class="lds-ellipsis" id='shelf5'>
         <div><img src="{% static 'images/milk.png' %}" height=30></div>
         <div><img src="{% static 'images/milk.png' %}" height=30></div>
@@ -411,7 +411,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form5'>
@@ -420,7 +420,7 @@
       </form>
     </td>
     <td>
-      <p class='regular__item'>Shelf №6<br>========================</p>
+      <p>Shelf №6<br>========================</p>
       <div class="lds-ellipsis" id='shelf6'>
         <div><img src="{% static 'images/orange_juice.png' %}" height=30></div>
         <div><img src="{% static 'images/orange_juice.png' %}" height=30></div>
@@ -445,7 +445,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form6'>
@@ -454,7 +454,7 @@
       </form>
     </td>
     <td>
-      <p class='regular__item'>Shelf №7<br>========================</p>
+      <p>Shelf №7<br>========================</p>
       <div class="lds-ellipsis" id='shelf7'>
         <div><img src="{% static 'images/potato.png' %}" height=30></div>
         <div><img src="{% static 'images/potato.png' %}" height=30></div>
@@ -479,7 +479,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form7'>
@@ -488,7 +488,7 @@
       </form>
     </td>
     <td>
-      <p class='regular__item'>Shelf №8<br>========================</p>
+      <p>Shelf №8<br>========================</p>
       <div class="lds-ellipsis" id='shelf8'>
         <div><img src="{% static 'images/tomato.png' %}" height=30></div>
         <div><img src="{% static 'images/tomato.png' %}" height=30></div>
@@ -513,7 +513,7 @@
         <div></div>
         <div></div>
       </div>
-      <p class='regular__item'>========================</p>
+      <p>========================</p>
     </td>
     <td>
       <form method='POST' id='form8'>
@@ -524,6 +524,6 @@
   </tr>
 </table>
 {% else %}
-<h1 class='regular__item'>You are not authenticated to see this page</h1>
+<h1>You are not authenticated to see this page</h1>
 {% endif %}
 {% endblock content %}

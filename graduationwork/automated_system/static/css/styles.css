@@ -1,44 +1,18 @@
 @use postcss-cssnext;
 
-/* helpers/grid.css */
-
-.grid {
-  margin-left: 1em;
-  max-width: 48em;
-  width: 90%;
-}
-
-/* helpers/sticky.css */
-
-.sticky {
-  position: sticky;
-  will-change: transform;
-}
-
-.sticky--top {
-  top: 0;
-}
-
-/* layout/base.css */
-
-html {
-  box-sizing: border-box;
-  height: 100%;
-}
-
-body {
-  font-family: "Roboto", sans-serif;
-  line-height: 1.75;
-  margin: 0;
-  min-height: 100%;
-}
-
-/* layout/header.css */
+/* header:~:start */
 
 .header {
+  z-index: 999999;
   background-color: #fff;
   padding-bottom: 1em;
   padding-top: 1em;
+  position: sticky;
+  will-change: transform;
+  top: 0;
+  line-height: 1.75;
+  min-height: 100%;
+  border-bottom: solid rgba(202, 202, 202, 0.1) 2px;
 }
 
 .header::after {
@@ -58,34 +32,18 @@ body {
   opacity: 1;
 }
 
-/* layout/main.css */
-
-.main {
-  padding-top: 6em;
-  padding-bottom: 6em;
-}
-
-/* modules/headline.css */
-
-h1 {
-  margin-bottom: 1.5em;
-  margin-top: 0;
-}
-
-/* modules/navigation.css */
-
 .navigation a {
   color: inherit;
   display: block;
   text-decoration: none;
 }
 
-.navigation .is-active {
-  background-color: #000;
+.nav_item_active {
+  background-color: rgb(99, 99, 99);
   color: #fff;
-  padding-left: 1em;
-  padding-right: 1em;
-  border-radius: 999px;
+  margin: 0.5em;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .navigation__list {
@@ -98,26 +56,72 @@ h1 {
   display: flex;
 }
 
-.navigation__item {
+.nav_item {
   margin: 0.5em;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.regular__item {
-  margin: 0.5em;
+.nav_item:hover {
+  background-color: rgb(165, 165, 165);
+  color: white;
 }
 
-/* modules/paragraph.css */
+.auth-area {
+  float: right;
+}
 
-p {
-  margin-bottom: 1.5em;
-  margin-top: 1.5em;
+/* header:~:end */
+
+html {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
 }
 
 .greeting {
-  font-size: 0.5em;
-  color: gray;
+  font-size: 15px;
+  width: 200px;
+  margin-top: 0.65em;
+  margin-bottom: 0;
+  text-align: right;
+  color: rgb(209, 209, 209);
 }
 
-#welcome {
-  padding-left: 30px;
+.block-clear {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  clear: both;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 1);
+  border: solid rgba(202, 202, 202, 0.1) 1px;
+}
+
+.block-content {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.block-image {
+  opacity: 0.25;
+}
+
+.width {
+  width: 1000px;
+}
+
+.center {
+  margin: 0 auto;
+  padding-left: 10px;
+  overflow: hidden;
+  padding-right: 10px;
+}
+
+.content-on-image {
+  position: absolute;
+	top: 0;
+	left: 0;
 }

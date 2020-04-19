@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Авторизация{% endblock title %}
+{% block content %}
+
+{% if form.errors %}
+  <p>Имя пользователя или пароль не распознаны. Попробуйте еще раз.</p>
+{% endif %}
+
+{% if user.is_authenticated %}
+  <p>Вы уже выполнили вход.</p>
+{% else %}
+  {% load static %}
+  <form method="post" action="{% url 'login' %}" id="login">
+    <link rel="stylesheet" href="{% static 'css/auth_styles.css' %}" />
+    {% csrf_token %}
+    <fieldset id="inputs">
+      <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
+      <div id="username">{{ form.username }}</div>
+      <label for="{{ form.password.id_for_label }}">Пароль:</label>
+      <div id="password">{{ form.password }}</div>
+    </fieldset>
+    <fieldset id="actions">
+      <input type="submit" id="submit" value="login">
+    </fieldset>
+  </form>
+{% endif %}
+
+{% endblock %}
