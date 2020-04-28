@@ -3,13 +3,13 @@
 
 {% block errorContent %}
   {% if user.is_authenticated %}
-    <div class="jumbotron">
+    <div class="jumbotron border">
       <h3 class="text-center" style="color: red;">Вы уже выполнили вход.</h3>
     </div>
   {% endif %}
 
   {% if form.errors %}
-    <div class="jumbotron">
+    <div class="jumbotron border">
       <h3 class="text-center" style="color: red;">Имя пользователя или пароль не распознаны. Попробуйте еще раз.</h3>
     </div>
   {% endif %}

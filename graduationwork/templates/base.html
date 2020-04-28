@@ -15,7 +15,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 
-<body background="{% static 'images/background.png' %}">
+<body style="background-color: rgb(250, 250, 250);">
   {% block header %}
     <nav class="navbar navbar-expand navbar-light fixed-top" style="background-color: white; font-family: Roboto, sans-serif;">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -24,18 +24,17 @@
             <a class="nav-link" href="/">Домашняя <span class="sr-only">(current)</span></a>
           </li>
           {% if user.is_authenticated %}
-            <li class="nav-item {{ products_is_active|default:"" }}">
-              <a class="nav-link" href="/products">Продукты</span></a>
-            </li>
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              <li class="nav-item {{ products_is_active|default:"" }}">
+                <a class="nav-link" href="/products">Продукты</span></a>
+              </li>
+            {% endif %}
             <li class="nav-item {{ store_is_active|default:"" }}">
               <a class="nav-link" href="/store">Магазин</span></a>
             </li>
             <li class="nav-item {{ storage_is_active|default:"" }}">
               <a class="nav-link" href="/storage">Склад</span></a>
             </li>
-            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-              <!-- <li class="nav_item"><a href="/transportations" {{ transportations_is_active|default:"" }}>Transportations</a></li> -->
-            {% endif %}
           {% endif %}
           <li class="nav-item {{ about_is_active|default:"" }}">
             <a class="nav-link" href="/about">О нас</span></a>
@@ -43,18 +42,6 @@
           <li class="nav-item {{ contact_is_active|default:"" }}">
             <a class="nav-link" href="/contact">Контакты</span></a>
           </li>
-
-          {% comment %} <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li> {% endcomment %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
@@ -77,7 +64,7 @@
   <main role="main" class="container">
     {% block errorContent %}
       {% if not user.is_authenticated %}
-        <div class="jumbotron">
+        <div class="jumbotron border">
           <h3 class="text-center" style="color: red;">Выполните вход, чтобы полностью видеть эту страницу.</h3>
         </div>
       {% endif %}

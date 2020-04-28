@@ -3,15 +3,9 @@
 {% load auth_filter %}
 {% block title %}Домашняя{% endblock title %}
 
-<script>
-  function goProducts() {
-
-  }
-</script>
-
 {% block content %}
   {% if user.is_authenticated %}
-    <div class="jumbotron">
+    <div class="jumbotron border">
       <h1 style="text-align: center;">Добро пожаловать в автоматизированную систему управления полочным пространством супермаркета!</h1>
       <!-- <p>System status: </p>
       {% if current_status.store.status == "fine" %}
@@ -41,16 +35,36 @@
     </div>
   {% endif %}
 
-  <div class="card">
-    <img class="card-img-top" src="{% static 'images/home_1.png' %}" style="opacity: 0.2;">
+  <div class="card mb-5">
+    <img class="card-img-top" src="{% static 'images/home_1.png' %}" style="opacity: 0.1;">
     <div class="card-img-overlay">
       <div class="container h-100">
         <div class="row align-items-center h-100">
           <div class="col">
-            <h1 class="text-center">Управляйте продуктами с помощью удобного web-интерфейса</h1>
+            <h1 class="text-center">Управляйте продуктами с помощью удобного web-интерфейса (для менеджера)</h1>
             {% if user.is_authenticated %}
-              <br>
-              <a class="btn btn-warning btn-lg btn-block" href="/products">Управление продуктами</a>
+              {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                <br>
+                <a class="btn btn-warning btn-lg btn-block" href="/products">Управление продуктами</a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="{% static 'images/home_2.png' %}" style="opacity: 0.1;">
+    <div class="card-img-overlay">
+      <div class="container h-100">
+        <div class="row align-items-center h-100">
+          <div class="col">
+            <h1 class="text-center">Управляйте продуктами на складе: меняйте количество товаров на складе (для менеджера), добавляйте новые поставленные товары</h1>
+            {% if user.is_authenticated %}
+              {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                <br>
+                <a class="btn btn-warning btn-lg btn-block" href="/storage">Перейти на склад</a>
+              {% endif %}
             {% endif %}
           </div>
         </div>

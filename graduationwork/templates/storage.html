@@ -1,30 +1,63 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Storage{% endblock title %}
+{% load auth_filter %}
+
+{% block title %}Склад{% endblock title %}
+
 {% block content %}
 {% if user.is_authenticated %}
-  <h1>Storage</h1>
-  <table style='width: 100%; border: 2px solid'>
-    <thead>
-      <tr>
-        <td style='border: 2px solid;'><b>Product</b></td>
-        <td style='border: 2px solid;'><b>Amount</b></td>
-        <td style='border: 2px solid;'><b>Last delivery</b></td>
-        <td style='border: 2px solid;'><b>Image</b></td>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in products_in_storage %}
-      <tr>
-        <td style='border: 2px solid;'>{{ product.product_name }}</td>
-        <td style='border: 2px solid;'>{{ product.product_count }}</td>
-        <td style='border: 2px solid;'>{{ product.last_delivery }}</td>
-        {% with 'images/'|add:product.image_name|add:'.png' as image_static %}
-        <td style='border: 2px solid;'><img src="{% static image_static %}" height=100></td>
-        {% endwith %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="container-md">
+    {% for storageElem in storage %}
+      <div class="row border border-info bg-white my-2 p-2">
+        <div class="col-md-2 text-center">
+          {% with 'images/'|add:storageElem.product.name|add:'.png' as image_static %}
+            <img src="{% static image_static %}" class="img-fluid" style="height: 100px !important;">
+          {% endwith %}
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-10">
+              <b>Продукт: </b>"{{ storageElem.product.name }}"
+              <br>
+              <b>Дата последней поставки: </b>"{{ storageElem.delivery_timestamp }}"
+              <br>
+            </div>
+          </div>
+          {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+            <div class="row">
+              <div class="col-md-6">
+                <label for="product-count" class="font-weight-bold">Количество единиц продажи на складе: </label>
+                <div class="input-group mb-1">
+                  <input type=text id="product-count" class="form-control input-sm" value="{{ storageElem.product_count }}">
+                  <div class="input-group-append">
+                    <button class="btn btn-success" type="button">Сохранить изменения</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+                <div class="input-group mb-1">
+                  <input type=text id="product-count" class="form-control input-sm" value="0">
+                  <div class="input-group-append">
+                    <button class="btn btn-success" type="button">Добавить</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <b>Количество единиц продажи на складе: </b>{{ storageElem.product_count }}
+            <br>
+            <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+            <div class="input-group mb-1">
+              <input type=text id="product-count" class="form-control input-sm" value="0">
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button">Добавить</button>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endif %}
 {% endblock content %}

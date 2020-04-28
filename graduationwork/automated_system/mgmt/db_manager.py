@@ -4,7 +4,7 @@ from datetime import date
 from datetime import timedelta
 
 
-def fill_in_product():
+def fill_in_products():
     models.Product.objects.create(
         name="Apple",
         digit_code="00000-0001",
@@ -87,6 +87,33 @@ def fill_in_product():
         stackable=True)
 
 
+def fill_in_storage():
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Apple'),
+        product_count=100)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Pineapple'),
+        product_count=25)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Orange Juice'),
+        product_count=50)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Milk'),
+        product_count=30)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Carrot'),
+        product_count=40)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Cucumber'),
+        product_count=35)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Potato'),
+        product_count=50)
+    models.Storage.objects.create(
+        product=models.Product.objects.get(name='Tomato'),
+        product_count=40)
+
+
 # def fill_in_cargo():
 #     models.CargoTransportation.objects.create(
 #         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=1)
@@ -104,25 +131,6 @@ def fill_in_product():
 #         company_name="Juicy Liquids", delivered_count=500, delivery_date=datetime.now(), product_id=3)
 #     models.CargoTransportation.objects.create(
 #         company_name="Happy Milk Farm", delivered_count=500, delivery_date=datetime.now(), product_id=4)
-
-
-# def fill_in_storage():
-#     models.Storage.objects.create(
-#         product_count=1000, delivery_id=1, product_id=1)
-#     models.Storage.objects.create(
-#         product_count=1500, delivery_id=2, product_id=2)
-#     models.Storage.objects.create(
-#         product_count=560, delivery_id=3, product_id=3)
-#     models.Storage.objects.create(
-#         product_count=1100, delivery_id=4, product_id=4)
-#     models.Storage.objects.create(
-#         product_count=2300, delivery_id=5, product_id=5)
-#     models.Storage.objects.create(
-#         product_count=700, delivery_id=6, product_id=6)
-#     models.Storage.objects.create(
-#         product_count=800, delivery_id=7, product_id=7)
-#     models.Storage.objects.create(
-#         product_count=550, delivery_id=8, product_id=8)
 
 
 # def fill_in_store():

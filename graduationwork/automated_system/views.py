@@ -39,9 +39,7 @@ def store(request):
 
 
 def storage(request):
-    # storageProducts = db_manager.get_storage_products_for_page()
-    storageProducts = ""
-    return render(request, "storage.html", {"storage_is_active": is_active, "products_in_storage": storageProducts})
+    return render(request, "storage.html", {"storage_is_active": is_active, "storage": models.Storage.objects.all()})
 
 
 def transportations(request):
@@ -56,10 +54,6 @@ def about(request):
 
 def contact(request):
     return render(request, "contact.html", {"contact_is_active": is_active})
-
-
-def product(request):
-    return render(request, "product.html")
 
 
 def products(request):
