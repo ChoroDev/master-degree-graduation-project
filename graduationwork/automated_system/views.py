@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from .forms import UserForm
-# from .mgmt import db_manager
+from .mgmt import db_manager
+from . import models
 import json
+import math
 
 
-is_active = "nav_item_active"
+is_active = "active"
 
 
 def index(request):
@@ -54,3 +56,21 @@ def about(request):
 
 def contact(request):
     return render(request, "contact.html", {"contact_is_active": is_active})
+
+
+def product(request):
+    return render(request, "product.html")
+
+
+def products(request):
+    products = models.Product.objects.all()
+    rowsCount = math.ceil(products.count() / 3)
+    return render(
+        request,
+        "products.html",
+        {
+            "products_is_active": is_active,
+            "products": models.Product.objects.all(),
+            "rowsCount": rowsCount
+        }
+    )

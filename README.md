@@ -20,7 +20,7 @@
 ## Migrations
 
 1. Change something in models.py
-2. python manage.py makemigrations
+2. python manage.py makemigrations automated_system
 3. python manage.py migrate
 
 ## Users and passwords

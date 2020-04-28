@@ -1,25 +1,90 @@
-# from .. import models
-# from datetime import datetime
-# from datetime import date
+from .. import models
+from datetime import datetime
+from datetime import date
+from datetime import timedelta
 
 
-# def fill_in_product():
-#     models.Product.objects.create(name="Apple", price=1.0, production_date=datetime.now(
-#     ), expiration_days=60, product_type="Food")
-#     models.Product.objects.create(name="Pineapple", price=1.2, production_date=datetime.now(
-#     ), expiration_days=60, product_type="Food")
-#     models.Product.objects.create(name="Orange Juice", price=1.1, production_date=datetime.now(
-#     ), expiration_days=180, product_type="Food")
-#     models.Product.objects.create(name="Milk", price=0.9, production_date=datetime.now(
-#     ), expiration_days=3, product_type="Food")
-#     models.Product.objects.create(name="Carrot", price=0.6, production_date=datetime.now(
-#     ), expiration_days=60, product_type="Food")
-#     models.Product.objects.create(name="Cucumber", price=0.3, production_date=datetime.now(
-#     ), expiration_days=60, product_type="Food")
-#     models.Product.objects.create(name="Potato", price=0.2, production_date=datetime.now(
-#     ), expiration_days=60, product_type="Food")
-#     models.Product.objects.create(name="Tomato", price=0.4, production_date=datetime.now(
-#     ), expiration_days=60, product_type="Food")
+def fill_in_product():
+    models.Product.objects.create(
+        name="Apple",
+        digit_code="00000-0001",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=200.0,
+        height=100.0,
+        length=150.0,
+        weight=500.0,
+        price=2.1,
+        stackable=True)
+    models.Product.objects.create(
+        name="Pineapple",
+        digit_code="00000-0002",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=150.0,
+        height=300.0,
+        length=150.0,
+        weight=1500.0,
+        price=1.1,
+        stackable=True)
+    models.Product.objects.create(
+        name="Orange Juice",
+        digit_code="00000-0003",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=100.0,
+        height=200.0,
+        length=50.0,
+        weight=1000.0,
+        price=1.2,
+        stackable=True)
+    models.Product.objects.create(
+        name="Milk",
+        digit_code="00000-0004",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=100.0,
+        height=200.0,
+        length=50.0,
+        weight=950.0,
+        price=0.9,
+        stackable=True)
+    models.Product.objects.create(
+        name="Carrot",
+        digit_code="00000-0005",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=90.0,
+        height=60.0,
+        length=150.0,
+        weight=500.0,
+        price=1.5,
+        stackable=True)
+    models.Product.objects.create(
+        name="Cucumber",
+        digit_code="00000-0007",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=80.0,
+        height=80.0,
+        length=100.0,
+        weight=500.0,
+        price=1.3,
+        stackable=True)
+    models.Product.objects.create(
+        name="Potato",
+        digit_code="00000-0008",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=150.0,
+        height=75.0,
+        length=80.0,
+        weight=500.0,
+        price=1.1,
+        stackable=True)
+    models.Product.objects.create(
+        name="Tomato",
+        digit_code="00000-0009",
+        shelf_life=(datetime.now() + timedelta(days=365)),
+        width=200.0,
+        height=100.0,
+        length=50.0,
+        weight=500.0,
+        price=1.4,
+        stackable=True)
 
 
 # def fill_in_cargo():

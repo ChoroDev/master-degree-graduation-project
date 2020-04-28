@@ -2,54 +2,90 @@
 {% load auth_filter %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>{% block title %}АСУППС{% endblock title %}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 
 <body background="{% static 'images/background.png' %}">
   {% block header %}
-  <header class="header">
-    <div class="center width">
-      <table>
-        <tr>
-          <td width="100%">
-            <nav class="navigation">
-              <ul class="navigation__list navigation__list--inline">
-                <li class="{{ home_is_active|default:"nav_item" }}"><a href="/">Домашняя</a></li>
-                {% if user.is_authenticated %}
-                  <li class="{{ store_is_active|default:"nav_item" }}"><a href="/store">Магазин</a></li>
-                  <li class="{{ storage_is_active|default:"nav_item" }}"><a href="/storage">Склад</a></li>
-                  {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-                    <!-- <li class="nav_item"><a href="/transportations" {{ transportations_is_active|default:"" }}>Transportations</a></li> -->
-                  {% endif %}
-                {% endif %}
-                <li class="{{ about_is_active|default:"nav_item" }}"><a href="/about">О нас</a></li>
-                <li class="{{ contact_is_active|default:"nav_item" }}"><a href="/contact" >Контакты</a></li>
-              </ul>
-            </nav>
-          </td>
-          <td width="100%">
-            <nav class="navigation">
-              <ul class="navigation__list navigation__list--inline auth-area">
-                {% if user.is_authenticated %}
-                  <li class="greeting">Привет, {{ user.get_username }}!</li>
-                  <li class="nav_item"><a href="/logout">Выйти</a></li>
-                {% else %}
-                  <li class="{{ form.login_is_active|default:"nav_item" }}"><a href="/login">Войти</a></li>
-                {% endif %}
-              </ul>
-            </nav>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </header>
+    <nav class="navbar navbar-expand navbar-light fixed-top" style="background-color: white; font-family: Roboto, sans-serif;">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item {{ home_is_active|default:"" }}">
+            <a class="nav-link" href="/">Домашняя <span class="sr-only">(current)</span></a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item {{ products_is_active|default:"" }}">
+              <a class="nav-link" href="/products">Продукты</span></a>
+            </li>
+            <li class="nav-item {{ store_is_active|default:"" }}">
+              <a class="nav-link" href="/store">Магазин</span></a>
+            </li>
+            <li class="nav-item {{ storage_is_active|default:"" }}">
+              <a class="nav-link" href="/storage">Склад</span></a>
+            </li>
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              <!-- <li class="nav_item"><a href="/transportations" {{ transportations_is_active|default:"" }}>Transportations</a></li> -->
+            {% endif %}
+          {% endif %}
+          <li class="nav-item {{ about_is_active|default:"" }}">
+            <a class="nav-link" href="/about">О нас</span></a>
+          </li>
+          <li class="nav-item {{ contact_is_active|default:"" }}">
+            <a class="nav-link" href="/contact">Контакты</span></a>
+          </li>
+
+          {% comment %} <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li> {% endcomment %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link disabled">Привет, {{ user.get_username }}!</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Выйти</a>
+            </li>
+          {% else %}
+            <li class="nav-item {{ form.login_is_active|default:"" }}">
+              <a class="nav-link" href="/login">Войти</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
   {% endblock header %}
-  <div class="center width">{% block content %}{% endblock content %}</div>
+
+  <main role="main" class="container">
+    {% block errorContent %}
+      {% if not user.is_authenticated %}
+        <div class="jumbotron">
+          <h3 class="text-center" style="color: red;">Выполните вход, чтобы полностью видеть эту страницу.</h3>
+        </div>
+      {% endif %}
+    {% endblock errorContent %}
+
+    {% block content %}{% endblock content %}
+    <br>
+  </main>
 </body>
 
 </html>

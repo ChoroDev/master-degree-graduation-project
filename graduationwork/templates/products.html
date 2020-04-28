@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Продукты{% endblock title %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    {% if rowsCount > 0 %}
+      <div class="container-md">
+        <div class="row">
+          {% for product in products %}
+            <div class="col-md-4 my-3 border border-info bg-white">
+              <div class="row mt-3">
+                <div class="col">
+                  {% with 'images/'|add:product.name|add:'.png' as image_static %}
+                    <img src="{% static image_static %}" class="img-fluid" style="height: 168px !important;">
+                  {% endwith %}
+                </div>
+                <div class="col">
+                  <label for="product-name" class="font-weight-bold">Продукт: </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-name" class="form-control input-sm" value="{{ product.name }}">
+                  </div>
+                  <label for="product-price" class="font-weight-bold">Цена ($): </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-price" class="form-control input-sm" value="{{ product.price }}">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label for="product-digit-code" class="font-weight-bold">Код: </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-digit-code" class="form-control input-sm" value="{{ product.digit_code }}">
+                  </div>
+                  <label for="product-shelf-life" class="font-weight-bold">Срок годности: </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-shelf-life" class="form-control input-sm" value="{{ product.shelf_life }}">
+                  </div>
+                  <label for="product-width" class="font-weight-bold">Ширина (мм): </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-width" class="form-control input-sm" value="{{ product.width }}">
+                  </div>
+                  <label for="product-height" class="font-weight-bold">Высота (мм): </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-height" class="form-control input-sm" value="{{ product.height }}">
+                  </div>
+                  <label for="product-length" class="font-weight-bold">Длина (мм): </label>
+                  <div class="input-group mb-1">
+                    <input type=text id="product-length" class="form-control input-sm" value="{{ product.length }}">
+                  </div>
+                  <label for="product-weight" class="font-weight-bold">Вес единицы продажи (г): </label>
+                  <div class="input-group mb-2">
+                    <input type=text id="product-weight" class="form-control input-sm" value="{{ product.weight }}">
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary btn-sm btn-block">Сохранить<br>изменения</button>
+                </div>
+                <div class="col-6">
+                  <button type="button" class="btn btn-danger btn-sm btn-block">Удалить<br>продукт</button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          <a class="col-md-4 my-3 border border-info bg-light d-flex flex-wrap align-items-center justify-content-center" onclick="addProductCard()">
+            <img src="{% static 'images/plus.png' %}" class="img-fluid" style="height: 200px !important;">
+          </a>
+        </div>
+      </div>
+    {% else %}
+      <div class="block-clear block-content">
+        <p class="error-content-center">Продуктов нет.</p>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

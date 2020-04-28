@@ -34,4 +34,6 @@ urlpatterns = [
          template_name='auth/login.html', authentication_form=AuthenticationForm), name='login'),
     path('logout', auth_views.LogoutView.as_view(
         template_name='index.html'), name='logout'),
+    path('product', views.product, name='product'),
+    path('products', views.products, name='products'),
 ]

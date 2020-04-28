@@ -1,60 +1,60 @@
 {% extends "base.html" %}
+{% load static %}
 {% load auth_filter %}
 {% block title %}Домашняя{% endblock title %}
+
+<script>
+  function goProducts() {
+
+  }
+</script>
+
 {% block content %}
-
-<div class="block-clear block-content">
-  <h1 style="text-align: center;">Добро пожаловать в автоматизированную систему управления полочным пространством супермаркета!</h1>
-
   {% if user.is_authenticated %}
-    <!-- <p>System status: </p>
-
-    {% if current_status.store.status == "fine" %}
-      <p style="color: green"><b>{{ current_status.store.data }}</b></p>
-    {% elif current_status.store.status == "warning" %}
-      <p style="color: orange"><b>{{ current_status.store.data }}</b></p>
-    {% else %}
-      <p style="color: red"><b>{{ current_status.store.data }}</b></p>
-    {% endif %}
-
-    {% if current_status.storage.status == "fine" %}
-      <p style="color: green"><b>{{ current_status.storage.data }}</b></p>
-    {% elif current_status.storage.status == "warning" %}
-      <p style="color: orange"><b>{{ current_status.storage.data }}</b></p>
-    {% else %}
-      <p style="color: red"><b>{{ current_status.storage.data }}</b></p>
-    {% endif %}
-
-    {% if current_status.equipment.status == "fine" %}
-      <p style="color: green"><b>{{ current_status.equipment.data }}</b></p>
-    {% elif current_status.equipment.status == "warning" %}
-      <p style="color: orange"><b>{{ current_status.equipment.data }}</b></p>
-    {% else %}
-      <p style="color: red"><b>{{ current_status.equipment.data }}</b></p>
-    {% endif %}
-
-    {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-      <p>Documents awaiting signature:</p>
-    {% endif %} -->
-
-  {% else %}
-    <p style="text-align: center; color: red;">Выполните вход, чтобы видеть всю эту информацию.</p>
+    <div class="jumbotron">
+      <h1 style="text-align: center;">Добро пожаловать в автоматизированную систему управления полочным пространством супермаркета!</h1>
+      <!-- <p>System status: </p>
+      {% if current_status.store.status == "fine" %}
+        <p style="color: green"><b>{{ current_status.store.data }}</b></p>
+      {% elif current_status.store.status == "warning" %}
+        <p style="color: orange"><b>{{ current_status.store.data }}</b></p>
+      {% else %}
+        <p style="color: red"><b>{{ current_status.store.data }}</b></p>
+      {% endif %}
+      {% if current_status.storage.status == "fine" %}
+        <p style="color: green"><b>{{ current_status.storage.data }}</b></p>
+      {% elif current_status.storage.status == "warning" %}
+        <p style="color: orange"><b>{{ current_status.storage.data }}</b></p>
+      {% else %}
+        <p style="color: red"><b>{{ current_status.storage.data }}</b></p>
+      {% endif %}
+      {% if current_status.equipment.status == "fine" %}
+        <p style="color: green"><b>{{ current_status.equipment.data }}</b></p>
+      {% elif current_status.equipment.status == "warning" %}
+        <p style="color: orange"><b>{{ current_status.equipment.data }}</b></p>
+      {% else %}
+        <p style="color: red"><b>{{ current_status.equipment.data }}</b></p>
+      {% endif %}
+      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+        <p>Documents awaiting signature:</p>
+      {% endif %} -->
+    </div>
   {% endif %}
-</div>
 
-<div class="block-clear">
-  <div class="block-content content-on-image">
-    <h1 style="text-align: center;">
-      Что же может эта система? Один бог знает, если честно. Я пока только начал ее разрабатывать, считай.
-      Скоро сдавать поэтому мне надо будет придумать еще пару страниц, аналитика, там, всякие подсчеты,
-      ну и прочие вещи, которые на самом деле не будут работать, а всего лишь захардкожены. Ну а что,
-      все мы в этом всем. Рабочую систему смысла делать не вижу, т.к. продавать эту лабуду не собираюсь,
-      кому она нужна. Все давно разрабатывают это на коммерческой основе большой командой. Разве что в
-      опенсурс можно отправить, но опять же, вам что, заняться больше нечем?
-    </h1>
+  <div class="card">
+    <img class="card-img-top" src="{% static 'images/home_1.png' %}" style="opacity: 0.2;">
+    <div class="card-img-overlay">
+      <div class="container h-100">
+        <div class="row align-items-center h-100">
+          <div class="col">
+            <h1 class="text-center">Управляйте продуктами с помощью удобного web-интерфейса</h1>
+            {% if user.is_authenticated %}
+              <br>
+              <a class="btn btn-warning btn-lg btn-block" href="/products">Управление продуктами</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% load static %}
-  <img src="{% static 'images/shelves.jpg' %}" class="width block-image" alt="Shelves">
-</div>
-
 {% endblock content %}

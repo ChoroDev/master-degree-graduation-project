@@ -35,7 +35,7 @@ class Failure(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=30, blank=True)
-    digit_code = models.BigIntegerField(null=True)
+    digit_code = models.CharField(max_length=9, blank=True)
     shelf_life = models.DateTimeField(null=True)
     width = models.FloatField(default=0.0)
     height = models.FloatField(default=0.0)

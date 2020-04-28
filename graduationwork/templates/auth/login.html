@@ -1,28 +1,35 @@
 {% extends "base.html" %}
 {% block title %}Авторизация{% endblock title %}
+
+{% block errorContent %}
+  {% if user.is_authenticated %}
+    <div class="jumbotron">
+      <h3 class="text-center" style="color: red;">Вы уже выполнили вход.</h3>
+    </div>
+  {% endif %}
+
+  {% if form.errors %}
+    <div class="jumbotron">
+      <h3 class="text-center" style="color: red;">Имя пользователя или пароль не распознаны. Попробуйте еще раз.</h3>
+    </div>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
-
-{% if form.errors %}
-  <p>Имя пользователя или пароль не распознаны. Попробуйте еще раз.</p>
-{% endif %}
-
-{% if user.is_authenticated %}
-  <p>Вы уже выполнили вход.</p>
-{% else %}
-  {% load static %}
-  <form method="post" action="{% url 'login' %}" id="login">
-    <link rel="stylesheet" href="{% static 'css/auth_styles.css' %}" />
-    {% csrf_token %}
-    <fieldset id="inputs">
-      <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
-      <div id="username">{{ form.username }}</div>
-      <label for="{{ form.password.id_for_label }}">Пароль:</label>
-      <div id="password">{{ form.password }}</div>
-    </fieldset>
-    <fieldset id="actions">
-      <input type="submit" id="submit" value="login">
-    </fieldset>
-  </form>
-{% endif %}
-
+  {% if not user.is_authenticated %}
+    {% load static %}
+    <form method="post" action="{% url 'login' %}" id="login">
+      <link rel="stylesheet" href="{% static 'css/auth_styles.css' %}" />
+      {% csrf_token %}
+      <fieldset id="inputs">
+        <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
+        <div id="username">{{ form.username }}</div>
+        <label for="{{ form.password.id_for_label }}">Пароль:</label>
+        <div id="password">{{ form.password }}</div>
+      </fieldset>
+      <fieldset id="actions">
+        <input type="submit" id="submit" value="login">
+      </fieldset>
+    </form>
+  {% endif %}
 {% endblock %}

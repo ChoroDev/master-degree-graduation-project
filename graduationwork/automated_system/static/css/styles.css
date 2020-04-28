@@ -1,127 +1,20 @@
-@use postcss-cssnext;
-
-/* header:~:start */
-
-.header {
-  z-index: 999999;
-  background-color: #fff;
-  padding-bottom: 1em;
-  padding-top: 1em;
-  position: sticky;
-  will-change: transform;
-  top: 0;
-  line-height: 1.75;
-  min-height: 100%;
-  border-bottom: solid rgba(202, 202, 202, 0.1) 2px;
-}
-
-.header::after {
-  bottom: 0;
-  box-shadow: 0 0.0625em 0.5em rgba(0, 0, 0, 0.3);
-  content: "";
-  left: 0;
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: opacity 0.3s;
-  z-index: -1;
-}
-
-.header.is-active::after {
-  opacity: 1;
-}
-
-.navigation a {
-  color: inherit;
-  display: block;
-  text-decoration: none;
-}
-
-.nav_item_active {
-  background-color: rgb(99, 99, 99);
-  color: #fff;
-  margin: 0.5em;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.navigation__list {
-  list-style: none;
-  margin: -0.5em;
-  padding: 0;
-}
-
-.navigation__list--inline {
-  display: flex;
-}
-
-.nav_item {
-  margin: 0.5em;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.nav_item:hover {
-  background-color: rgb(165, 165, 165);
-  color: white;
-}
-
-.auth-area {
-  float: right;
-}
-
-/* header:~:end */
-
 html {
   font-family: "Roboto", sans-serif;
 }
 
 body {
-  margin: 0;
+  margin-top: 90px;
 }
 
-.greeting {
-  font-size: 15px;
-  width: 200px;
-  margin-top: 0.65em;
-  margin-bottom: 0;
-  text-align: right;
-  color: rgb(209, 209, 209);
+.error-content-center {
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  color: red;
 }
 
-.block-clear {
-  position: relative;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  clear: both;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 1);
-  border: solid rgba(202, 202, 202, 0.1) 1px;
-}
-
-.block-content {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-.block-image {
-  opacity: 0.25;
-}
-
-.width {
-  width: 1000px;
-}
-
-.center {
-  margin: 0 auto;
-  padding-left: 10px;
-  overflow: hidden;
-  padding-right: 10px;
-}
-
-.content-on-image {
-  position: absolute;
-	top: 0;
-	left: 0;
+.jumbotron {
+  background-color: white;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
