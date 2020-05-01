@@ -4,6 +4,7 @@ from django.core import serializers
 from .forms import UserForm
 from .mgmt import db_manager
 from . import models
+from collections import defaultdict
 import json
 import math
 
@@ -19,23 +20,29 @@ def index(request):
 
 
 def store(request):
-    if request.method == 'POST':
-        print('custom post')
-        # db_manager.update_store_products(request.POST.get(
-        #     'product_id'), request.POST.get('storeProducts'))
-        print(request.POST.get('storeProducts'))
-        print(request.POST.get('storageProducts'))
-        # db_manager.update_storage_products(request.POST.get(
-        #     'product_id'), request.POST.get('storageProducts'))
-        return HttpResponse('')
-    else:
-        # storageProducts = db_manager.get_storage_products()
-        # storageProducts = serializers.serialize('json', storageProducts)
-        storageProducts = ""
-        # storeProducts = db_manager.get_store_products()
-        # storeProducts = serializers.serialize('json', storeProducts)
-        storeProducts = ""
-        return render(request, "store.html", {"store_is_active": is_active, "storageProducts": storageProducts, "storeProducts": storeProducts})
+    # if request.method == 'POST':
+    #     print('custom post')
+    #     db_manager.update_store_products(request.POST.get(
+    #         'product_id'), request.POST.get('storeProducts'))
+    #     print(request.POST.get('storeProducts'))
+    #     print(request.POST.get('storageProducts'))
+    #     db_manager.update_storage_products(request.POST.get(
+    #         'product_id'), request.POST.get('storageProducts'))
+    #     return HttpResponse('')
+    # else:
+    #     storageProducts = db_manager.get_storage_products()
+    #     storageProducts = serializers.serialize('json', storageProducts)
+    #     storageProducts = ""
+    #     storeProducts = db_manager.get_store_products()
+    #     storeProducts = serializers.serialize('json', storeProducts)
+    #     storeProducts = ""
+    #     return render(request, "store.html", {"store_is_active": is_active, "storageProducts": storageProducts, "storeProducts": storeProducts})
+
+    storeSectionsRaw = defaultdict(list)
+    for shelf in models.Store.objects.all():
+        storeSectionsRaw[shelf.section_name].append(shelf)
+    storeSections = storeSectionsRaw.values()
+    return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeSections})
 
 
 def storage(request):

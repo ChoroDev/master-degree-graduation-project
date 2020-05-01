@@ -65,7 +65,8 @@ class Store(models.Model):
     height = models.FloatField(default=0.0)
     length = models.FloatField(default=0.0)
     carrying_capacity = models.FloatField(default=0.0)
-    shelf_number = models.IntegerField(default=0)
+    shelf_name = models.CharField(max_length=30, blank=True)
+    section_name = models.CharField(max_length=30, blank=True)
     last_charge = models.DateTimeField(auto_now=True)
 
 

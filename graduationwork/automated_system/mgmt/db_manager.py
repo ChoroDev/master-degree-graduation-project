@@ -114,6 +114,90 @@ def fill_in_storage():
         product_count=40)
 
 
+def fill_in_store():
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Apple'),
+        product_count=1,
+        width=1000.0,
+        height=400.0,
+        length=500.0,
+        carrying_capacity=100000.0,
+        shelf_name='Apples_1',
+        section_name='Fruits_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Pineapple'),
+        product_count=1,
+        width=1000.0,
+        height=400.0,
+        length=500.0,
+        carrying_capacity=100000.0,
+        shelf_name='Pineapples_1',
+        section_name='Fruits_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Orange Juice'),
+        product_count=1,
+        width=2000.0,
+        height=300.0,
+        length=300.0,
+        carrying_capacity=200000.0,
+        shelf_name='Juices_1',
+        section_name='Drinks_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Milk'),
+        product_count=1,
+        width=1000.0,
+        height=300.0,
+        length=300.0,
+        carrying_capacity=50000.0,
+        shelf_name='Milk_1',
+        section_name='Milk_Products_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Milk'),
+        product_count=1,
+        width=1000.0,
+        height=300.0,
+        length=300.0,
+        carrying_capacity=50000.0,
+        shelf_name='Milk_2',
+        section_name='Milk_Products_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Carrot'),
+        product_count=1,
+        width=500.0,
+        height=400.0,
+        length=500.0,
+        carrying_capacity=50000.0,
+        shelf_name='Carrots_1',
+        section_name='Vegetables_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Cucumber'),
+        product_count=1,
+        width=1000.0,
+        height=500.0,
+        length=700.0,
+        carrying_capacity=100000.0,
+        shelf_name='Cucumbers_1',
+        section_name='Vegetables_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Potato'),
+        product_count=1,
+        width=1500.0,
+        height=400.0,
+        length=500.0,
+        carrying_capacity=150000.0,
+        shelf_name='Potatoes_1',
+        section_name='Vegetables_1')
+    models.Store.objects.create(
+        product=models.Product.objects.get(name='Tomato'),
+        product_count=1,
+        width=1000.0,
+        height=500.0,
+        length=700.0,
+        carrying_capacity=100000.0,
+        shelf_name='Tomatoes_1',
+        section_name='Vegetables_1')
+
+
 # def fill_in_cargo():
 #     models.CargoTransportation.objects.create(
 #         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=1)
