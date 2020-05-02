@@ -6,58 +6,64 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-    <div class="container-md">
-      {% for storageElem in storage %}
-        <div class="row border border-info bg-white my-2 p-2">
-          <div class="col-md-2 text-center">
-            {% with 'images/'|add:storageElem.product.name|add:'.png' as image_static %}
-              <img src="{% static image_static %}" class="img-fluid" style="height: 100px !important;">
-            {% endwith %}
-          </div>
-          <div class="col-md-10">
-            <div class="row">
-              <div class="col-md-10">
-                <b>Продукт: </b>"{{ storageElem.product.name }}"
-                <br>
-                <b>Дата последней поставки: </b>"{{ storageElem.delivery_timestamp }}"
-                <br>
-              </div>
+    {% if storage.count > 0 %}
+      <div class="container-md">
+        {% for storageElem in storage %}
+          <div class="row border border-info bg-white my-2 p-2">
+            <div class="col-md-2 text-center">
+              {% with 'images/'|add:storageElem.product.name|add:'.png' as image_static %}
+                <img src="{% static image_static %}" class="img-fluid" style="height: 100px !important;">
+              {% endwith %}
             </div>
-            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+            <div class="col-md-10">
               <div class="row">
-                <div class="col-md-6">
-                  <label for="product-count" class="font-weight-bold">Количество единиц продажи на складе: </label>
-                  <div class="input-group mb-1">
-                    <input type=text id="product-count" class="form-control input-sm" value="{{ storageElem.product_count }}">
-                    <div class="input-group-append">
-                      <button class="btn btn-success" type="button">Сохранить изменения</button>
+                <div class="col-md-10">
+                  <b>Продукт: </b>"{{ storageElem.product.name }}"
+                  <br>
+                  <b>Дата последней поставки: </b>"{{ storageElem.delivery_timestamp }}"
+                  <br>
+                </div>
+              </div>
+              {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="product-count" class="font-weight-bold">Количество единиц продажи на складе: </label>
+                    <div class="input-group mb-1">
+                      <input type=text id="product-count" class="form-control input-sm" value="{{ storageElem.product_count }}">
+                      <div class="input-group-append">
+                        <button class="btn btn-success" type="button">Сохранить изменения</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+                    <div class="input-group mb-1">
+                      <input type=text id="product-count" class="form-control input-sm" value="0">
+                      <div class="input-group-append">
+                        <button class="btn btn-success" type="button">Добавить</button>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
-                  <div class="input-group mb-1">
-                    <input type=text id="product-count" class="form-control input-sm" value="0">
-                    <div class="input-group-append">
-                      <button class="btn btn-success" type="button">Добавить</button>
-                    </div>
+              {% else %}
+                <b>Количество единиц продажи на складе: </b>{{ storageElem.product_count }}
+                <br>
+                <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+                <div class="input-group mb-1">
+                  <input type=text id="product-count" class="form-control input-sm" value="0">
+                  <div class="input-group-append">
+                    <button class="btn btn-success" type="button">Добавить</button>
                   </div>
                 </div>
-              </div>
-            {% else %}
-              <b>Количество единиц продажи на складе: </b>{{ storageElem.product_count }}
-              <br>
-              <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
-              <div class="input-group mb-1">
-                <input type=text id="product-count" class="form-control input-sm" value="0">
-                <div class="input-group-append">
-                  <button class="btn btn-success" type="button">Добавить</button>
-                </div>
-              </div>
-            {% endif %}
+              {% endif %}
+            </div>
           </div>
-        </div>
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="jumbotron border">
+        <h3 class="text-center" style="color: red;">Продукты не добавлены.</h3>
+      </div>
+    {% endif %}
   {% endif %}
 {% endblock content %}

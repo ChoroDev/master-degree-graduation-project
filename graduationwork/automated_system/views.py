@@ -41,8 +41,9 @@ def store(request):
     storeSectionsRaw = defaultdict(list)
     for shelf in models.Store.objects.all():
         storeSectionsRaw[shelf.section_name].append(shelf)
+    sectionsNames = storeSectionsRaw.keys()
     storeSections = storeSectionsRaw.values()
-    return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeSections})
+    return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeSections, "sectionsNames": sectionsNames})
 
 
 def storage(request):

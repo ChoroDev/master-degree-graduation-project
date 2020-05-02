@@ -1,30 +1,169 @@
 {% extends "base.html" %}
 {% load static %}
+{% load auth_filter %}
 
 {% block title %}Магазин{% endblock title %}
 
 {% block content %}
 
   {% if user.is_authenticated %}
-    {% for sectionSet in storeSections %}
-      {% for section in sectionSet %}
-        {{ section.product.name }}
-      {% endfor %}
-    {% endfor %}
-    <div class="jumbotron border">
-      <p>
-        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#elemToCollapse" aria-expanded="false" aria-controls="elemToCollapse">Стеллаж 1</button>
-      </p>
-      <div class="row">
-        <div class="col">
-          <div class="collapse multi-collapse" id="elemToCollapse">
-            <div class="card card-body">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+    {% if storeSections %}
+      <div class="jumbotron border pb-0 pt-5">
+        {% for sectionSet in storeSections %}
+          {% with sectionSet|first as sectionHeader %}
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">Название секции: </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" value="{{ sectionHeader.section_name }}">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                </div>
+              </div>
+            {% endif %}
+            <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#{{ sectionHeader.section_name }}" aria-expanded="false" aria-controls="{{ sectionHeader.section_name }}">Секция: {{ sectionHeader.section_name }}</button>
+              </div>
             </div>
-          </div>
-        </div>
+            <div class="row mt-3">
+              <div class="col">
+                <div class="collapse multi-collapse" id="{{ sectionHeader.section_name }}">
+                  <div class="card card-body pb-0">
+                    {% for section in sectionSet %}
+                      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                        <div class="input-group mb-3 mt-4">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="">Название полки: </span>
+                          </div>
+                          <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" value="{{ section.shelf_name }}">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                          </div>
+                        </div>
+                      {% endif %}
+                      <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#{{ section.shelf_name }}" aria-expanded="false" aria-controls="{{ section.shelf_name }}">Полка: {{ section.shelf_name }}</button>
+                      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                        <b class="my-3">Параметры полки {{ section.shelf_name }}:</b>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Ширина (мм): </span>
+                              </div>
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.width }}">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Высота (мм): </span>
+                              </div>
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.height }}">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Длина (мм): </span>
+                              </div>
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.length }}">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Макс. вес (г): </span>
+                              </div>
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.carrying_capacity }}">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                      <div class="row mt-3 mb-3">
+                        <div class="col">
+                          <div class="collapse multi-collapse" id="{{ section.shelf_name }}">
+                            <div class="card card-body">
+                              <div class="row bg-white my-2 p-2">
+                                <div class="col-md-2 text-center">
+                                  {% with 'images/'|add:section.product.name|add:'.png' as image_static %}
+                                    <img src="{% static image_static %}" class="img-fluid" style="height: 100px !important;">
+                                  {% endwith %}
+                                </div>
+                                <div class="col-md-10">
+                                  <div class="row">
+                                    <div class="col-md-10">
+                                      <b>Продукт: </b>"{{ section.product.name }}"
+                                      <br>
+                                      <b>Последнее заполнение: </b>"{{ section.last_charge }}"
+                                      <br>
+                                    </div>
+                                  </div>
+                                  {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <label for="product-count" class="font-weight-bold">Количество единиц продажи на полке: </label>
+                                        <div class="input-group mb-1">
+                                          <input type=text id="product-count" class="form-control input-sm" value="{{ section.product_count }}">
+                                          <div class="input-group-append">
+                                            <button class="btn btn-success" type="button">Сохранить изменения</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+                                        <div class="input-group mb-1">
+                                          <input type=text id="product-count" class="form-control input-sm" value="0">
+                                          <div class="input-group-append">
+                                            <button class="btn btn-success" type="button">Добавить</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  {% else %}
+                                    <b>Количество единиц продажи на полке: </b>{{ section.product_count }}
+                                    <br>
+                                    <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+                                    <div class="input-group mb-1">
+                                      <input type=text id="product-count" class="form-control input-sm" value="0">
+                                      <div class="input-group-append">
+                                        <button class="btn btn-success" type="button">Добавить</button>
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endwith %}
+          <br>
+        {% endfor %}
       </div>
-    </div>
+    {% else %}
+      <div class="jumbotron border">
+        <h3 class="text-center" style="color: red;">Продукты не добавлены.</h3>
+      </div>
+    {% endif %}
   {% endif %}
 
 {% endblock content %}

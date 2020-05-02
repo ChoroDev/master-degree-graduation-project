@@ -41,19 +41,17 @@
       <div class="container h-100">
         <div class="row align-items-center h-100">
           <div class="col">
-            <h1 class="text-center">Управляйте продуктами с помощью удобного web-интерфейса (для менеджера)</h1>
+            <h1 class="text-center">Просматривайте и изменяйте количество товаров на полках, а также меняйте параметры полок (для менеджера)</h1>
             {% if user.is_authenticated %}
-              {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-                <br>
-                <a class="btn btn-warning btn-lg btn-block" href="/products">Управление продуктами</a>
-              {% endif %}
+              <br>
+              <a class="btn btn-warning btn-lg btn-block" href="/store">Перейти в магазин</a>
             {% endif %}
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="card">
+  <div class="card mb-5">
     <img class="card-img-top" src="{% static 'images/home_2.png' %}" style="opacity: 0.1;">
     <div class="card-img-overlay">
       <div class="container h-100">
@@ -61,9 +59,25 @@
           <div class="col">
             <h1 class="text-center">Управляйте продуктами на складе: меняйте количество товаров на складе (для менеджера), добавляйте новые поставленные товары</h1>
             {% if user.is_authenticated %}
+              <br>
+              <a class="btn btn-warning btn-lg btn-block" href="/storage">Перейти на склад</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mb-5">
+    <img class="card-img-top" src="{% static 'images/home_3.png' %}" style="opacity: 0.1;">
+    <div class="card-img-overlay">
+      <div class="container h-100">
+        <div class="row align-items-center h-100">
+          <div class="col">
+            <h1 class="text-center">Управляйте продуктами с помощью удобного web-интерфейса (для менеджера)</h1>
+            {% if user.is_authenticated %}
               {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
                 <br>
-                <a class="btn btn-warning btn-lg btn-block" href="/storage">Перейти на склад</a>
+                <a class="btn btn-warning btn-lg btn-block" href="/products">Управление продуктами</a>
               {% endif %}
             {% endif %}
           </div>
