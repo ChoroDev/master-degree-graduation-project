@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% load auth_filter %}
+{% block title %}Профиль сотрудника{% endblock title %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="jumbotron border">
+      Имя: {{ user.first_name }}, <br>Фамилия: {{ user.last_name }}, <br>Группа: {{ userGroup }}
+    </div>
+  {% endif %}
+{% endblock content %}

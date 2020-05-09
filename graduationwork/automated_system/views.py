@@ -76,3 +76,19 @@ def products(request):
             "rowsCount": rowsCount
         }
     )
+
+
+def profile(request):
+    userGroups = list()
+    for group in request.user.groups.all():
+        userGroups.append(group.name)
+    userGroup = "Персонал"
+    if userGroups:
+        if userGroups[0] == "SystemAdministrators":
+            userGroup = "Системные администраторы"
+        elif userGroups[0] == "Management":
+            userGroup = "Менеджеры"
+        else:
+            userGroup = userGroups[0]
+
+    return render(request, "profile.html", {"profile_is_active": is_active, "userGroup": userGroup})

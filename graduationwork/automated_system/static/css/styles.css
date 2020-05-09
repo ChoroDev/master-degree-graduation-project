@@ -1,5 +1,33 @@
-html {
-  font-family: "Roboto", sans-serif;
+@media (max-width: 767px) {
+  html {
+    font-size: 8px;
+  }
+  .card-img-oversize-defense {
+    visibility: hidden;
+  }
+  .card-content-oversize-defense {
+    height: 250px;
+    background-color: rgb(255, 255, 255);
+  }
+}
+
+/* на sm */
+@media (min-width: 768px) {
+  html {
+    font-size: 10px;
+  }
+}
+/* на md */
+@media (min-width: 992px) {
+  html {
+    font-size: 12px;
+  }
+}
+/* на lg */
+@media (min-width: 1200px) {
+  html {
+    font-size: 14px;
+  }
 }
 
 body {

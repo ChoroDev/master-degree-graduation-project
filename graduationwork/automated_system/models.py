@@ -1,17 +1,34 @@
 from django.db import models
+from django.contrib.auth.models import User as BaseUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(models.Model):
-    login = models.CharField(max_length=30)
-    password = models.CharField(max_length=100)
-    email = models.CharField(max_length=100, blank=True)
+    user = models.OneToOneField(
+        BaseUser, parent_link=True, related_name='profile', null=True, on_delete=models.CASCADE)
     last_access = models.DateTimeField(auto_now=True)
+    login = models.CharField(max_length=30)
     USER_GROUPS = (
-        ('P', 'personel'),
-        ('M', 'management'),
-        ('A', 'admin')
+        ('P', 'Personel'),
+        ('M', 'Management'),
+        ('A', 'SystemAdministrators')
     )
     group = models.CharField(max_length=1, choices=USER_GROUPS, default='P')
+
+
+@receiver(post_save, sender=BaseUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        User.objects.create(user=instance)
+
+
+@receiver(post_save, sender=BaseUser)
+def save_profile(sender, instance, created, **kwargs):
+    profile = User.objects.get_or_create(user=instance)[0]
+    profile.login = instance.username
+    profile.last_access = instance.last_login
+    profile.save()
 
 
 class Statistics(models.Model):

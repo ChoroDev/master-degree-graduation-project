@@ -37,16 +37,19 @@
             </li>
           {% endif %}
           <li class="nav-item {{ about_is_active|default:"" }}">
-            <a class="nav-link" href="/about">О нас</span></a>
+            <a class="nav-link" href="/about">О&nbsp;нас</span></a>
           </li>
           <li class="nav-item {{ contact_is_active|default:"" }}">
             <a class="nav-link" href="/contact">Контакты</span></a>
           </li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="navbar-nav navbar-right">
           {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link disabled">Привет, {{ user.get_username }}!</a>
+              <span class="navbar-text">Привет, </span>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="/profile">{{ user.get_username }}!</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/logout">Выйти</a>
