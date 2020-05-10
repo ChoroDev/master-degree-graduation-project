@@ -6,7 +6,67 @@
 {% block content %}
   {% if user.is_authenticated %}
     <div class="jumbotron border">
-      Имя: {{ user.first_name }}, <br>Фамилия: {{ user.last_name }}, <br>Группа: {{ userGroup }}
+      <div class="container-md">
+        <div class="row">
+          <div class="col-md">
+            <label for="first_name" class="font-weight-bold">Имя: </label>
+            <div class="input-group mb-1">
+              <input type=text id="first_name" class="form-control input-sm" value="{{ user.first_name }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <label for="last_name" class="font-weight-bold">Фамилия: </label>
+            <div class="input-group mb-1">
+              <input type=text id="last_name" class="form-control input-sm" value="{{ user.last_name }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <label for="email" class="font-weight-bold">E-mail: </label>
+            <div class="input-group mb-1">
+              <input type=text id="email" class="form-control input-sm" value="{{ user.email }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              <label for="group" class="font-weight-bold">Группа: </label>
+              <div class="input-group mb-1">
+                <input type=text id="group" class="form-control input-sm" value="{{ userGroup }}">
+              </div>
+            {% else %}
+              <b>Группа: </b>{{ userGroup }}
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              <b>Распределение задач:</b><br>
+            {% else %}
+              <b>Назначенные задания:</b><br>
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              <b>Распределение полок:</b><br>
+            {% else %}
+              <b>Назначенные полки:</b><br>
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <button class="btn btn-success float-right" type="button">Сохранить изменения</button>
+          </div>
+        </div>
+      </div>
     </div>
   {% endif %}
 {% endblock content %}

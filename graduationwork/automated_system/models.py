@@ -7,8 +7,6 @@ from django.dispatch import receiver
 class User(models.Model):
     user = models.OneToOneField(
         BaseUser, parent_link=True, related_name='profile', null=True, on_delete=models.CASCADE)
-    last_access = models.DateTimeField(auto_now=True)
-    login = models.CharField(max_length=30)
     USER_GROUPS = (
         ('P', 'Personel'),
         ('M', 'Management'),
@@ -26,8 +24,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=BaseUser)
 def save_profile(sender, instance, created, **kwargs):
     profile = User.objects.get_or_create(user=instance)[0]
-    profile.login = instance.username
-    profile.last_access = instance.last_login
     profile.save()
 
 
@@ -77,6 +73,7 @@ class Sales(models.Model):
 
 class Store(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product_count = models.IntegerField(default=0)
     width = models.FloatField(default=0.0)
     height = models.FloatField(default=0.0)
