@@ -43,21 +43,117 @@
             {% endif %}
           </div>
         </div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-md">
             {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-              <b>Распределение задач:</b><br>
+              <b>Распределение заданий:</b>
+              {% if unassignedTasks %}
+                <div class="jumbotron my-1 px-3 py-1">
+                  <div class="row mb-2">
+                    <div class="col-md">
+                      <b>Нераспределенные задачи:</b>
+                    </div>
+                  </div>
+                  {% for unassignedTask in unassignedTasks %}
+                    <div class="row">
+                      <div class="col-md">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
+                          </div>
+                        </div>
+                        <div class="row my-2">
+                          <div class="col">
+                            <div class="collapse multi-collapse" id="unassignedTask_{{ unassignedTask.id }}">
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <b>Возможная причина: </b>{{ unassignedTask.possible_cause }}
+                                </div>
+                                <div class="col-md-4">
+                                  <b>Серьезность ошибки: </b>
+                                  {% if unassignedTask.severity < 2 %}
+                                    <font color=green><b>{{ unassignedTask.severity }}</b></font>
+                                  {% elif unassignedTask.severity < 4 %}
+                                    <font color=orange><b>{{ unassignedTask.severity }}</b></font>
+                                  {% else %}
+                                    <font color=red><b>{{ unassignedTask.severity }}</b></font>
+                                  {% endif %}
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <b>Возможное решение: </b>{{ unassignedTask.possible_solution}}
+                                </div>
+                                <div class="col-md-4">
+                                  <b>Статус: </b>
+                                  {% if unassignedTask.is_solved %}
+                                    <font color=green><b>решена</b></font>
+                                  {% else %}
+                                    <font color=red><b>не решена</b></font>
+                                  {% endif %}
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <b>Дата возникновения: </b>{{ unassignedTask.timestamp }}
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="dropdown">
+                                    <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ unassignedTask.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить задачу</button>
+                                    <div class="dropdown-menu" aria-labelledby="assign_{{ unassignedTask.id }}">
+                                      <a class="dropdown-item" href="#">Я</a>
+                                      <a class="dropdown-item" href="#">Мы</a>
+                                      <a class="dropdown-item" href="#">Ты</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% if tasks %}
+
+              {% endif %}
+              {% if not tasks and not unassignedTasks %}
+                <font color=green><b>все задачи выполнены.</b></font>
+              {% endif %}
             {% else %}
-              <b>Назначенные задания:</b><br>
+              <b>Задачи:</b>
+              {% if tasks %}
+                {% comment %} <div class="row">
+                  <div class="col-md">
+                  </div>
+                </div> {% endcomment %}
+                {{ tasks }}
+              {% else %}
+                нет задач.
+              {% endif %}
             {% endif %}
           </div>
         </div>
         <div class="row">
           <div class="col-md">
             {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-              <b>Распределение полок:</b><br>
+              <b>Распределение полок:</b>
+              {% if shelves %}
+              {% else %}
+                нет доступных полок.
+              {% endif %}
             {% else %}
-              <b>Назначенные полки:</b><br>
+              <b>Назначенные полки:</b>
+              {% if shelves %}
+                {% comment %} <div class="row">
+                  <div class="col-md">
+                  </div>
+                </div> {% endcomment %}
+              {% else %}
+                нет назначенных полок.
+              {% endif %}
             {% endif %}
           </div>
         </div>

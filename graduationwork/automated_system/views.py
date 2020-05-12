@@ -83,12 +83,43 @@ def profile(request):
     for group in request.user.groups.all():
         userGroups.append(group.name)
     userGroup = "Персонал"
+
+    tasksByUsersDict = defaultdict(list)
+    unassignedTasks = list()
+    for task in models.Failure.objects.all():
+        if task.assignee:
+            tasksByUsersDict[task.assignee.id].append(task)
+        else:
+            unassignedTasks.append(task)
+    tasks = tasksByUsersDict
+
+    shelvesByUsersDict = defaultdict(list)
+    unassignedShelves = list()
+    for shelf in models.Store.objects.all():
+        if shelf.user:
+            shelvesByUsersDict[shelf.user.id].append(shelf)
+        else:
+            unassignedShelves.append(shelf)
+    shelves = shelvesByUsersDict
+
     if userGroups:
         if userGroups[0] == "SystemAdministrators":
             userGroup = "Системные администраторы"
         elif userGroups[0] == "Management":
             userGroup = "Менеджеры"
         else:
-            userGroup = userGroups[0]
+            userGroup = "Персонал"
 
-    return render(request, "profile.html", {"profile_is_active": is_active, "userGroup": userGroup})
+    return render(
+        request,
+        "profile.html",
+        {
+            "profile_is_active": is_active,
+            "userGroup": userGroup,
+            "tasks": tasks,
+            "unassignedTasks": unassignedTasks,
+            "shelves": shelves,
+            "unassignedShelves": unassignedShelves,
+            "availableUsers": models.User.objects.all()
+        }
+    )

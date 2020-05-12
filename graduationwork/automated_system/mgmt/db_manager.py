@@ -198,6 +198,38 @@ def fill_in_store():
         section_name='Vegetables_1')
 
 
+def fill_in_failures():
+    models.Failure.objects.create(
+        text="Shelf should be filled in by 10 products. Shelf name: Potatoes_1, section name: Vegetables_1.",
+        severity=4,
+        possible_cause="Customers bought a lot of products from that shelf.",
+        possible_solution="Fill shelf in."
+    )
+    models.Failure.objects.create(
+        text="Shelf should be filled in by 5 products. Shelf name: Cucumbers_1, section name: Vegetables_1.",
+        severity=3,
+        possible_cause="Customers bought a lot of products from that shelf.",
+        possible_solution="Fill shelf in."
+    )
+    models.Failure.objects.create(
+        text="2 products should be transferred to the storage. Shelf name: Juices_1, section name: Drinks_1.",
+        possible_cause="Customers didn't buy a lot of products from that shelf.",
+        possible_solution="Transfer products to the storage."
+    )
+    models.Failure.objects.create(
+        text="Shelf should be filled in by 9 products. Shelf name: Milk_1, section name: Milk_Products_1.",
+        severity=3,
+        possible_cause="Customers bought a lot of products from that shelf.",
+        possible_solution="Fill shelf in."
+    )
+    models.Failure.objects.create(
+        text="Number of products should be clarified. Shelf name: Potatoes_1, section name: Vegetables_1",
+        severity=2,
+        possible_cause="A lot of time has passed since the last update.",
+        possible_solution="Clarify the number of products."
+    )
+
+
 # def fill_in_cargo():
 #     models.CargoTransportation.objects.create(
 #         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=1)
