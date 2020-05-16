@@ -35,6 +35,9 @@
             <li class="nav-item {{ storage_is_active|default:"" }}">
               <a class="nav-link" href="/storage">Склад</span></a>
             </li>
+            <li class="nav-item {{ failures_is_active|default:"" }}">
+              <a class="nav-link" href="/failures">Задачи</span></a>
+            </li>
           {% endif %}
           <li class="nav-item {{ about_is_active|default:"" }}">
             <a class="nav-link" href="/about">О&nbsp;нас</span></a>

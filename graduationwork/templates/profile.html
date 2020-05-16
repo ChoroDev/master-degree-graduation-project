@@ -4,6 +4,7 @@
 {% block title %}Профиль сотрудника{% endblock title %}
 
 {% block content %}
+
   {% if user.is_authenticated %}
     <div class="jumbotron border">
       <div class="container-md">
@@ -397,4 +398,5 @@
       </div>
     </div>
   {% endif %}
+
 {% endblock content %}

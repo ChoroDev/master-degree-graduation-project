@@ -145,3 +145,7 @@ def profile(request):
             "availableUsers": models.BaseUser.objects.all().select_related('profile')
         }
     )
+
+
+def failures(request):
+    return render(request, "failures.html", {"failures_is_active": is_active})

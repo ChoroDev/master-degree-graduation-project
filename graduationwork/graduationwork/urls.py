@@ -36,4 +36,5 @@ urlpatterns = [
         template_name='index.html'), name='logout'),
     path('products', views.products, name='products'),
     path('profile', views.profile, name='profile'),
+    path('failures', views.failures, name='failures'),
 ]

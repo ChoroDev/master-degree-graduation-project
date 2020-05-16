@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% load auth_filter %}
+
+{% block title %}Задачи{% endblock title %}
+
+{% block content %}
+
+  {% if user.is_authenticated %}
+    <div class="jumbotron border">
+      {% if unsolvedTasks %}
+        <div class="container-md">
+          <div class="row">
+            <div class="col-md">
+              Нерешенные задачи, ахах
+            </div>
+          </div>
+        </div>
+      {% elif solvedTasks %}
+        <div class="container-md">
+          <div class="row">
+            <div class="col-md">
+              Решенные задачи, ахах
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <h3 class="text-center" style="color: red;">Нет доступных задач.</h3>
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% endblock content %}
