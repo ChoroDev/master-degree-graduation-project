@@ -5,7 +5,6 @@
 {% block title %}Магазин{% endblock title %}
 
 {% block content %}
-
   {% if user.is_authenticated %}
     {% if storeSections %}
       <div class="jumbotron border pb-0 pt-5">
@@ -161,7 +160,11 @@
       </div>
     {% else %}
       <div class="jumbotron border">
-        <h3 class="text-center" style="color: red;">Продукты не добавлены.</h3>
+        {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+          <h3 class="text-center" style="color: red;">Полки не определены.</h3>
+        {% else %}
+          <h3 class="text-center" style="color: red;">Нет полок, назначенных на вас.</h3>
+        {% endif %}
       </div>
     {% endif %}
   {% endif %}
