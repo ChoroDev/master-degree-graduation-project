@@ -83,25 +83,6 @@ def profile(request):
     for group in request.user.groups.all():
         userGroups.append(group.name)
     userGroup = "Персонал"
-
-    tasksByUsersDict = defaultdict(list)
-    unassignedTasks = list()
-    for task in models.Failure.objects.all():
-        if task.assignee:
-            tasksByUsersDict[task.assignee.id].append(task)
-        else:
-            unassignedTasks.append(task)
-    tasks = tasksByUsersDict
-
-    shelvesByUsersDict = defaultdict(list)
-    unassignedShelves = list()
-    for shelf in models.Store.objects.all():
-        if shelf.user:
-            shelvesByUsersDict[shelf.user.id].append(shelf)
-        else:
-            unassignedShelves.append(shelf)
-    shelves = shelvesByUsersDict
-
     if userGroups:
         if userGroups[0] == "SystemAdministrators":
             userGroup = "Системные администраторы"
@@ -109,6 +90,32 @@ def profile(request):
             userGroup = "Менеджеры"
         else:
             userGroup = "Персонал"
+
+    tasksByUsersDict = defaultdict(list)
+    unassignedTasks = list()
+    for task in models.Failure.objects.all():
+        if task.assignee:
+            if userGroup == "Персонал":
+                if task.assignee == request.user.profile:
+                    tasksByUsersDict[task.assignee.id].append(task)
+            else:
+                tasksByUsersDict[task.assignee.id].append(task)
+        else:
+            unassignedTasks.append(task)
+    tasks = tasksByUsersDict.values()
+
+    shelvesByUsersDict = defaultdict(list)
+    unassignedShelves = list()
+    for shelf in models.Store.objects.all():
+        if shelf.user:
+            if userGroup == "Персонал":
+                if task.assignee == request.user.profile:
+                    shelvesByUsersDict[shelf.user.id].append(shelf)
+            else:
+                shelvesByUsersDict[shelf.user.id].append(shelf)
+        else:
+            unassignedShelves.append(shelf)
+    shelves = shelvesByUsersDict.values()
 
     return render(
         request,
@@ -120,6 +127,6 @@ def profile(request):
             "unassignedTasks": unassignedTasks,
             "shelves": shelves,
             "unassignedShelves": unassignedShelves,
-            "availableUsers": models.User.objects.all()
+            "availableUsers": models.BaseUser.objects.all().select_related('profile')
         }
     )

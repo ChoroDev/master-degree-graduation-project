@@ -228,36 +228,20 @@ def fill_in_failures():
         possible_cause="A lot of time has passed since the last update.",
         possible_solution="Clarify the number of products."
     )
-
-
-# def fill_in_cargo():
-#     models.CargoTransportation.objects.create(
-#         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=1)
-#     models.CargoTransportation.objects.create(
-#         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=2)
-#     models.CargoTransportation.objects.create(
-#         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=5)
-#     models.CargoTransportation.objects.create(
-#         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=6)
-#     models.CargoTransportation.objects.create(
-#         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=7)
-#     models.CargoTransportation.objects.create(
-#         company_name="Food Delivery", delivered_count=500, delivery_date=datetime.now(), product_id=8)
-#     models.CargoTransportation.objects.create(
-#         company_name="Juicy Liquids", delivered_count=500, delivery_date=datetime.now(), product_id=3)
-#     models.CargoTransportation.objects.create(
-#         company_name="Happy Milk Farm", delivered_count=500, delivery_date=datetime.now(), product_id=4)
-
-
-# def fill_in_store():
-#     models.Store.objects.create(shelf_number=1, product_id=1)
-#     models.Store.objects.create(shelf_number=2, product_id=2)
-#     models.Store.objects.create(shelf_number=3, product_id=3)
-#     models.Store.objects.create(shelf_number=4, product_id=4)
-#     models.Store.objects.create(shelf_number=5, product_id=5)
-#     models.Store.objects.create(shelf_number=6, product_id=6)
-#     models.Store.objects.create(shelf_number=7, product_id=7)
-#     models.Store.objects.create(shelf_number=8, product_id=8)
+    models.Failure.objects.create(
+        text="Number of products should be clarified. Shelf name: Tomatoes_1, section name: Vegetables_1",
+        severity=2,
+        possible_cause="A lot of time has passed since the last update.",
+        possible_solution="Clarify the number of products.",
+        assignee=models.User.objects.get(id=7)
+    )
+    models.Failure.objects.create(
+        text="Shelf should be filled in by 5 products. Shelf name: Milk_2, section name: Milk_Products_1.",
+        severity=3,
+        possible_cause="A lot of time has passed since the last update.",
+        possible_solution="Clarify the number of products.",
+        assignee=models.User.objects.get(id=6)
+    )
 
 
 # def fill_in_staff():

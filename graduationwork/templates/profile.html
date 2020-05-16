@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-md">
             {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
               <label for="group" class="font-weight-bold">Группа: </label>
@@ -49,26 +49,24 @@
               <b>Распределение заданий:</b>
               {% if unassignedTasks %}
                 <div class="jumbotron my-1 px-3 py-1">
-                  <div class="row mb-2">
-                    <div class="col-md">
-                      <b>Нераспределенные задачи:</b>
-                    </div>
-                  </div>
+                  <div class="row mb-2"><div class="col-md"><b>Нераспределенные задачи:</b></div></div>
                   {% for unassignedTask in unassignedTasks %}
                     <div class="row">
                       <div class="col-md">
                         <div class="row">
                           <div class="col-md-12">
-                            <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
+                            {% if unassignedTask.is_solved %}
+                              <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
+                            {% else %}
+                              <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
+                            {% endif %}
                           </div>
                         </div>
                         <div class="row my-2">
                           <div class="col">
                             <div class="collapse multi-collapse" id="unassignedTask_{{ unassignedTask.id }}">
                               <div class="row">
-                                <div class="col-md-8">
-                                  <b>Возможная причина: </b>{{ unassignedTask.possible_cause }}
-                                </div>
+                                <div class="col-md-8"><b>Возможная причина: </b>{{ unassignedTask.possible_cause }}</div>
                                 <div class="col-md-4">
                                   <b>Серьезность ошибки: </b>
                                   {% if unassignedTask.severity < 2 %}
@@ -81,9 +79,7 @@
                                 </div>
                               </div>
                               <div class="row">
-                                <div class="col-md-8">
-                                  <b>Возможное решение: </b>{{ unassignedTask.possible_solution}}
-                                </div>
+                                <div class="col-md-8"><b>Возможное решение: </b>{{ unassignedTask.possible_solution}}</div>
                                 <div class="col-md-4">
                                   <b>Статус: </b>
                                   {% if unassignedTask.is_solved %}
@@ -94,16 +90,17 @@
                                 </div>
                               </div>
                               <div class="row">
-                                <div class="col-md-8">
-                                  <b>Дата возникновения: </b>{{ unassignedTask.timestamp }}
-                                </div>
+                                <div class="col-md-8"><b>Дата возникновения: </b>{{ unassignedTask.timestamp }}</div>
                                 <div class="col-md-4">
                                   <div class="dropdown">
                                     <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ unassignedTask.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить задачу</button>
                                     <div class="dropdown-menu" aria-labelledby="assign_{{ unassignedTask.id }}">
-                                      <a class="dropdown-item" href="#">Я</a>
-                                      <a class="dropdown-item" href="#">Мы</a>
-                                      <a class="dropdown-item" href="#">Ты</a>
+                                      {% for user in availableUsers %}
+                                        {% if user.profile.group == "P" %}
+                                          <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                        {% endif %}
+                                      {% endfor %}
+                                      <a class="dropdown-item" href="#">Отметить как решенную</a>
                                     </div>
                                   </div>
                                 </div>
@@ -117,21 +114,148 @@
                 </div>
               {% endif %}
               {% if tasks %}
-
+                {% for tasksList in tasks %}
+                  <div class="jumbotron my-1 px-3 py-1">
+                    <div class="row mb-2">
+                      <div class="col-md">
+                        {% with tasksList|first as firstTask %}
+                          {% for user in availableUsers %}
+                            {% if user.profile == firstTask.assignee %}
+                              <b>Задачи сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
+                            {% endif %}
+                          {% endfor %}
+                        {% endwith %}
+                      </div>
+                    </div>
+                    {% for task in tasksList %}
+                      <div class="row">
+                        <div class="col-md">
+                          <div class="row">
+                            <div class="col-md-12">
+                              {% if task.is_solved %}
+                                <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                              {% else %}
+                                <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="row my-2">
+                            <div class="col">
+                              <div class="collapse multi-collapse" id="task_{{ task.id }}">
+                                <div class="row">
+                                  <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
+                                  <div class="col-md-4">
+                                    <b>Серьезность ошибки: </b>
+                                    {% if task.severity < 2 %}
+                                      <font color=green><b>{{ task.severity }}</b></font>
+                                    {% elif task.severity < 4 %}
+                                      <font color=orange><b>{{ task.severity }}</b></font>
+                                    {% else %}
+                                      <font color=red><b>{{ task.severity }}</b></font>
+                                    {% endif %}
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
+                                  <div class="col-md-4">
+                                    <b>Статус: </b>
+                                    {% if task.is_solved %}
+                                      <font color=green><b>решена</b></font>
+                                    {% else %}
+                                      <font color=red><b>не решена</b></font>
+                                    {% endif %}
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
+                                  <div class="col-md-4">
+                                    <div class="dropdown">
+                                      <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
+                                      <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
+                                        {% for user in availableUsers %}
+                                          {% if user.profile.group == "P" and not user.profile == task.assignee %}
+                                            <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                          {% endif %}
+                                        {% endfor %}
+                                        <a class="dropdown-item" href="#">Отметить как решенную</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
               {% endif %}
               {% if not tasks and not unassignedTasks %}
                 <font color=green><b>все задачи выполнены.</b></font>
               {% endif %}
             {% else %}
-              <b>Задачи:</b>
               {% if tasks %}
-                {% comment %} <div class="row">
-                  <div class="col-md">
-                  </div>
-                </div> {% endcomment %}
-                {{ tasks }}
+                <p class="mb-2"><b>Задачи:</b></p>
+                {% for tasksList in tasks %}
+                  {% with tasksList|first as firstTask %}
+                    {% if request.user.profile == firstTask.assignee %}
+                      {% for task in tasksList %}
+                        <div class="row">
+                          <div class="col-md">
+                            <div class="row">
+                              <div class="col-md-12">
+                                {% if task.is_solved %}
+                                  <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                                {% else %}
+                                  <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="row my-2">
+                              <div class="col">
+                                <div class="collapse multi-collapse" id="task_{{ task.id }}">
+                                  <div class="row">
+                                    <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
+                                    <div class="col-md-4">
+                                      <b>Серьезность ошибки: </b>
+                                      {% if task.severity < 2 %}
+                                        <font color=green><b>{{ task.severity }}</b></font>
+                                      {% elif task.severity < 4 %}
+                                        <font color=orange><b>{{ task.severity }}</b></font>
+                                      {% else %}
+                                        <font color=red><b>{{ task.severity }}</b></font>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
+                                    <div class="col-md-4">
+                                      <b>Статус: </b>
+                                      {% if task.is_solved %}
+                                        <font color=green><b>решена</b></font>
+                                      {% else %}
+                                        <font color=red><b>не решена</b></font>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
+                                    <div class="col-md-4">
+                                      <button class="btn-sm btn-block btn-primary" type="button">Отметить как решенную</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                {% endfor %}
               {% else %}
-                нет задач.
+                <b>Задачи: </b>нет задач.
               {% endif %}
             {% endif %}
           </div>
@@ -140,19 +264,127 @@
           <div class="col-md">
             {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
               <b>Распределение полок:</b>
+              {% if unassignedShelves %}
+                <div class="jumbotron my-1 px-3 py-1">
+                  <div class="row mb-2"><div class="col-md"><b>Свободные полки:</b></div></div>
+                  {% for unassignedShelf in unassignedShelves %}
+                    <div class="row">
+                      <div class="col-md">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#unassignedShelf_{{ unassignedShelf.id }}" aria-expanded="false" aria-controls="unassignedShelf_{{ unassignedShelf.id }}">{{ unassignedShelf.shelf_name }}</button>
+                          </div>
+                        </div>
+                        <div class="row my-2">
+                          <div class="col">
+                            <div class="collapse multi-collapse" id="unassignedShelf_{{ unassignedShelf.id }}">
+                              <div class="row">
+                                <div class="col-md-4"><b>Секция: </b>{{ unassignedShelf.section_name }}</div>
+                                <div class="col-md-4"><b>Количество продуктов: </b>{{ unassignedShelf.product_count }}</div>
+                                <div class="col-md-4">
+                                  <div class="dropdown">
+                                    <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ unassignedTask.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить ответственного</button>
+                                    <div class="dropdown-menu" aria-labelledby="assign_{{ unassignedTask.id }}">
+                                      {% for user in availableUsers %}
+                                        {% if user.profile.group == "P" %}
+                                          <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                        {% endif %}
+                                      {% endfor %}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
               {% if shelves %}
-              {% else %}
+                {% for shelvesList in shelves %}
+                  <div class="jumbotron my-1 px-3 py-1">
+                    <div class="row mb-2">
+                      <div class="col-md">
+                        {% with shelvesList|first as firstShelf %}
+                          {% for user in availableUsers %}
+                            {% if user.profile == firstShelf.user %}
+                              <b>Полки сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
+                            {% endif %}
+                          {% endfor %}
+                        {% endwith %}
+                      </div>
+                    </div>
+                    {% for shelf in shelvesList %}
+                      <div class="row">
+                        <div class="col-md">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#shelf_{{ shelf.id }}" aria-expanded="false" aria-controls="shelf_{{ shelf.id }}">{{ shelf.shelf_name }}</button>
+                            </div>
+                          </div>
+                          <div class="row my-2">
+                            <div class="col">
+                              <div class="collapse multi-collapse" id="shelf_{{ shelf.id }}">
+                                <div class="row">
+                                  <div class="col-md-4"><b>Секция: </b>{{ shelf.section_name }}</div>
+                                  <div class="col-md-4"><b>Количество продуктов: </b>{{ shelf.product_count }}</div>
+                                  <div class="col-md-4">
+                                    <div class="dropdown">
+                                      <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ shelf.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить ответственного</button>
+                                      <div class="dropdown-menu" aria-labelledby="assign_{{ shelf.id }}">
+                                        {% for user in availableUsers %}
+                                          {% if user.profile.group == "P" and not user.profile == shelf.user %}
+                                            <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              {% endif %}
+              {% if not unassignedShelves and not shelves %}
                 нет доступных полок.
               {% endif %}
             {% else %}
-              <b>Назначенные полки:</b>
               {% if shelves %}
-                {% comment %} <div class="row">
-                  <div class="col-md">
-                  </div>
-                </div> {% endcomment %}
+                <p class="mb-2"><b>Назначенные полки:</b></p>
+                {% for shelvesList in shelves %}
+                  {% with shelvesList|first as firstShelf %}
+                    {% if request.user.profile == firstShelf.user %}
+                      {% for shelf in shelvesList %}
+                        <div class="row">
+                          <div class="col-md">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#shelf_{{ shelf.id }}" aria-expanded="false" aria-controls="shelf_{{ shelf.id }}">{{ shelf.shelf_name }}</button>
+                              </div>
+                            </div>
+                            <div class="row my-2">
+                              <div class="col">
+                                <div class="collapse multi-collapse" id="shelf_{{ shelf.id }}">
+                                  <div class="row"><div class="col-md-12"><b>Секция: </b>{{ shelf.section_name }}</div></div>
+                                  <div class="row"><div class="col-md-12"><b>Количество продуктов: </b>{{ shelf.product_count }}</div></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                {% endfor %}
               {% else %}
-                нет назначенных полок.
+                <b>Назначенные полки: </b>нет назначенных полок.
               {% endif %}
             {% endif %}
           </div>

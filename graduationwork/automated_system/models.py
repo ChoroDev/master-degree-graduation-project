@@ -24,6 +24,16 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=BaseUser)
 def save_profile(sender, instance, created, **kwargs):
     profile = User.objects.get_or_create(user=instance)[0]
+    userGroups = list()
+    for group in instance.groups.all():
+        userGroups.append(group.name)
+    if userGroups:
+        if userGroups[0] == "SystemAdministrators":
+            profile.group = 'A'
+        elif userGroups[0] == "Management":
+            profile.group = 'M'
+        else:
+            profile.group = 'P'
     profile.save()
 
 
