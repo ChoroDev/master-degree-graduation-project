@@ -148,4 +148,20 @@ def profile(request):
 
 
 def failures(request):
-    return render(request, "failures.html", {"failures_is_active": is_active})
+    solvedTasks = list()
+    unsolvedTasks = list()
+    for task in models.Failure.objects.all():
+        if not task.is_solved:
+            unsolvedTasks.append(task)
+        else:
+            solvedTasks.append(task)
+
+    return render(
+        request,
+        "failures.html",
+        {
+            "failures_is_active": is_active,
+            "solvedTasks": solvedTasks,
+            "unsolvedTasks": unsolvedTasks
+        }
+    )

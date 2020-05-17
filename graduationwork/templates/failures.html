@@ -8,23 +8,97 @@
 
   {% if user.is_authenticated %}
     <div class="jumbotron border">
-      {% if unsolvedTasks %}
-        <div class="container-md">
-          <div class="row">
-            <div class="col-md">
-              Нерешенные задачи, ахах
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#unsolvedTasks" aria-expanded="false" aria-controls="unsolvedTasks">Нерешенные задачи</button>
+        </div>
+      </div>
+      <div class="container-md">
+        {% if unsolvedTasks %}
+          <div class="row mt-3">
+            <div class="col">
+              <div class="collapse multi-collapse" id="unsolvedTasks">
+                {% for task in unsolvedTasks %}
+                  <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                    </div>
+                  </div>
+                  <div class="row my-2">
+                    <div class="col">
+                      <div class="collapse multi-collapse" id="task_{{ task.id }}">
+                        <div class="row">
+                          <div class="col">
+                            {{ task }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
             </div>
           </div>
-        </div>
-      {% elif solvedTasks %}
-        <div class="container-md">
-          <div class="row">
-            <div class="col-md">
-              Решенные задачи, ахах
+        {% else %}
+          <div class="row mt-3">
+            <div class="col">
+              <div class="collapse multi-collapse" id="unsolvedTasks">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3 class="text-center" style="color: red;">Нет нерешенных задач</h3>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        {% endif %}
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#solvedTasks" aria-expanded="false" aria-controls="solvedTasks">Решенные задачи</button>
         </div>
-      {% else %}
+      </div>
+      <div class="container-md">
+        {% if solvedTasks %}
+          <div class="row mt-3">
+            <div class="col">
+              <div class="collapse multi-collapse" id="unsolvedTasks">
+                {% for task in unsolvedTasks %}
+                  <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                    </div>
+                  </div>
+                  <div class="row my-2">
+                    <div class="col">
+                      <div class="collapse multi-collapse" id="task_{{ task.id }}">
+                        <div class="row">
+                          <div class="col">
+                            {{ task }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="row mt-3">
+            <div class="col">
+              <div class="collapse multi-collapse" id="solvedTasks">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3 class="text-center" style="color: red;">Нет решенных задач</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      {% if not solvedTasks and not unsolvedTasks %}
         <h3 class="text-center" style="color: red;">Нет доступных задач.</h3>
       {% endif %}
     </div>
