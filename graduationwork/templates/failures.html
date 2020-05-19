@@ -29,7 +29,83 @@
                       <div class="collapse multi-collapse" id="task_{{ task.id }}">
                         <div class="row">
                           <div class="col">
-                            {{ task }}
+                            <div class="row">
+                              <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
+                              <div class="col-md-4">
+                                <b>Серьезность ошибки: </b>
+                                {% if unassignedTask.severity < 2 %}
+                                  <font color=green><b>{{ task.severity }}</b></font>
+                                {% elif unassignedTask.severity < 4 %}
+                                  <font color=orange><b>{{ task.severity }}</b></font>
+                                {% else %}
+                                  <font color=red><b>{{ task.severity }}</b></font>
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
+                              <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
+                            </div>
+                            {% if task.assignee %}
+                              <div class="row">
+                                <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
+                                {% for user in availableUsers %}
+                                  {% if user.profile == task.assignee %}
+                                    <div class="col-md-4"><b>Владелец задачи: </b>{{ user.last_name }} {{ user.first_name }}</div>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+                              <div class="row">
+                                {% if task.stack_trace %}
+                                  <div class="col-md-8"><b>Код, который привел к ошибке: </b><br>{{ task.stack_trace }}</div>
+                                {% else %}
+                                  <div class="col-md-8"></div>
+                                {% endif %}
+                                {% if not request.user.profile.group == "P" %}
+                                  <div class="col-md-4">
+                                    <div class="dropdown">
+                                      <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
+                                      <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
+                                        {% for user in availableUsers %}
+                                          {% if user.profile.group == "P" and not user.profile == task.assignee %}
+                                            <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                          {% endif %}
+                                        {% endfor %}
+                                        <a class="dropdown-item" href="#">Отметить как решенную</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% else %}
+                                  <div class="col-md-4">
+                                    <button class="btn-sm btn-block btn-primary" type="button">Отметить как решенную</button>
+                                  </div>
+                                {% endif %}
+                              </div>
+                            {% else %}
+                              <div class="row">
+                                <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
+                                <div class="col-md-4">
+                                  <div class="dropdown">
+                                    <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить задачу</button>
+                                    <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
+                                      {% for user in availableUsers %}
+                                        {% if user.profile.group == "P" %}
+                                          <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                        {% endif %}
+                                      {% endfor %}
+                                      <a class="dropdown-item" href="#">Отметить как решенную</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                {% if task.stack_trace %}
+                                  <div class="col-md-8"><b>Код, который привел к ошибке: </b><br>{{ task.stack_trace }}</div>
+                                {% else %}
+                                  <div class="col-md-8"></div>
+                                {% endif %}
+                              </div>
+                            {% endif %}
                           </div>
                         </div>
                       </div>
@@ -62,11 +138,11 @@
         {% if solvedTasks %}
           <div class="row mt-3">
             <div class="col">
-              <div class="collapse multi-collapse" id="unsolvedTasks">
-                {% for task in unsolvedTasks %}
+              <div class="collapse multi-collapse" id="solvedTasks">
+                {% for task in solvedTasks %}
                   <div class="row">
                     <div class="col-md-12">
-                      <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                      <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
                     </div>
                   </div>
                   <div class="row my-2">
@@ -74,7 +150,40 @@
                       <div class="collapse multi-collapse" id="task_{{ task.id }}">
                         <div class="row">
                           <div class="col">
-                            {{ task }}
+                            <div class="row">
+                              <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
+                              <div class="col-md-4">
+                                <b>Серьезность ошибки: </b>
+                                {% if unassignedTask.severity < 2 %}
+                                  <font color=green><b>{{ task.severity }}</b></font>
+                                {% elif unassignedTask.severity < 4 %}
+                                  <font color=orange><b>{{ task.severity }}</b></font>
+                                {% else %}
+                                  <font color=red><b>{{ task.severity }}</b></font>
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
+                              <div class="col-md-4"><b>Статус: <font color=green>решена</font></b></div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
+                              {% if task.assignee %}
+                                {% for user in availableUsers %}
+                                  {% if user.profile == task.assignee %}
+                                    <div class="col-md-4"><b>Владелец задачи: </b>{{ user.last_name }} {{ user.first_name }}</div>
+                                  {% endif %}
+                                {% endfor %}
+                              {% else %}
+                                <div class="col-md-4"><b>Владелец задачи: </b>не назначен</div>
+                              {% endif %}
+                            </div>
+                            {% if task.stack_trace %}
+                              <div class="row">
+                                <div class="col-md-8"><b>Код, который привел к ошибке: </b><br>{{ task.stack_trace }}</div>
+                              </div>
+                            {% endif %}
                           </div>
                         </div>
                       </div>
@@ -98,9 +207,6 @@
           </div>
         {% endif %}
       </div>
-      {% if not solvedTasks and not unsolvedTasks %}
-        <h3 class="text-center" style="color: red;">Нет доступных задач.</h3>
-      {% endif %}
     </div>
   {% endif %}
 

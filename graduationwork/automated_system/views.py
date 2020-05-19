@@ -116,7 +116,8 @@ def profile(request):
             else:
                 tasksByUsersDict[task.assignee.id].append(task)
         else:
-            unassignedTasks.append(task)
+            if not task.is_solved:
+                unassignedTasks.append(task)
     tasks = tasksByUsersDict.values()
 
     shelvesByUsersDict = defaultdict(list)
@@ -148,13 +149,32 @@ def profile(request):
 
 
 def failures(request):
+    userGroups = list()
+    for group in request.user.groups.all():
+        userGroups.append(group.name)
+    userGroup = "Персонал"
+    if userGroups:
+        if userGroups[0] == "SystemAdministrators":
+            userGroup = "Системные администраторы"
+        elif userGroups[0] == "Management":
+            userGroup = "Менеджеры"
+        else:
+            userGroup = "Персонал"
+
     solvedTasks = list()
     unsolvedTasks = list()
     for task in models.Failure.objects.all():
-        if not task.is_solved:
-            unsolvedTasks.append(task)
+        if userGroup == "Персонал":
+            if task.assignee == request.user.profile:
+                if not task.is_solved:
+                    unsolvedTasks.append(task)
+                else:
+                    solvedTasks.append(task)
         else:
-            solvedTasks.append(task)
+            if not task.is_solved:
+                unsolvedTasks.append(task)
+            else:
+                solvedTasks.append(task)
 
     return render(
         request,
@@ -162,6 +182,7 @@ def failures(request):
         {
             "failures_is_active": is_active,
             "solvedTasks": solvedTasks,
-            "unsolvedTasks": unsolvedTasks
+            "unsolvedTasks": unsolvedTasks,
+            "availableUsers": models.BaseUser.objects.all().select_related('profile')
         }
     )

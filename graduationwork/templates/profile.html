@@ -56,11 +56,7 @@
                       <div class="col-md">
                         <div class="row">
                           <div class="col-md-12">
-                            {% if unassignedTask.is_solved %}
-                              <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
-                            {% else %}
-                              <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
-                            {% endif %}
+                            <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
                           </div>
                         </div>
                         <div class="row my-2">
@@ -81,14 +77,7 @@
                               </div>
                               <div class="row">
                                 <div class="col-md-8"><b>Возможное решение: </b>{{ unassignedTask.possible_solution}}</div>
-                                <div class="col-md-4">
-                                  <b>Статус: </b>
-                                  {% if unassignedTask.is_solved %}
-                                    <font color=green><b>решена</b></font>
-                                  {% else %}
-                                    <font color=red><b>не решена</b></font>
-                                  {% endif %}
-                                </div>
+                                <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
                               </div>
                               <div class="row">
                                 <div class="col-md-8"><b>Дата возникновения: </b>{{ unassignedTask.timestamp }}</div>
@@ -133,11 +122,7 @@
                         <div class="col-md">
                           <div class="row">
                             <div class="col-md-12">
-                              {% if task.is_solved %}
-                                <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
-                              {% else %}
-                                <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
-                              {% endif %}
+                              <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
                             </div>
                           </div>
                           <div class="row my-2">
@@ -158,14 +143,7 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
-                                  <div class="col-md-4">
-                                    <b>Статус: </b>
-                                    {% if task.is_solved %}
-                                      <font color=green><b>решена</b></font>
-                                    {% else %}
-                                      <font color=red><b>не решена</b></font>
-                                    {% endif %}
-                                  </div>
+                                  <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
                                 </div>
                                 <div class="row">
                                   <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
@@ -206,11 +184,7 @@
                           <div class="col-md">
                             <div class="row">
                               <div class="col-md-12">
-                                {% if task.is_solved %}
-                                  <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
-                                {% else %}
-                                  <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
-                                {% endif %}
+                                <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
                               </div>
                             </div>
                             <div class="row my-2">
@@ -231,14 +205,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
-                                    <div class="col-md-4">
-                                      <b>Статус: </b>
-                                      {% if task.is_solved %}
-                                        <font color=green><b>решена</b></font>
-                                      {% else %}
-                                        <font color=red><b>не решена</b></font>
-                                      {% endif %}
-                                    </div>
+                                    <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>

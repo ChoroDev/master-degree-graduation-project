@@ -242,6 +242,31 @@ def fill_in_failures():
         possible_solution="Clarify the number of products.",
         assignee=models.User.objects.get(id=6)
     )
+    models.Failure.objects.create(
+        text="Shelf should be filled in by 15 products. Shelf name: Carrots_1, section name: Vegetables_1.",
+        severity=4,
+        possible_cause="Customers bought a lot of products from that shelf.",
+        possible_solution="Fill shelf in.",
+        is_solved=True,
+        assignee=models.User.objects.get(id=8)
+    )
+    models.Failure.objects.create(
+        text="Number of products should be clarified. Shelf name: Carrots_1, section name: Vegetables_1.",
+        severity=2,
+        possible_cause="A lot of time has passed since the last update.",
+        possible_solution="Clarify the number of products.",
+        is_solved=True,
+        assignee=models.User.objects.get(id=8)
+    )
+
+
+def fill_in_solved_task():
+    models.Failure.objects.create(
+        text="3 products should be transferred to the storage. Shelf name: Juices_1, section name: Drinks_1.",
+        possible_cause="Customers didn't buy a lot of products from that shelf.",
+        possible_solution="Transfer products to the storage.",
+        is_solved=True
+    )
 
 
 # def fill_in_staff():
