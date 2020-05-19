@@ -109,14 +109,14 @@ def profile(request):
     tasksByUsersDict = defaultdict(list)
     unassignedTasks = list()
     for task in models.Failure.objects.all():
-        if task.assignee:
-            if userGroup == "Персонал":
-                if task.assignee == request.user.profile:
+        if not task.is_solved:
+            if task.assignee:
+                if request.user.profile.group == "P":
+                    if task.assignee == request.user.profile:
+                        tasksByUsersDict[task.assignee.id].append(task)
+                else:
                     tasksByUsersDict[task.assignee.id].append(task)
             else:
-                tasksByUsersDict[task.assignee.id].append(task)
-        else:
-            if not task.is_solved:
                 unassignedTasks.append(task)
     tasks = tasksByUsersDict.values()
 
@@ -124,8 +124,8 @@ def profile(request):
     unassignedShelves = list()
     for shelf in models.Store.objects.all():
         if shelf.user:
-            if userGroup == "Персонал":
-                if task.assignee == request.user.profile:
+            if request.user.profile.group == "P":
+                if shelf.user == request.user.profile:
                     shelvesByUsersDict[shelf.user.id].append(shelf)
             else:
                 shelvesByUsersDict[shelf.user.id].append(shelf)
@@ -149,22 +149,10 @@ def profile(request):
 
 
 def failures(request):
-    userGroups = list()
-    for group in request.user.groups.all():
-        userGroups.append(group.name)
-    userGroup = "Персонал"
-    if userGroups:
-        if userGroups[0] == "SystemAdministrators":
-            userGroup = "Системные администраторы"
-        elif userGroups[0] == "Management":
-            userGroup = "Менеджеры"
-        else:
-            userGroup = "Персонал"
-
     solvedTasks = list()
     unsolvedTasks = list()
     for task in models.Failure.objects.all():
-        if userGroup == "Персонал":
+        if request.user.profile.group == "P":
             if task.assignee == request.user.profile:
                 if not task.is_solved:
                     unsolvedTasks.append(task)
