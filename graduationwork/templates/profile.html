@@ -103,20 +103,25 @@
                   {% endfor %}
                 </div>
               {% endif %}
-              {% if tasks %}
+            {% endif %}
+            {% if tasks %}
+              {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
+                <p class="mb-2"><b>Задачи:</b></p>
+              {% endif %}
+              <div class="jumbotron my-1 px-3 py-1">
                 {% for tasksList in tasks %}
-                  <div class="jumbotron my-1 px-3 py-1">
-                    <div class="row mb-2">
-                      <div class="col-md">
-                        {% with tasksList|first as firstTask %}
+                  {% with tasksList|first as firstTask %}
+                    {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                      <div class="row mb-2">
+                        <div class="col-md">
                           {% for user in availableUsers %}
                             {% if user.profile == firstTask.assignee %}
                               <b>Задачи сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
                             {% endif %}
                           {% endfor %}
-                        {% endwith %}
+                        </div>
                       </div>
-                    </div>
+                    {% endif %}
                     {% for task in tasksList %}
                       <div class="row">
                         <div class="col-md">
@@ -148,17 +153,21 @@
                                 <div class="row">
                                   <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
                                   <div class="col-md-4">
-                                    <div class="dropdown">
-                                      <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
-                                      <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
-                                        {% for user in availableUsers %}
-                                          {% if user.profile.group == "P" and not user.profile == task.assignee %}
-                                            <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
-                                          {% endif %}
-                                        {% endfor %}
-                                        <a class="dropdown-item" href="#">Отметить как решенную</a>
+                                    {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                                      <div class="dropdown">
+                                        <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
+                                        <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
+                                          {% for user in availableUsers %}
+                                            {% if user.profile.group == "P" and not user.profile == task.assignee %}
+                                              <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                            {% endif %}
+                                          {% endfor %}
+                                          <a class="dropdown-item" href="#">Отметить как решенную</a>
+                                        </div>
                                       </div>
-                                    </div>
+                                    {% else %}
+                                      <button class="btn-sm btn-block btn-primary" type="button">Отметить как решенную</button>
+                                    {% endif %}
                                   </div>
                                 </div>
                               </div>
@@ -167,63 +176,17 @@
                         </div>
                       </div>
                     {% endfor %}
-                  </div>
-                {% endfor %}
-              {% endif %}
-              {% if not tasks and not unassignedTasks %}
-                <font color=green><b>все задачи выполнены.</b></font>
-              {% endif %}
-            {% else %}
-              {% if tasks %}
-                <p class="mb-2"><b>Задачи:</b></p>
-                {% for tasksList in tasks %}
-                  {% with tasksList|first as firstTask %}
-                    {% if request.user.profile == firstTask.assignee %}
-                      {% for task in tasksList %}
-                        <div class="row">
-                          <div class="col-md">
-                            <div class="row">
-                              <div class="col-md-12">
-                                <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
-                              </div>
-                            </div>
-                            <div class="row my-2">
-                              <div class="col">
-                                <div class="collapse multi-collapse" id="task_{{ task.id }}">
-                                  <div class="row">
-                                    <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
-                                    <div class="col-md-4">
-                                      <b>Серьезность ошибки: </b>
-                                      {% if task.severity < 2 %}
-                                        <font color=green><b>{{ task.severity }}</b></font>
-                                      {% elif task.severity < 4 %}
-                                        <font color=orange><b>{{ task.severity }}</b></font>
-                                      {% else %}
-                                        <font color=red><b>{{ task.severity }}</b></font>
-                                      {% endif %}
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
-                                    <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
-                                    <div class="col-md-4">
-                                      <button class="btn-sm btn-block btn-primary" type="button">Отметить как решенную</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      {% endfor %}
-                    {% endif %}
                   {% endwith %}
                 {% endfor %}
-              {% else %}
+              </div>
+            {% else %}
+              {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
                 <b>Задачи: </b>нет нерешенных задач.
+              {% endif %}
+            {% endif %}
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+              {% if not tasks and not unassignedTasks %}
+                <font color=green><b>все задачи выполнены.</b></font>
               {% endif %}
             {% endif %}
           </div>
@@ -247,8 +210,8 @@
                           <div class="col">
                             <div class="collapse multi-collapse" id="unassignedShelf_{{ unassignedShelf.id }}">
                               <div class="row">
-                                <div class="col-md-4"><b>Секция: </b>{{ unassignedShelf.section_name }}</div>
-                                <div class="col-md-4"><b>Количество продуктов: </b>{{ unassignedShelf.product_count }}</div>
+                                <div class="col-md-3"><b>Секция: </b>{{ unassignedShelf.section_name }}</div>
+                                <div class="col-md-3"><b>Количество продуктов: </b>{{ unassignedShelf.product_count }}</div>
                                 <div class="col-md-4">
                                   <div class="dropdown">
                                     <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ unassignedTask.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить ответственного</button>
@@ -261,6 +224,9 @@
                                     </div>
                                   </div>
                                 </div>
+                                <div class="col-md-2">
+                                  <button class="btn-sm btn-block btn-danger" type="button">Удалить полку</button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -270,20 +236,25 @@
                   {% endfor %}
                 </div>
               {% endif %}
-              {% if shelves %}
-                {% for shelvesList in shelves %}
-                  <div class="jumbotron my-1 px-3 py-1">
-                    <div class="row mb-2">
-                      <div class="col-md">
-                        {% with shelvesList|first as firstShelf %}
+            {% endif %}
+            {% if shelves %}
+              {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
+                <p class="mb-2"><b>Назначенные полки:</b></p>
+              {% endif %}
+              {% for shelvesList in shelves %}
+                <div class="jumbotron my-1 px-3 py-1">
+                  {% with shelvesList|first as firstShelf %}
+                    {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                      <div class="row mb-2">
+                        <div class="col-md">
                           {% for user in availableUsers %}
                             {% if user.profile == firstShelf.user %}
                               <b>Полки сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
                             {% endif %}
                           {% endfor %}
-                        {% endwith %}
+                        </div>
                       </div>
-                    </div>
+                    {% endif %}
                     {% for shelf in shelvesList %}
                       <div class="row">
                         <div class="col-md">
@@ -296,20 +267,25 @@
                             <div class="col">
                               <div class="collapse multi-collapse" id="shelf_{{ shelf.id }}">
                                 <div class="row">
-                                  <div class="col-md-4"><b>Секция: </b>{{ shelf.section_name }}</div>
-                                  <div class="col-md-4"><b>Количество продуктов: </b>{{ shelf.product_count }}</div>
-                                  <div class="col-md-4">
-                                    <div class="dropdown">
-                                      <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ shelf.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить ответственного</button>
-                                      <div class="dropdown-menu" aria-labelledby="assign_{{ shelf.id }}">
-                                        {% for user in availableUsers %}
-                                          {% if user.profile.group == "P" and not user.profile == shelf.user %}
-                                            <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
-                                          {% endif %}
-                                        {% endfor %}
+                                  <div class="col-md-3"><b>Секция: </b>{{ shelf.section_name }}</div>
+                                  <div class="col-md-3"><b>Количество продуктов: </b>{{ shelf.product_count }}</div>
+                                  {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                                    <div class="col-md-4">
+                                      <div class="dropdown">
+                                        <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ shelf.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить ответственного</button>
+                                        <div class="dropdown-menu" aria-labelledby="assign_{{ shelf.id }}">
+                                          {% for user in availableUsers %}
+                                            {% if user.profile.group == "P" and not user.profile == shelf.user %}
+                                              <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
+                                            {% endif %}
+                                          {% endfor %}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                    <div class="col-md-2">
+                                      <button class="btn-sm btn-block btn-danger" type="button">Удалить полку</button>
+                                    </div>
+                                  {% endif %}
                                 </div>
                               </div>
                             </div>
@@ -317,42 +293,17 @@
                         </div>
                       </div>
                     {% endfor %}
-                  </div>
-                {% endfor %}
+                  {% endwith %}
+                </div>
+              {% endfor %}
+            {% else %}
+              {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
+                <b>Назначенные полки: </b>нет назначенных полок.
               {% endif %}
+            {% endif %}
+            {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
               {% if not unassignedShelves and not shelves %}
                 нет доступных полок.
-              {% endif %}
-            {% else %}
-              {% if shelves %}
-                <p class="mb-2"><b>Назначенные полки:</b></p>
-                {% for shelvesList in shelves %}
-                  {% with shelvesList|first as firstShelf %}
-                    {% if request.user.profile == firstShelf.user %}
-                      {% for shelf in shelvesList %}
-                        <div class="row">
-                          <div class="col-md">
-                            <div class="row">
-                              <div class="col-md-12">
-                                <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#shelf_{{ shelf.id }}" aria-expanded="false" aria-controls="shelf_{{ shelf.id }}">{{ shelf.shelf_name }}</button>
-                              </div>
-                            </div>
-                            <div class="row my-2">
-                              <div class="col">
-                                <div class="collapse multi-collapse" id="shelf_{{ shelf.id }}">
-                                  <div class="row"><div class="col-md-12"><b>Секция: </b>{{ shelf.section_name }}</div></div>
-                                  <div class="row"><div class="col-md-12"><b>Количество продуктов: </b>{{ shelf.product_count }}</div></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      {% endfor %}
-                    {% endif %}
-                  {% endwith %}
-                {% endfor %}
-              {% else %}
-                <b>Назначенные полки: </b>нет назначенных полок.
               {% endif %}
             {% endif %}
           </div>

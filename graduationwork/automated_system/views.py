@@ -110,27 +110,27 @@ def profile(request):
     unassignedTasks = list()
     for task in models.Failure.objects.all():
         if not task.is_solved:
-            if task.assignee:
-                if request.user.profile.group == "P":
-                    if task.assignee == request.user.profile:
-                        tasksByUsersDict[task.assignee.id].append(task)
-                else:
-                    tasksByUsersDict[task.assignee.id].append(task)
+            if request.user.profile.group == "P":
+                if task.assignee == request.user.profile:
+                    tasksByUsersDict[request.user.profile.id].append(task)
             else:
-                unassignedTasks.append(task)
+                if task.assignee:
+                    tasksByUsersDict[task.assignee.id].append(task)
+                else:
+                    unassignedTasks.append(task)
     tasks = tasksByUsersDict.values()
 
     shelvesByUsersDict = defaultdict(list)
     unassignedShelves = list()
     for shelf in models.Store.objects.all():
-        if shelf.user:
-            if request.user.profile.group == "P":
-                if shelf.user == request.user.profile:
-                    shelvesByUsersDict[shelf.user.id].append(shelf)
-            else:
-                shelvesByUsersDict[shelf.user.id].append(shelf)
+        if request.user.profile.group == "P":
+            if shelf.user == request.user.profile:
+                shelvesByUsersDict[request.user.profile.id].append(shelf)
         else:
-            unassignedShelves.append(shelf)
+            if shelf.user:
+                shelvesByUsersDict[shelf.user.id].append(shelf)
+            else:
+                unassignedShelves.append(shelf)
     shelves = shelvesByUsersDict.values()
 
     return render(

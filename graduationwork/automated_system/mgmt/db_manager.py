@@ -258,9 +258,6 @@ def fill_in_failures():
         is_solved=True,
         assignee=models.User.objects.get(id=8)
     )
-
-
-def fill_in_solved_task():
     models.Failure.objects.create(
         text="3 products should be transferred to the storage. Shelf name: Juices_1, section name: Drinks_1.",
         possible_cause="Customers didn't buy a lot of products from that shelf.",
