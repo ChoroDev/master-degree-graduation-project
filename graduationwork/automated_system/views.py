@@ -65,18 +65,8 @@ def storage(request):
     return render(request, "storage.html", {"storage_is_active": is_active, "storage": models.Storage.objects.all()})
 
 
-def transportations(request):
-    # transpos = db_manager.get_transportations_info()
-    transpos = ""
-    return render(request, "transportations.html", {"transportations_is_active": is_active, "transportations": transpos})
-
-
 def about(request):
     return render(request, "about.html", {"about_is_active": is_active})
-
-
-def contact(request):
-    return render(request, "contact.html", {"contact_is_active": is_active})
 
 
 def products(request):

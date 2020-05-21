@@ -2,9 +2,13 @@
 {% block title %}О нас{% endblock title %}
 {% block errorContent %}{% endblock errorContent %}
 {% block content %}
-  <h1>О нас</h1>
-  <p>This site is designed to facilitate the management of an automated supermarket shelf space management system.</p>
-  <p>System automates the process of filling the shelf space, while reducing human participation, reducing its functions only to monitoring the quality of the exhibited products.</p>
-  <!-- {% load static %}
-  <img src="{% static 'images/scheme.jpg' %}" alt="Production scheme"> -->
+  <div class="jumbotron border">
+    <h1>О нас</h1>
+    <p class="ml-1 mt-3">Этот сайт предназначен для работы с автоматизированной системой управления полочным пространством супермаркета.</p>
+    <p class="ml-1">Система автоматизирует процесс заполнения полочного пространства, одновременно снижая участие человека, сводя его функции к контролю качества и иногда количества выставленных товаров.</p>
+    <hr>
+    <h1>Контакты</h1>
+    <p class="ml-1 mt-3">По всем вопросам писать на электронную почту:<b> JohnDoe@example.com</b></p>
+    <p class="ml-1">Контактный номер телефона:<b> 8-(800)-555-35-35</b></p>
+  </div>
 {% endblock content %}

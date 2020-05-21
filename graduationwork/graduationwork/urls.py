@@ -27,9 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('store', views.store, name='store'),
     path('storage', views.storage, name='storage'),
-    path('transportations', views.transportations, name='transportations'),
     path('about', views.about, name='about'),
-    path('contact', views.contact, name='contact'),
     path('login', auth_views.LoginView.as_view(
          template_name='auth/login.html', authentication_form=AuthenticationForm), name='login'),
     path('logout', auth_views.LogoutView.as_view(
