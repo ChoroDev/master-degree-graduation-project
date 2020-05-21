@@ -14,8 +14,9 @@
 3. Run virtual environment (venv\\Scripts\\activate.bat for Windows || source venv/Scripts/activate)
 4. Install django (pip install django)
 5. (optional, could be removed from settings.py) Install debug toolbar (pip install django-debug-toolbar) 
-6. Run project server (cd graduationwork; python manage.py runserver)
-7. Project will be available on http://127.0.0.1:8000/
+6. Install django-google-charts and trailling modules (pip install django-google-charts, pip install django-qsstats-magic, pip install python-dateutil)
+7. Run project server (cd graduationwork; python manage.py runserver)
+8. Project will be available on http://127.0.0.1:8000/
 
 ## Migrations
 
@@ -27,6 +28,8 @@
 
 `Login` == `Password`  
 admin == admin  
-business_manager == bm_login_1  
-store_manager == sm_login_1  
-merchandiser == md_login_1  
+manager == manager  
+regular1 == regular1  
+regular2 == regular2  
+regular3 == regular3  
+regular4 == regular4  

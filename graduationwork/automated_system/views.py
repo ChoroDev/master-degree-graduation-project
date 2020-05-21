@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from django.db.models import Count
 from .forms import UserForm
 from .mgmt import db_manager
 from . import models
 from collections import defaultdict
+from qsstats import QuerySetStats
+from django.utils import timezone
 import json
 import math
+import datetime
+import pytz
 
 
 is_active = "active"
@@ -164,3 +169,12 @@ def failures(request):
             "availableUsers": models.BaseUser.objects.all().select_related('profile')
         }
     )
+
+
+def analytics(request):
+    start_date = timezone.now() - datetime.timedelta(days=7)
+    end_date = timezone.now()
+    tasks = models.Failure.objects.all()
+    countOfFailures = QuerySetStats(tasks, date_field='timestamp')
+    values = countOfFailures.time_series(start_date, end_date)
+    return render(request, "analytics.html", {"analytics_is_active": is_active, "values": values})

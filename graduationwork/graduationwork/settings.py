@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'automated_system',
     'django_extensions',
     'crispy_forms',
+    'googlecharts',
 ]
 
 MIDDLEWARE = [
