@@ -24,6 +24,12 @@
 2. python manage.py makemigrations automated_system
 3. python manage.py migrate
 
+## DB diagram
+
+```
+python manage.py graph_models -a -o myapp_models.png
+```
+
 ## Users and passwords
 
 `Login` == `Password`  

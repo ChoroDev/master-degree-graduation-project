@@ -37,14 +37,6 @@ def save_profile(sender, instance, created, **kwargs):
     profile.save()
 
 
-class Statistics(models.Model):
-    day = models.DateField(null=True)
-    revenue = models.DecimalField(default=0.0, max_digits=30, decimal_places=2)
-    sold_count = models.IntegerField(default=0)
-    is_stock_day = models.BooleanField(default=False)
-    failures_count = models.IntegerField(default=0)
-
-
 class Failure(models.Model):
     text = models.TextField(blank=True)
     severity = models.IntegerField(default=1)
@@ -92,6 +84,14 @@ class Store(models.Model):
     shelf_name = models.CharField(max_length=30, blank=True)
     section_name = models.CharField(max_length=30, blank=True)
     last_charge = models.DateTimeField(auto_now=True)
+
+
+class Statistics(models.Model):
+    day = models.DateField(null=True)
+    shelf = models.ForeignKey(Store, on_delete=models.CASCADE)
+    sold_count = models.IntegerField(default=0)
+    is_stock_day = models.BooleanField(default=False)
+    failures_count = models.IntegerField(default=0)
 
 
 class Stock(models.Model):

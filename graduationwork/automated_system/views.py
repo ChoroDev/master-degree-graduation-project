@@ -172,9 +172,18 @@ def failures(request):
 
 
 def analytics(request):
-    start_date = timezone.now() - datetime.timedelta(days=7)
-    end_date = timezone.now()
-    tasks = models.Failure.objects.all()
-    countOfFailures = QuerySetStats(tasks, date_field='timestamp')
-    values = countOfFailures.time_series(start_date, end_date)
-    return render(request, "analytics.html", {"analytics_is_active": is_active, "values": values})
+    start_date = datetime.date.today() - datetime.timedelta(days=10)
+    end_date = datetime.date.today()
+    stats = models.Statistics.objects.all()
+
+    stats = models.Statistics.objects.all()
+    firstShelfStore = models.Store.objects.get(id=1)
+    firstShelfStats = list()
+    for shelfStats in stats:
+        if shelfStats.shelf == firstShelfStore:
+            firstShelfStats.append(
+                [f"Day: {shelfStats.id}", shelfStats.sold_count])
+
+    values = firstShelfStats
+    summary = [["khe", 100], ["kok", 120], ["hah", 230]]
+    return render(request, "analytics.html", {"analytics_is_active": is_active, "values": values, "summary": summary})

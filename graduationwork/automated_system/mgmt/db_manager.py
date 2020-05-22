@@ -266,71 +266,827 @@ def fill_in_failures():
     )
 
 
+def fill_in_statistics():
+    # Store obj with id = 1
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=34,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=33,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=35,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=31,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=34,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=39,
+        is_stock_day=True,
+        failures_count=4
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=41,
+        is_stock_day=True,
+        failures_count=5
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=38,
+        is_stock_day=True,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=27,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=29,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=1),
+        sold_count=31,
+        is_stock_day=False,
+        failures_count=2
+    )
+
+    # Store obj with id = 2
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=11,
+        is_stock_day=True,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=12,
+        is_stock_day=True,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=9,
+        is_stock_day=True,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=8,
+        is_stock_day=True,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=4,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=5,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=5,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=6,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=4,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=6,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=2),
+        sold_count=5,
+        is_stock_day=False,
+        failures_count=1
+    )
+
+    # Store obj with id = 3
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=11,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=13,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=9,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=12,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=13,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=10,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=16,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=3),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=1
+    )
+
+    # Store obj with id = 4
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=19,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=12,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=13,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=21,
+        is_stock_day=True,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=24,
+        is_stock_day=True,
+        failures_count=4
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=4),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=1
+    )
+
+    # Store obj with id = 5
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=16,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=19,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=20,
+        is_stock_day=False,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=19,
+        is_stock_day=False,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=18,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=22,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=21,
+        is_stock_day=False,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=5),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=2
+    )
+
+    # Store obj with id = 6
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=6,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=12,
+        is_stock_day=True,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=14,
+        is_stock_day=True,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=15,
+        is_stock_day=True,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=4,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=7,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=8,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=5,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=11,
+        is_stock_day=False,
+        failures_count=0
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=7,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=6),
+        sold_count=4,
+        is_stock_day=False,
+        failures_count=0
+    )
+
+    # Store obj with id = 7
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=8,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=12,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=11,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=9,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=7,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=8,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=11,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=7),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=2
+    )
+
+    # Store obj with id = 8
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=18,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=19,
+        is_stock_day=False,
+        failures_count=3
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=18,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=8),
+        sold_count=14,
+        is_stock_day=False,
+        failures_count=1
+    )
+
+    # Store obj with id = 9
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=10),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=12,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=9),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=15,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=8),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=7,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=7),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=16,
+        is_stock_day=False,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=6),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=12,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=5),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=17,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=4),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=8,
+        is_stock_day=False,
+        failures_count=1
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=3),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=15,
+        is_stock_day=True,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=2),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=17,
+        is_stock_day=True,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today() - timedelta(days=1),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=18,
+        is_stock_day=True,
+        failures_count=2
+    )
+    models.Statistics.objects.create(
+        day=date.today(),
+        shelf=models.Store.objects.get(id=9),
+        sold_count=16,
+        is_stock_day=True,
+        failures_count=2
+    )
+
+
+def fill_in_stocks():
+    stockProduct = models.Store.objects.get(id=1).product
+    models.Stock.objects.create(
+        product=stockProduct,
+        stock_price=(stockProduct.price - stockProduct.price * 0.1),
+        start_timestamp=date.today() - timedelta(days=5),
+        end_timestamp=date.today() - timedelta(days=3)
+    )
+
+    stockProduct = models.Store.objects.get(id=2).product
+    models.Stock.objects.create(
+        product=stockProduct,
+        shelf=models.Store.objects.get(id=2),
+        stock_price=(stockProduct.price - stockProduct.price * 0.25),
+        start_timestamp=date.today() - timedelta(days=10),
+        end_timestamp=date.today() - timedelta(days=7)
+    )
+
+    stockProduct = models.Store.objects.get(id=4).product
+    models.Stock.objects.create(
+        product=stockProduct,
+        shelf=models.Store.objects.get(id=4),
+        stock_price=(stockProduct.price - stockProduct.price * 0.2),
+        start_timestamp=date.today() - timedelta(days=2),
+        end_timestamp=date.today() - timedelta(days=1)
+    )
+
+    stockProduct = models.Store.objects.get(id=6).product
+    models.Stock.objects.create(
+        product=stockProduct,
+        stock_price=(stockProduct.price - stockProduct.price * 0.15),
+        start_timestamp=date.today() - timedelta(days=9),
+        end_timestamp=date.today() - timedelta(days=7)
+    )
+
+    stockProduct = models.Store.objects.get(id=9).product
+    models.Stock.objects.create(
+        product=stockProduct,
+        stock_price=(stockProduct.price - stockProduct.price * 0.1),
+        start_timestamp=date.today() - timedelta(days=3),
+        end_timestamp=date.today()
+    )
+
 # def fill_in_staff():
 #     models.Staff.objects.create(
-#         name="John", surname="Doe", position="Business manager")
+#         name = "John", surname = "Doe", position = "Business manager")
 #     models.Staff.objects.create(
-#         name="Jane", surname="Doe", position="Store manager")
+#         name = "Jane", surname = "Doe", position = "Store manager")
 #     models.Staff.objects.create(
-#         name="Mike", surname="Smith", position="Merchandizer")
+#         name = "Mike", surname = "Smith", position = "Merchandizer")
 #     models.Staff.objects.create(
-#         name="Tom", surname="Heinz", position="Merchandizer")
+#         name = "Tom", surname = "Heinz", position = "Merchandizer")
 #     models.Staff.objects.create(
-#         name="Hacker", surname="Man", position="System administrator")
+#         name = "Hacker", surname = "Man", position = "System administrator")
 #     models.Staff.objects.create(
-#         name="Vasya", surname="Sidorov", position="Driver")
+#         name = "Vasya", surname = "Sidorov", position = "Driver")
 
 
 # def fill_in_equipment():
-#     models.Equipment.objects.create(name="Automated System", equipment_type="Enterprise",
-#                                     cost="99999.9", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 1", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 2", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 3", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 4", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 5", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 6", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 7", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Shelf 8", equipment_type="Store Component",
-#                                     cost="150.5", last_maintainance_date=datetime.now(), warranty_period_years=228)
-#     models.Equipment.objects.create(name="Truck", equipment_type="Car",
-#                                     cost="6500.2", last_maintainance_date=datetime.now(), warranty_period_years=10)
+#     models.Equipment.objects.create(name = "Automated System", equipment_type = "Enterprise",
+#                                     cost = "99999.9", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 1", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 2", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 3", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 4", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 5", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 6", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 7", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Shelf 8", equipment_type = "Store Component",
+#                                     cost = "150.5", last_maintainance_date = datetime.now(), warranty_period_years = 228)
+#     models.Equipment.objects.create(name = "Truck", equipment_type = "Car",
+#                                     cost = "6500.2", last_maintainance_date = datetime.now(), warranty_period_years = 10)
 
 
 # def remove_product():
-#     models.Product.objects.filter(id=1).delete()
+#     models.Product.objects.filter(id = 1).delete()
 
 
 # def update_store():
-#     models.Store.objects.filter(id=1).update(product_count=9)
-#     models.Store.objects.filter(id=2).update(product_count=5)
-#     models.Store.objects.filter(id=3).update(product_count=7)
-#     models.Store.objects.filter(id=4).update(product_count=5)
-#     models.Store.objects.filter(id=5).update(product_count=8)
-#     models.Store.objects.filter(id=6).update(product_count=9)
-#     models.Store.objects.filter(id=7).update(product_count=9)
-#     models.Store.objects.filter(id=8).update(product_count=6)
+#     models.Store.objects.filter(id = 1).update(product_count = 9)
+#     models.Store.objects.filter(id = 2).update(product_count = 5)
+#     models.Store.objects.filter(id = 3).update(product_count = 7)
+#     models.Store.objects.filter(id = 4).update(product_count = 5)
+#     models.Store.objects.filter(id = 5).update(product_count = 8)
+#     models.Store.objects.filter(id = 6).update(product_count = 9)
+#     models.Store.objects.filter(id = 7).update(product_count = 9)
+#     models.Store.objects.filter(id = 8).update(product_count = 6)
 
 
 # def update_store_products(product_id, product_count):
-#     models.Store.objects.filter(id=product_id).update(
-#         product_count=product_count)
+#     models.Store.objects.filter(id = product_id).update(
+#         product_count = product_count)
 
 
 # def update_storage_products(product_id, product_count):
-#     models.Storage.objects.filter(id=product_id).update(
-#         product_count=product_count)
+#     models.Storage.objects.filter(id = product_id).update(
+#         product_count = product_count)
 
 
 # def update_references():
-#     models.Store.objects.filter(id=1).update(maintainer_id=3)
+#     models.Store.objects.filter(id = 1).update(maintainer_id = 3)
 
 
 # def checkStore():
@@ -338,7 +1094,7 @@ def fill_in_failures():
 #     status = "fine"
 #     shelf = models.Store.objects.all()
 #     for product in shelf:
-#         currentProduct = models.Product.objects.get(id=product.product_id)
+#         currentProduct = models.Product.objects.get(id = product.product_id)
 #         if product.product_count < 5:
 #             statusString = "Product: " + currentProduct.name + \
 #                 ": insufficient count of product on shelf"
@@ -360,7 +1116,7 @@ def fill_in_failures():
 #     status = "fine"
 #     storage = models.Storage.objects.all()
 #     for product in storage:
-#         currentProduct = models.Product.objects.get(id=product.product_id)
+#         currentProduct = models.Product.objects.get(id = product.product_id)
 #         if product.product_count < 50:
 #             statusString = "Product: " + currentProduct.name + \
 #                 ": insufficient count of product in storage"
@@ -387,7 +1143,7 @@ def fill_in_failures():
 #         currentDate = datetime.now()
 #         lastMaintainanceYear = item.last_maintainance_date.year
 #         warrantyExpirationDate = item.last_maintainance_date.replace(
-#             year=lastMaintainanceYear+item.warranty_period_years, tzinfo=None)
+#             year = lastMaintainanceYear+item.warranty_period_years, tzinfo = None)
 #         daysToExpire = abs((currentDate-warrantyExpirationDate).days)
 #         if daysToExpire < 30 and daysToExpire > 0:
 #             statusString = "Equipment: " + item.name + \
@@ -419,10 +1175,10 @@ def fill_in_failures():
 # def get_storage_products_for_page():
 #     storageProduct = []
 #     for item in models.Storage.objects.all():
-#         product_name = models.Product.objects.get(id=item.product_id).name
-#         product_count = models.Storage.objects.get(id=item.id).product_count
+#         product_name = models.Product.objects.get(id = item.product_id).name
+#         product_count = models.Storage.objects.get(id = item.id).product_count
 #         last_delivery = models.CargoTransportation.objects.get(
-#             id=item.delivery_id).delivery_date
+#             id = item.delivery_id).delivery_date
 #         image_name = product_name.lower().replace(' ', '_')
 #         storageProduct.append({"product_name": product_name, "product_count": product_count,
 #                                "last_delivery": last_delivery, "image_name": image_name})
@@ -436,7 +1192,7 @@ def fill_in_failures():
 # def get_transportations_info():
 #     transpos = []
 #     for transp in models.CargoTransportation.objects.all():
-#         product_name = models.Product.objects.get(id=transp.product_id).name
+#         product_name = models.Product.objects.get(id = transp.product_id).name
 #         transpos.append({"product_name": product_name, "company_name": transp.company_name,
 #                          "delivery_date": transp.delivery_date, "delivered_count": transp.delivered_count})
 #     return transpos
