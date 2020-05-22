@@ -6,7 +6,6 @@ from .forms import UserForm
 from .mgmt import db_manager
 from . import models
 from collections import defaultdict
-from qsstats import QuerySetStats
 from django.utils import timezone
 import json
 import math
@@ -172,18 +171,35 @@ def failures(request):
 
 
 def analytics(request):
-    start_date = datetime.date.today() - datetime.timedelta(days=10)
-    end_date = datetime.date.today()
-    stats = models.Statistics.objects.all()
+    storeShelves = models.Store.objects.all()
+    fullStatsRaw = models.Statistics.objects.all()
+    fullStatsForEachShelf = []
+    for storeShelf in storeShelves:
+        soldEveryDayForSingleShelf = []
+        for dailyStats in fullStatsRaw:
+            if storeShelf == dailyStats.shelf:
+                soldEveryDayForSingleShelf.append(
+                    [dailyStats.day.strftime(
+                        '%m/%d/%Y'), dailyStats.sold_count]
+                )
+        availableStats = dict()
+        if soldEveryDayForSingleShelf:
+            availableStats["soldEveryDay"] = soldEveryDayForSingleShelf
+        fullStatsForEachShelf.append(
+            [storeShelf, availableStats]
+        )
 
-    stats = models.Statistics.objects.all()
-    firstShelfStore = models.Store.objects.get(id=1)
-    firstShelfStats = list()
-    for shelfStats in stats:
-        if shelfStats.shelf == firstShelfStore:
-            firstShelfStats.append(
-                [f"Day: {shelfStats.id}", shelfStats.sold_count])
-
-    values = firstShelfStats
+    fullStatsForEachShelf
     summary = [["khe", 100], ["kok", 120], ["hah", 230]]
-    return render(request, "analytics.html", {"analytics_is_active": is_active, "values": values, "summary": summary})
+    someData = [["kheData", 100], ["kokData", 120], ["hahData", 230]]
+
+    return render(
+        request,
+        "analytics.html",
+        {
+            "analytics_is_active": is_active,
+            "fullStatsForEachShelf": fullStatsForEachShelf,
+            "summary": summary,
+            "someData": someData
+        }
+    )
