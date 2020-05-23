@@ -66,13 +66,6 @@ class Storage(models.Model):
     delivery_timestamp = models.DateTimeField(auto_now=True)
 
 
-class Sales(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    sold_price = models.FloatField(default=0.0)
-    sold_date = models.DateTimeField(auto_now=True)
-    sold_count = models.IntegerField(default=0)
-
-
 class Store(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -86,18 +79,16 @@ class Store(models.Model):
     last_charge = models.DateTimeField(auto_now=True)
 
 
+class Stock(models.Model):
+    stock_price = models.FloatField(default=0.0)
+    start_timestamp = models.DateTimeField()
+    end_timestamp = models.DateTimeField()
+
+
 class Statistics(models.Model):
     day = models.DateField(null=True)
     shelf = models.ForeignKey(Store, on_delete=models.CASCADE)
     sold_count = models.IntegerField(default=0)
-    is_stock_day = models.BooleanField(default=False)
+    stock = models.ForeignKey(Stock, on_delete=models.SET_NULL, null=True)
     failures_count = models.IntegerField(default=0)
     price_that_day = models.FloatField(default=0.0)
-
-
-class Stock(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    shelf = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True)
-    stock_price = models.FloatField(default=0.0)
-    start_timestamp = models.DateTimeField(auto_now=True)
-    end_timestamp = models.DateTimeField()

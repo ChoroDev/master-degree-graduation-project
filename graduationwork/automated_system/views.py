@@ -176,16 +176,31 @@ def analytics(request):
     fullStatsForEachShelf = []
     for storeShelf in storeShelves:
         soldEveryDay = []
-        revenueEveryDay = []
+        incomeEveryDay = []
         for dailyStats in fullStatsRaw:
             if storeShelf == dailyStats.shelf:
                 soldEveryDay.append(
                     [dailyStats.day.strftime(
                         '%m/%d/%Y'), dailyStats.sold_count]
                 )
+                if dailyStats.is_stock_day:
+                    stockPrice = models.Stock.objects.get(product=storeShelf.product, end_timestamp=datetime.combine(
+                        dailyStats.day, datetime.min.time())
+                    ).stock_price
+                    incomeEveryDay.append(
+                        [dailyStats.day.strftime(
+                            '%m/%d/%Y'), dailyStats.sold_count * stockPrice]
+                    )
+                else:
+                    incomeEveryDay.append(
+                        [dailyStats.day.strftime(
+                            '%m/%d/%Y'), dailyStats.sold_count * dailyStats.price_that_day]
+                    )
         availableStats = dict()
         if soldEveryDay:
             availableStats["soldEveryDay"] = soldEveryDay
+        if incomeEveryDay:
+            availableStats["incomeEveryDay"] = incomeEveryDay
         fullStatsForEachShelf.append(
             [storeShelf, availableStats]
         )

@@ -31,6 +31,7 @@
         height: 220
       }
       const soldEveryDayOptions = basicOptions
+      const incomeEveryDayOptions = basicOptions
 
       function drawCharts() {
         {% for fullStatsForSingleShelf in fullStatsForEachShelf %}
@@ -45,8 +46,19 @@
                     soldEveryDayData_{{ shelfProps.id }}.addRow(['{{ row|first }}', {{ row|last }}])
                   {% endfor %}
 
-                  let chart_{{ shelfProps.id }} = new google.visualization.LineChart(document.getElementById('soldEveryDayGraph_{{ shelfProps.id }}'))
-                  chart_{{ shelfProps.id }}.draw(soldEveryDayData_{{ shelfProps.id }}, soldEveryDayOptions)
+                  let soldEveryDayChart_{{ shelfProps.id }} = new google.visualization.LineChart(document.getElementById('soldEveryDayGraph_{{ shelfProps.id }}'))
+                  soldEveryDayChart_{{ shelfProps.id }}.draw(soldEveryDayData_{{ shelfProps.id }}, soldEveryDayOptions)
+                {% endif %}
+                {% if statsName == "incomeEveryDay" %}
+                  let incomeEveryDayData_{{ shelfProps.id }} = new google.visualization.DataTable()
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn('string', 'Дата')
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn('number', 'Доход')
+                  {% for row in stats %}
+                    incomeEveryDayData_{{ shelfProps.id }}.addRow(['{{ row|first }}', {{ row|last }}])
+                  {% endfor %}
+
+                  let incomeEveryDayChart_{{ shelfProps.id }} = new google.visualization.LineChart(document.getElementById('incomeEveryDayGraph_{{ shelfProps.id }}'))
+                  incomeEveryDayChart_{{ shelfProps.id }}.draw(incomeEveryDayData_{{ shelfProps.id }}, incomeEveryDayOptions)
                 {% endif %}
               {% endfor %}
             {% endwith %}
@@ -65,12 +77,17 @@
                   <div class="row">
                     {% for statsName, stats in shelfStats.items %}
                       {% if statsName == "soldEveryDay" %}
-                          <div class="col-md-4">
-                            <div class="mb-2"><b>Статистика продаж:</b></div>
-                            <b><div class="mb-2" id="soldEveryDayGraph_{{ shelfProps.id }}"></div></b>
-                          </div>
+                        <div class="col-md-4">
+                          <div class="mb-2"><b>Статистика продаж:</b></div>
+                          <b><div class="mb-2" id="soldEveryDayGraph_{{ shelfProps.id }}"></div></b>
+                        </div>
                       {% endif %}
-                      {% comment %} <div class="col-md-4 mt-4" id="secondGraph"></div> {% endcomment %}
+                      {% if statsName == "incomeEveryDay" %}
+                        <div class="col-md-4">
+                          <div class="mb-2"><b>Ежедневный доход:</b></div>
+                          <b><div class="mb-2" id="incomeEveryDayGraph_{{ shelfProps.id }}"></div></b>
+                        </div>
+                      {% endif %}
                       {% comment %} <div class="col-md-4 mt-4" id="thirdGraph"></div> {% endcomment %}
                     {% endfor %}
                   </div>
