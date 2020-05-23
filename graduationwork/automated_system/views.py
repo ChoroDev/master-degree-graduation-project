@@ -174,6 +174,10 @@ def analytics(request):
     storeShelves = models.Store.objects.all()
     fullStatsRaw = models.Statistics.objects.all()
     fullStatsForEachShelf = []
+    models.Statistics.objects.all().delete()
+    db_manager.fill_in_statistics()
+    models.Stock.objects.all().delete()
+    db_manager.fill_in_stocks()
     for storeShelf in storeShelves:
         soldEveryDay = []
         incomeEveryDay = []

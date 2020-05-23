@@ -80,6 +80,7 @@ class Store(models.Model):
 
 
 class Stock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     stock_price = models.FloatField(default=0.0)
     start_timestamp = models.DateTimeField()
     end_timestamp = models.DateTimeField()
