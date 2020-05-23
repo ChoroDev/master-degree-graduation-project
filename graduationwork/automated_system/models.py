@@ -93,3 +93,13 @@ class Statistics(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.SET_NULL, null=True)
     failures_count = models.IntegerField(default=0)
     price_that_day = models.FloatField(default=0.0)
+
+    @property
+    def statYear(self):
+        "Returns year of statistic record"
+        return self.day.strftime('%Y')
+
+    @property
+    def is_current_year(self):
+        "Returns true if row year is current"
+        return self.statYear == datetime.datetime.today().year

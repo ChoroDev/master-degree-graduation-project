@@ -171,40 +171,68 @@ def failures(request):
 
 
 def analytics(request):
+    # models.Stock.objects.all().delete()
+    # models.Statistics.objects.all().delete()
+    # db_manager.fill_in_stocks()
+    # db_manager.fill_in_statistics()
     storeShelves = models.Store.objects.all()
-    fullStatsRaw = models.Statistics.objects.all()
+    fullStatsRaw = models.Statistics.objects.order_by('day')
+
+    years = list(
+        map(
+            lambda singleYearRaw: singleYearRaw.strftime('%Y'),
+            models.Statistics.objects.all().dates('day', 'year')
+        )
+    )
+
+    # fullStatsForEachShelf = [
+    #   [
+    #       storeShelf,
+    #       {
+    #           'soldEveryDay', soldInYear = [
+    #               {'2018', soldInYear['2018'] = [[date, sold_count], [date, sold_count], ...]},
+    #               {'2019', soldInYear['2019'] = [...]},
+    #               {'2020', soldInYear['2020'] = [...]}
+    #           ],
+    #           'incomeEveryDay', incomeInYear = [
+    #               {'2018', incomeInYear['2018'] = [[date, sold_count * price_that_day], [date, sold_count * price_that_day], ...]},
+    #               {'2019', incomeInYear['2019'] = [...]},
+    #               {'2020', incomeInYear['2020'] = [...]}
+    #           ]
+    #       }
+    #   ], [storeShelf, {...}], ...
+    # ]
+
     fullStatsForEachShelf = []
-    models.Statistics.objects.all().delete()
-    db_manager.fill_in_statistics()
-    models.Stock.objects.all().delete()
-    db_manager.fill_in_stocks()
     for storeShelf in storeShelves:
-        soldEveryDay = []
-        incomeEveryDay = []
+        soldInYear = {}
+        incomeInYear = {}
+        for year in years:
+            soldInYear[year] = []
+            incomeInYear[year] = []
+
         for dailyStats in fullStatsRaw:
             if storeShelf == dailyStats.shelf:
-                soldEveryDay.append(
+                year = dailyStats.statYear
+                soldInYear[year].append(
                     [dailyStats.day.strftime(
-                        '%m/%d/%Y'), dailyStats.sold_count]
+                        '%m/%d'), dailyStats.sold_count]
                 )
-                if dailyStats.is_stock_day:
-                    stockPrice = models.Stock.objects.get(product=storeShelf.product, end_timestamp=datetime.combine(
-                        dailyStats.day, datetime.min.time())
-                    ).stock_price
-                    incomeEveryDay.append(
+                if dailyStats.stock:
+                    incomeInYear[year].append(
                         [dailyStats.day.strftime(
-                            '%m/%d/%Y'), dailyStats.sold_count * stockPrice]
+                            '%m/%d'), dailyStats.sold_count * dailyStats.stock.stock_price]
                     )
                 else:
-                    incomeEveryDay.append(
+                    incomeInYear[year].append(
                         [dailyStats.day.strftime(
-                            '%m/%d/%Y'), dailyStats.sold_count * dailyStats.price_that_day]
+                            '%m/%d'), dailyStats.sold_count * dailyStats.price_that_day]
                     )
-        availableStats = dict()
-        if soldEveryDay:
-            availableStats["soldEveryDay"] = soldEveryDay
-        if incomeEveryDay:
-            availableStats["incomeEveryDay"] = incomeEveryDay
+        availableStats = {}
+        if soldInYear:
+            availableStats["soldEveryDay"] = soldInYear
+        if incomeInYear:
+            availableStats["incomeEveryDay"] = incomeInYear
         fullStatsForEachShelf.append(
             [storeShelf, availableStats]
         )

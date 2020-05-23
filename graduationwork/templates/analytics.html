@@ -12,8 +12,8 @@
 
       let basicOptions = {
         backgroundColor: "#fff",
-        colors: ["#09f"],
-        lineWidth: 3,
+        colors: ["#DC143C"],
+        lineWidth: 2,
         gridlineColor: "#ddd",
         legend: "none",
         vAxis: {minValue: 0},
@@ -30,8 +30,21 @@
         width: 220,
         height: 220
       }
-      const soldEveryDayOptions = basicOptions
-      const incomeEveryDayOptions = basicOptions
+      const soldEveryDayOptions = Object.assign({}, basicOptions)
+      soldEveryDayOptions.title = 'Статистика продаж'
+      soldEveryDayOptions.curveType = 'function'
+      soldEveryDayOptions.intervals = { 'style':'line' }
+      soldEveryDayOptions.interval = {
+        'i0': { 'style':'line', 'color':'#32CD32', 'lineWidth': 1 },
+        'i1': { 'style':'line', 'color':'#09f', 'lineWidth': 0.75 }
+      }
+      const incomeEveryDayOptions = Object.assign({}, basicOptions)
+      incomeEveryDayOptions.title = 'Ежедневный доход'
+      incomeEveryDayOptions.intervals = { 'style':'line' }
+      incomeEveryDayOptions.interval = {
+        'i0': { 'style':'line', 'color':'#32CD32', 'lineWidth': 1 },
+        'i1': { 'style':'line', 'color':'#09f', 'lineWidth': 0.75 }
+      }
 
       function drawCharts() {
         {% for fullStatsForSingleShelf in fullStatsForEachShelf %}
@@ -42,9 +55,28 @@
                   let soldEveryDayData_{{ shelfProps.id }} = new google.visualization.DataTable()
                   soldEveryDayData_{{ shelfProps.id }}.addColumn('string', 'Дата')
                   soldEveryDayData_{{ shelfProps.id }}.addColumn('number', 'Количество')
-                  {% for row in stats %}
-                    soldEveryDayData_{{ shelfProps.id }}.addRow(['{{ row|first }}', {{ row|last }}])
+                  soldEveryDayData_{{ shelfProps.id }}.addColumn({id:'i0', type:'number', role:'interval'})
+                  soldEveryDayData_{{ shelfProps.id }}.addColumn({id:'i1', type:'number', role:'interval'})
+
+                  let soldEveryDayRows_{{ shelfProps.id }} = {}
+                  {% for year, soldStats in stats.items %}
+                    {% for row in soldStats %}
+                      if (! soldEveryDayRows_{{ shelfProps.id }}['{{ row|first }}']) {
+                        soldEveryDayRows_{{ shelfProps.id }}['{{ row|first }}'] = {}
+                      }
+                      soldEveryDayRows_{{ shelfProps.id }}['{{ row|first }}']['{{ year }}'] = {{ row|last }}
+                    {% endfor %}
                   {% endfor %}
+                  for (prop in soldEveryDayRows_{{ shelfProps.id }}) {
+                    let soldEveryDayRows = soldEveryDayRows_{{ shelfProps.id }}
+                    soldEveryDayData_{{ shelfProps.id }}
+                      .addRow([
+                        prop,
+                        soldEveryDayRows[prop]['2020'] || 0,
+                        soldEveryDayRows[prop]['2019'] || 0,
+                        soldEveryDayRows[prop]['2018'] || 0
+                      ])
+                  }
 
                   let soldEveryDayChart_{{ shelfProps.id }} = new google.visualization.LineChart(document.getElementById('soldEveryDayGraph_{{ shelfProps.id }}'))
                   soldEveryDayChart_{{ shelfProps.id }}.draw(soldEveryDayData_{{ shelfProps.id }}, soldEveryDayOptions)
@@ -53,9 +85,28 @@
                   let incomeEveryDayData_{{ shelfProps.id }} = new google.visualization.DataTable()
                   incomeEveryDayData_{{ shelfProps.id }}.addColumn('string', 'Дата')
                   incomeEveryDayData_{{ shelfProps.id }}.addColumn('number', 'Доход')
-                  {% for row in stats %}
-                    incomeEveryDayData_{{ shelfProps.id }}.addRow(['{{ row|first }}', {{ row|last }}])
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn({id:'i0', type:'number', role:'interval'})
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn({id:'i1', type:'number', role:'interval'})
+
+                  let incomeEveryDayRows_{{ shelfProps.id }} = {}
+                  {% for year, incomeStats in stats.items %}
+                    {% for row in incomeStats %}
+                      if (! incomeEveryDayRows_{{ shelfProps.id }}['{{ row|first }}']) {
+                        incomeEveryDayRows_{{ shelfProps.id }}['{{ row|first }}'] = {}
+                      }
+                      incomeEveryDayRows_{{ shelfProps.id }}['{{ row|first }}']['{{ year }}'] = {{ row|last }}
+                    {% endfor %}
                   {% endfor %}
+                  for (prop in incomeEveryDayRows_{{ shelfProps.id }}) {
+                    let incomeEveryDayRows = incomeEveryDayRows_{{ shelfProps.id }}
+                    incomeEveryDayData_{{ shelfProps.id }}
+                      .addRow([
+                        prop,
+                        incomeEveryDayRows[prop]['2020'] || 0,
+                        incomeEveryDayRows[prop]['2019'] || 0,
+                        incomeEveryDayRows[prop]['2018'] || 0
+                      ])
+                  }
 
                   let incomeEveryDayChart_{{ shelfProps.id }} = new google.visualization.LineChart(document.getElementById('incomeEveryDayGraph_{{ shelfProps.id }}'))
                   incomeEveryDayChart_{{ shelfProps.id }}.draw(incomeEveryDayData_{{ shelfProps.id }}, incomeEveryDayOptions)
@@ -77,18 +128,20 @@
                   <div class="row">
                     {% for statsName, stats in shelfStats.items %}
                       {% if statsName == "soldEveryDay" %}
-                        <div class="col-md-4">
-                          <div class="mb-2"><b>Статистика продаж:</b></div>
-                          <b><div class="mb-2" id="soldEveryDayGraph_{{ shelfProps.id }}"></div></b>
+                        <div class="col-md-4" style="margin: 0 auto;">
+                          <b><div class="my-2" align="center" id="soldEveryDayGraph_{{ shelfProps.id }}"></div></b>
                         </div>
                       {% endif %}
                       {% if statsName == "incomeEveryDay" %}
-                        <div class="col-md-4">
-                          <div class="mb-2"><b>Ежедневный доход:</b></div>
-                          <b><div class="mb-2" id="incomeEveryDayGraph_{{ shelfProps.id }}"></div></b>
+                        <div class="col-md-4" style="margin: 0 auto;">
+                          <b><div class="my-2" align="center" id="incomeEveryDayGraph_{{ shelfProps.id }}"></div></b>
                         </div>
                       {% endif %}
-                      {% comment %} <div class="col-md-4 mt-4" id="thirdGraph"></div> {% endcomment %}
+                      {% if hasThirdOption %}
+                        <div class="col-md-4" style="margin: 0 auto;">
+                          <b><div class="my-2" align="center"></div></b>
+                        </div>
+                      {% endif %}
                     {% endfor %}
                   </div>
                 </div>
