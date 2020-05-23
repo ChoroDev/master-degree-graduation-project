@@ -15,12 +15,14 @@
         colors: ["#DC143C"],
         lineWidth: 2,
         gridlineColor: "#ddd",
-        legend: "none",
+        legend: {
+          position: "bottom"
+        },
         vAxis: {minValue: 0},
         chartArea: {
-          left: 40,
+          left: 30,
           top: 20,
-          width: 160,
+          width: 180,
           height: 160
         },
         backgroundColor: {
@@ -40,11 +42,7 @@
       }
       const incomeEveryDayOptions = Object.assign({}, basicOptions)
       incomeEveryDayOptions.title = 'Ежедневный доход'
-      incomeEveryDayOptions.intervals = { 'style':'line' }
-      incomeEveryDayOptions.interval = {
-        'i0': { 'style':'line', 'color':'#32CD32', 'lineWidth': 1 },
-        'i1': { 'style':'line', 'color':'#09f', 'lineWidth': 0.75 }
-      }
+      incomeEveryDayOptions.colors = ['#DC143C', '#32CD32', '#09F']
 
       function drawCharts() {
         {% for fullStatsForSingleShelf in fullStatsForEachShelf %}
@@ -54,7 +52,7 @@
                 {% if statsName == "soldEveryDay" %}
                   let soldEveryDayData_{{ shelfProps.id }} = new google.visualization.DataTable()
                   soldEveryDayData_{{ shelfProps.id }}.addColumn('string', 'Дата')
-                  soldEveryDayData_{{ shelfProps.id }}.addColumn('number', 'Количество')
+                  soldEveryDayData_{{ shelfProps.id }}.addColumn('number', '2020')
                   soldEveryDayData_{{ shelfProps.id }}.addColumn({id:'i0', type:'number', role:'interval'})
                   soldEveryDayData_{{ shelfProps.id }}.addColumn({id:'i1', type:'number', role:'interval'})
 
@@ -84,9 +82,9 @@
                 {% if statsName == "incomeEveryDay" %}
                   let incomeEveryDayData_{{ shelfProps.id }} = new google.visualization.DataTable()
                   incomeEveryDayData_{{ shelfProps.id }}.addColumn('string', 'Дата')
-                  incomeEveryDayData_{{ shelfProps.id }}.addColumn('number', 'Доход')
-                  incomeEveryDayData_{{ shelfProps.id }}.addColumn({id:'i0', type:'number', role:'interval'})
-                  incomeEveryDayData_{{ shelfProps.id }}.addColumn({id:'i1', type:'number', role:'interval'})
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn('number', '2020')
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn('number', '2019')
+                  incomeEveryDayData_{{ shelfProps.id }}.addColumn('number', '2018')
 
                   let incomeEveryDayRows_{{ shelfProps.id }} = {}
                   {% for year, incomeStats in stats.items %}
@@ -101,14 +99,14 @@
                     let incomeEveryDayRows = incomeEveryDayRows_{{ shelfProps.id }}
                     incomeEveryDayData_{{ shelfProps.id }}
                       .addRow([
-                        prop,
+                        {v: prop, f: prop},
                         incomeEveryDayRows[prop]['2020'] || 0,
                         incomeEveryDayRows[prop]['2019'] || 0,
                         incomeEveryDayRows[prop]['2018'] || 0
                       ])
                   }
 
-                  let incomeEveryDayChart_{{ shelfProps.id }} = new google.visualization.LineChart(document.getElementById('incomeEveryDayGraph_{{ shelfProps.id }}'))
+                  let incomeEveryDayChart_{{ shelfProps.id }} = new google.visualization.ColumnChart(document.getElementById('incomeEveryDayGraph_{{ shelfProps.id }}'))
                   incomeEveryDayChart_{{ shelfProps.id }}.draw(incomeEveryDayData_{{ shelfProps.id }}, incomeEveryDayOptions)
                 {% endif %}
               {% endfor %}
@@ -118,37 +116,35 @@
       }
     </script>
 
-    <div class="jumbotron border">
-      <div class="container-md">
-        {% for fullStatsForSingleShelf in fullStatsForEachShelf %}
-          {% with fullStatsForSingleShelf|first as shelfProps %}
-            {% with fullStatsForSingleShelf|last as shelfStats %}
-              <button class="btn btn-success btn-block" style="pointer-events: none;">Секция: {{ shelfProps.section_name }}, полка: {{ shelfProps.shelf_name }}</button>
-                <div class="card card-body">
-                  <div class="row">
-                    {% for statsName, stats in shelfStats.items %}
-                      {% if statsName == "soldEveryDay" %}
-                        <div class="col-md-4" style="margin: 0 auto;">
-                          <b><div class="my-2" align="center" id="soldEveryDayGraph_{{ shelfProps.id }}"></div></b>
-                        </div>
-                      {% endif %}
-                      {% if statsName == "incomeEveryDay" %}
-                        <div class="col-md-4" style="margin: 0 auto;">
-                          <b><div class="my-2" align="center" id="incomeEveryDayGraph_{{ shelfProps.id }}"></div></b>
-                        </div>
-                      {% endif %}
-                      {% if hasThirdOption %}
-                        <div class="col-md-4" style="margin: 0 auto;">
-                          <b><div class="my-2" align="center"></div></b>
-                        </div>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
+    <div class="container-md">
+      {% for fullStatsForSingleShelf in fullStatsForEachShelf %}
+        {% with fullStatsForSingleShelf|first as shelfProps %}
+          {% with fullStatsForSingleShelf|last as shelfStats %}
+            <button class="btn btn-success btn-block" style="pointer-events: none;">Секция: {{ shelfProps.section_name }}, полка: {{ shelfProps.shelf_name }}</button>
+              <div class="card card-body">
+                <div class="row">
+                  {% for statsName, stats in shelfStats.items %}
+                    {% if statsName == "soldEveryDay" %}
+                      <div class="col-md-4" style="margin: 0 auto;">
+                        <b><div class="my-2" align="center" id="soldEveryDayGraph_{{ shelfProps.id }}"></div></b>
+                      </div>
+                    {% endif %}
+                    {% if statsName == "incomeEveryDay" %}
+                      <div class="col-md-4" style="margin: 0 auto;">
+                        <b><div class="my-2" align="center" id="incomeEveryDayGraph_{{ shelfProps.id }}"></div></b>
+                      </div>
+                    {% endif %}
+                    {% if hasThirdOption %}
+                      <div class="col-md-4" style="margin: 0 auto;">
+                        <b><div class="my-2" align="center"></div></b>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
                 </div>
-            {% endwith %}
+              </div>
           {% endwith %}
-        {% endfor %}
-      </div>
+        {% endwith %}
+      {% endfor %}
     </div>
   {% endif %}
 {% endblock content %}

@@ -98,8 +98,3 @@ class Statistics(models.Model):
     def statYear(self):
         "Returns year of statistic record"
         return self.day.strftime('%Y')
-
-    @property
-    def is_current_year(self):
-        "Returns true if row year is current"
-        return self.statYear == datetime.datetime.today().year
