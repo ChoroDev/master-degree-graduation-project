@@ -92,6 +92,7 @@ class Statistics(models.Model):
     sold_count = models.IntegerField(default=0)
     is_stock_day = models.BooleanField(default=False)
     failures_count = models.IntegerField(default=0)
+    price_that_day = models.FloatField(default=0.0)
 
 
 class Stock(models.Model):

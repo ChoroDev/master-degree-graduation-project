@@ -175,31 +175,26 @@ def analytics(request):
     fullStatsRaw = models.Statistics.objects.all()
     fullStatsForEachShelf = []
     for storeShelf in storeShelves:
-        soldEveryDayForSingleShelf = []
+        soldEveryDay = []
+        revenueEveryDay = []
         for dailyStats in fullStatsRaw:
             if storeShelf == dailyStats.shelf:
-                soldEveryDayForSingleShelf.append(
+                soldEveryDay.append(
                     [dailyStats.day.strftime(
                         '%m/%d/%Y'), dailyStats.sold_count]
                 )
         availableStats = dict()
-        if soldEveryDayForSingleShelf:
-            availableStats["soldEveryDay"] = soldEveryDayForSingleShelf
+        if soldEveryDay:
+            availableStats["soldEveryDay"] = soldEveryDay
         fullStatsForEachShelf.append(
             [storeShelf, availableStats]
         )
-
-    fullStatsForEachShelf
-    summary = [["khe", 100], ["kok", 120], ["hah", 230]]
-    someData = [["kheData", 100], ["kokData", 120], ["hahData", 230]]
 
     return render(
         request,
         "analytics.html",
         {
             "analytics_is_active": is_active,
-            "fullStatsForEachShelf": fullStatsForEachShelf,
-            "summary": summary,
-            "someData": someData
+            "fullStatsForEachShelf": fullStatsForEachShelf
         }
     )
