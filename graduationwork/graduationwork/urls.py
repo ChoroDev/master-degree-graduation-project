@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from automated_system import views
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -36,4 +36,6 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('failures', views.failures, name='failures'),
     path('analytics', views.analytics, name='analytics'),
+    path('favicon.ico', RedirectView.as_view(
+        url='/static/images/favicon.ico', permanent=True)),
 ]

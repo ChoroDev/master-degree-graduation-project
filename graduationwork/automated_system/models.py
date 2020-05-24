@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User as BaseUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import json
 
 
 class User(models.Model):
@@ -63,7 +64,15 @@ class Product(models.Model):
 class Storage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_count = models.IntegerField(default=0)
-    delivery_timestamp = models.DateTimeField(auto_now=True)
+    delivery_timestamp = models.DateTimeField(null=True)
+
+    def toJSON(self):
+        return ('{ '
+                + '"id": "' + str(self.id)
+                + '", "product_id": "' + str(self.product.id)
+                + '", "product_count": "' + str(self.product_count)
+                + '", "delivery_timestamp": "' + str(self.delivery_timestamp)
+                + '"}')
 
 
 class Store(models.Model):

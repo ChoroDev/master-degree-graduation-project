@@ -6,6 +6,90 @@
 
 {% block content %}
   {% if user.is_authenticated %}
+    <script src="{% static 'js/common.js'%}" type="text/javascript"></script>
+    <script type="text/javascript">
+      const url = '{% url "storage" %}'
+
+      function addProductsResultHandler (result) {
+        result = JSON.parse(result)
+        result.success
+          ? addProductsSuccess(result.success)
+          : addProductsFailure(result.failure)
+      }
+
+      function addProductsSuccess (result) {
+        console.log('success')
+
+        const productsCountDOM = document.getElementById(`storageElem_${result.id}_productCount`)
+        const deliveryTimestampDOM = document.getElementById(`storageElem_${result.id}_deliveryTimestamp`)
+
+        productsCountDOM.nodeName === 'A'
+          ? productsCountDOM.innerText = `${result.product_count}`
+          : productsCountDOM.value = `${result.product_count}`
+
+        const lastCharge = new Date(result.delivery_timestamp).format("mmmm d, yyyy, h:MM tt.")
+        tt = lastCharge.substring(lastCharge.length - 3)
+        tt = (tt === 'pm.') ? 'p.m.' : 'a.m.'
+        deliveryTimestampDOM.innerText = `"${lastCharge.substring(0, lastCharge.length - 3) + tt}"`
+
+        return false
+      }
+
+      function addProductsFailure (result) {
+        console.log(`failure: ${result}`)
+        return false
+      }
+
+      function addProducts (storageElemId) {
+        const addProductsCountDOM = document.getElementById(`${storageElemId}_addProductCount`)
+        const addProductsCountString = addProductsCountDOM.value
+        addProductsCountDOM.value = 0
+
+        const data = {
+          storageElem_id: storageElemId.split('_')[1],
+          addCount: addProductsCountString
+        }
+
+        ajaxRequest(url, "addProducts", data, addProductsResultHandler)
+      }
+
+
+      function saveProductsCountResultHandler (result) {
+        result = JSON.parse(result)
+        result.success
+          ? saveProductsCountSuccess(result.success)
+          : saveProductsCountSuccess(result.failure)
+      }
+
+      function saveProductsCountSuccess (result) {
+        console.log('success')
+        const productsCountDOM = document.getElementById(`storageElem_${result.id}_productCount`)
+        productsCountDOM.value = `${result.product_count}`
+        return false
+      }
+
+      function saveProductsCountFailure (result) {
+        result
+          ? console.log(`failure: ${result}`)
+          : console.log('failure: количество элементов не может быть меньше нуля')
+        return false
+      }
+
+      function saveProductsCount (storageElemId) {
+        const productsCountDOM = document.getElementById(`${storageElemId}_productCount`)
+
+        if (productsCountDOM.value < 0) {
+          saveProductsCountFailure()
+          return
+        }
+        const data = {
+          storageElem_id: storageElemId.split('_')[1],
+          productsCount: productsCountDOM.value
+        }
+
+        ajaxRequest(url, "saveProductsCount", data, saveProductsCountResultHandler)
+      }
+    </script>
     {% if storage.count > 0 %}
       <div class="container-md">
         {% for storageElem in storage %}
@@ -20,7 +104,7 @@
                 <div class="col-md-10">
                   <b>Продукт: </b>"{{ storageElem.product.name }}"
                   <br>
-                  <b>Дата последней поставки: </b>"{{ storageElem.delivery_timestamp }}"
+                  <b>Дата последней поставки: </b><a id="storageElem_{{ storageElem.id }}_deliveryTimestamp">"{{ storageElem.delivery_timestamp }}"</a>
                   <br>
                 </div>
               </div>
@@ -29,33 +113,32 @@
                   <div class="col-md-6">
                     <label for="product-count" class="font-weight-bold">Количество единиц продажи на складе: </label>
                     <div class="input-group mb-1">
-                      <input type=text id="product-count" class="form-control input-sm" value="{{ storageElem.product_count }}">
+                      <input type=text class="form-control input-sm" id="storageElem_{{ storageElem.id }}_productCount" value="{{ storageElem.product_count }}">
                       <div class="input-group-append">
-                        <button class="btn btn-success" type="button">Сохранить изменения</button>
+                        <button class="btn btn-success" type="button" onclick="saveProductsCount('storageElem_{{ storageElem.id }}')">Сохранить изменения</button>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-6">
+              {% endif %}
+              {# break until continuation #}
+              {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
+                <b>Количество единиц продажи на складе: </b><a id="storageElem_{{ storageElem.id }}_productCount">{{ storageElem.product_count }}</a>
+                <br>
+              {% endif %}
                     <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
                     <div class="input-group mb-1">
-                      <input type=text id="product-count" class="form-control input-sm" value="0">
+                      <input type=text id="storageElem_{{ storageElem.id }}_addProductCount" class="form-control input-sm" value="0">
                       <div class="input-group-append">
-                        <button class="btn btn-success" type="button">Добавить</button>
+                        <button class="btn btn-success" type="button" onclick="addProducts('storageElem_{{ storageElem.id }}')">Добавить</button>
                       </div>
                     </div>
-                  </div>
-                </div>
-              {% else %}
-                <b>Количество единиц продажи на складе: </b>{{ storageElem.product_count }}
-                <br>
-                <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
-                <div class="input-group mb-1">
-                  <input type=text id="product-count" class="form-control input-sm" value="0">
-                  <div class="input-group-append">
-                    <button class="btn btn-success" type="button">Добавить</button>
+              {# continuation #}
+              {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
                   </div>
                 </div>
               {% endif %}
+              {# endcontinuation #}
             </div>
           </div>
         {% endfor %}
