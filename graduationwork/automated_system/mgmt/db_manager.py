@@ -336,13 +336,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=i),
-            shelf=shelf,
-            sold_count=random.randint(27, 37),
-            failures_count=random.randint(0, 4),
-            price_that_day=shelf.product.price
-        )
         if i <= 5 and i >= 3:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=i),
@@ -350,6 +343,14 @@ def fill_in_statistics():
                 sold_count=random.randint(30, 42),
                 stock=stockStats,
                 failures_count=random.randint(1, 5),
+                price_that_day=shelf.product.price
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=i),
+                shelf=shelf,
+                sold_count=random.randint(27, 37),
+                failures_count=random.randint(0, 4),
                 price_that_day=shelf.product.price
             )
 
@@ -362,13 +363,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=366+i),
-            shelf=shelf,
-            sold_count=random.randint(28, 36),
-            failures_count=random.randint(0, 4),
-            price_that_day=shelf.product.price * 0.9
-        )
         if i <= 9 and i >= 6:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=366+i),
@@ -376,6 +370,14 @@ def fill_in_statistics():
                 sold_count=random.randint(31, 41),
                 stock=stockStats,
                 failures_count=random.randint(1, 5),
+                price_that_day=shelf.product.price * 0.9
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=366+i),
+                shelf=shelf,
+                sold_count=random.randint(28, 36),
+                failures_count=random.randint(0, 4),
                 price_that_day=shelf.product.price * 0.9
             )
 
@@ -393,13 +395,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=i),
-            shelf=shelf,
-            sold_count=random.randint(4, 9),
-            failures_count=random.randint(0, 2),
-            price_that_day=shelf.product.price
-        )
         if i <= 10 and i >= 7:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=i),
@@ -407,6 +402,14 @@ def fill_in_statistics():
                 sold_count=random.randint(5, 12),
                 stock=stockStats,
                 failures_count=random.randint(1, 3),
+                price_that_day=shelf.product.price
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=i),
+                shelf=shelf,
+                sold_count=random.randint(4, 9),
+                failures_count=random.randint(0, 2),
                 price_that_day=shelf.product.price
             )
 
@@ -439,13 +442,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=i),
-            shelf=shelf,
-            sold_count=random.randint(12, 19),
-            failures_count=random.randint(0, 2),
-            price_that_day=shelf.product.price
-        )
         if i <= 2 and i >= 1:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=i),
@@ -453,6 +449,14 @@ def fill_in_statistics():
                 sold_count=random.randint(21, 24),
                 stock=stockStats,
                 failures_count=random.randint(1, 3),
+                price_that_day=shelf.product.price
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=i),
+                shelf=shelf,
+                sold_count=random.randint(12, 19),
+                failures_count=random.randint(0, 2),
                 price_that_day=shelf.product.price
             )
 
@@ -475,13 +479,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=365+366+i),
-            shelf=shelf,
-            sold_count=random.randint(13, 20),
-            failures_count=random.randint(0, 2),
-            price_that_day=shelf.product.price * 0.8
-        )
         if i <= 6 and i >= 4:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=365+366+i),
@@ -489,6 +486,14 @@ def fill_in_statistics():
                 sold_count=random.randint(18, 25),
                 stock=stockStats,
                 failures_count=random.randint(1, 4),
+                price_that_day=shelf.product.price * 0.8
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=365+366+i),
+                shelf=shelf,
+                sold_count=random.randint(13, 20),
+                failures_count=random.randint(0, 2),
                 price_that_day=shelf.product.price * 0.8
             )
 
@@ -521,13 +526,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=i),
-            shelf=shelf,
-            sold_count=random.randint(4, 11),
-            failures_count=random.randint(0, 1),
-            price_that_day=shelf.product.price
-        )
         if i <= 9 and i >= 7:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=i),
@@ -535,6 +533,14 @@ def fill_in_statistics():
                 sold_count=random.randint(8, 15),
                 stock=stockStats,
                 failures_count=random.randint(0, 2),
+                price_that_day=shelf.product.price
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=i),
+                shelf=shelf,
+                sold_count=random.randint(4, 11),
+                failures_count=random.randint(0, 1),
                 price_that_day=shelf.product.price
             )
 
@@ -582,13 +588,6 @@ def fill_in_statistics():
         )
     )
     for i in range(10, -1, -1):
-        models.Statistics.objects.create(
-            day=date.today() - timedelta(days=i),
-            shelf=shelf,
-            sold_count=random.randint(8, 17),
-            failures_count=random.randint(0, 2),
-            price_that_day=shelf.product.price
-        )
         if i <= 3 and i >= 0:
             models.Statistics.objects.create(
                 day=date.today() - timedelta(days=i),
@@ -596,6 +595,14 @@ def fill_in_statistics():
                 sold_count=random.randint(11, 22),
                 stock=stockStats,
                 failures_count=random.randint(0, 3),
+                price_that_day=shelf.product.price
+            )
+        else:
+            models.Statistics.objects.create(
+                day=date.today() - timedelta(days=i),
+                shelf=shelf,
+                sold_count=random.randint(8, 17),
+                failures_count=random.randint(0, 2),
                 price_that_day=shelf.product.price
             )
 

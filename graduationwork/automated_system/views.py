@@ -198,6 +198,11 @@ def analytics(request):
     #               {'2018', incomeInYear['2018'] = [[date, sold_count * price_that_day], [date, sold_count * price_that_day], ...]},
     #               {'2019', incomeInYear['2019'] = [...]},
     #               {'2020', incomeInYear['2020'] = [...]}
+    #           ],
+    #           'failuresCountByYear', failuresInYear = [
+    #               {'2018', failuresInYear['2018'] = sum(failures_count)},
+    #               {'2019', failuresInYear['2019'] = sum(...)},
+    #               {'2020', failuresInYear['2020'] = sum(...)}
     #           ]
     #       }
     #   ], [storeShelf, {...}], ...
@@ -207,9 +212,11 @@ def analytics(request):
     for storeShelf in storeShelves:
         soldInYear = {}
         incomeInYear = {}
+        failuresInYear = {}
         for year in years:
             soldInYear[year] = []
             incomeInYear[year] = []
+            failuresInYear[year] = 0
 
         for dailyStats in fullStatsRaw:
             if storeShelf == dailyStats.shelf:
@@ -228,11 +235,14 @@ def analytics(request):
                         [dailyStats.day.strftime(
                             '%m/%d'), dailyStats.sold_count * dailyStats.price_that_day]
                     )
+                failuresInYear[year] += dailyStats.failures_count
         availableStats = {}
         if soldInYear:
             availableStats["soldEveryDay"] = soldInYear
         if incomeInYear:
             availableStats["incomeEveryDay"] = incomeInYear
+        if failuresInYear:
+            availableStats["failuresInYear"] = failuresInYear
         fullStatsForEachShelf.append(
             [storeShelf, availableStats]
         )
