@@ -5,11 +5,24 @@ from datetime import timedelta
 import random
 
 
+def restore_db():
+    models.Product.objects.all().delete()
+    models.Storage.objects.all().delete()
+    models.Store.objects.all().delete()
+    models.Stock.objects.all().delete()
+    models.Statistics.objects.all().delete()
+    fill_in_products()
+    fill_in_storage()
+    fill_in_store()
+    fill_in_stocks()
+    fill_in_statistics()
+
+
 def fill_in_products():
     models.Product.objects.create(
         name="Apple",
         digit_code="00000-0001",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=200.0,
         height=100.0,
         length=150.0,
@@ -19,7 +32,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Pineapple",
         digit_code="00000-0002",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=150.0,
         height=300.0,
         length=150.0,
@@ -29,7 +42,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Orange Juice",
         digit_code="00000-0003",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=100.0,
         height=200.0,
         length=50.0,
@@ -39,7 +52,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Milk",
         digit_code="00000-0004",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=100.0,
         height=200.0,
         length=50.0,
@@ -49,7 +62,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Carrot",
         digit_code="00000-0005",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=90.0,
         height=60.0,
         length=150.0,
@@ -59,7 +72,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Cucumber",
         digit_code="00000-0007",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=80.0,
         height=80.0,
         length=100.0,
@@ -69,7 +82,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Potato",
         digit_code="00000-0008",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=150.0,
         height=75.0,
         length=80.0,
@@ -79,7 +92,7 @@ def fill_in_products():
     models.Product.objects.create(
         name="Tomato",
         digit_code="00000-0009",
-        shelf_life=(datetime.now() + timedelta(days=365)),
+        shelf_life=10,
         width=200.0,
         height=100.0,
         length=50.0,
@@ -162,6 +175,7 @@ def fill_in_store():
         section_name='Milk_Products_1')
     models.Store.objects.create(
         product=models.Product.objects.get(name='Milk'),
+        user=models.User.objects.get(id=6),
         product_count=1,
         width=1000.0,
         height=300.0,
@@ -198,6 +212,7 @@ def fill_in_store():
         section_name='Vegetables_1')
     models.Store.objects.create(
         product=models.Product.objects.get(name='Tomato'),
+        user=models.User.objects.get(id=7),
         product_count=1,
         width=1000.0,
         height=500.0,
@@ -276,7 +291,9 @@ def fill_in_failures():
 
 
 def fill_in_stocks():
-    stockProduct = models.Store.objects.get(id=1).product
+    firstShelf = models.Store.objects.order_by('id').first()
+
+    stockProduct = models.Store.objects.get(id=firstShelf.id).product
     models.Stock.objects.create(
         product=stockProduct,
         stock_price=(stockProduct.price - stockProduct.price * 0.1),
@@ -290,7 +307,7 @@ def fill_in_stocks():
         end_timestamp=date.today() - timedelta(days=366+6)
     )
 
-    stockProduct = models.Store.objects.get(id=2).product
+    stockProduct = models.Store.objects.get(id=firstShelf.id+1).product
     models.Stock.objects.create(
         product=stockProduct,
         stock_price=(stockProduct.price - stockProduct.price * 0.25),
@@ -298,7 +315,7 @@ def fill_in_stocks():
         end_timestamp=date.today() - timedelta(days=7)
     )
 
-    stockProduct = models.Store.objects.get(id=4).product
+    stockProduct = models.Store.objects.get(id=firstShelf.id+3).product
     models.Stock.objects.create(
         product=stockProduct,
         stock_price=(stockProduct.price - stockProduct.price * 0.2),
@@ -312,7 +329,7 @@ def fill_in_stocks():
         end_timestamp=date.today() - timedelta(days=365+366+4)
     )
 
-    stockProduct = models.Store.objects.get(id=6).product
+    stockProduct = models.Store.objects.get(id=firstShelf.id+5).product
     models.Stock.objects.create(
         product=stockProduct,
         stock_price=(stockProduct.price - stockProduct.price * 0.15),
@@ -320,7 +337,7 @@ def fill_in_stocks():
         end_timestamp=date.today() - timedelta(days=7)
     )
 
-    stockProduct = models.Store.objects.get(id=9).product
+    stockProduct = models.Store.objects.get(id=firstShelf.id+8).product
     models.Stock.objects.create(
         product=stockProduct,
         stock_price=(stockProduct.price - stockProduct.price * 0.1),
@@ -330,10 +347,11 @@ def fill_in_stocks():
 
 
 def fill_in_statistics():
+    firstShelf = models.Store.objects.order_by('id').first()
     #
     # Store obj with id = 1
     #
-    shelf = models.Store.objects.get(id=1)
+    shelf = models.Store.objects.get(id=firstShelf.id)
 
     # 2020
     stockStats = models.Stock.objects.get(
@@ -392,7 +410,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 2
     #
-    shelf = models.Store.objects.get(id=2)
+    shelf = models.Store.objects.get(id=firstShelf.id+1)
 
     # 2020
     stockStats = models.Stock.objects.get(
@@ -424,7 +442,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 3
     #
-    shelf = models.Store.objects.get(id=3)
+    shelf = models.Store.objects.get(id=firstShelf.id+2)
 
     # 2020
     for i in range(10, -1, -1):
@@ -439,7 +457,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 4
     #
-    shelf = models.Store.objects.get(id=4)
+    shelf = models.Store.objects.get(id=firstShelf.id+3)
 
     # 2020
     stockStats = models.Stock.objects.get(
@@ -508,7 +526,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 5
     #
-    shelf = models.Store.objects.get(id=5)
+    shelf = models.Store.objects.get(id=firstShelf.id+4)
 
     # 2020
     for i in range(10, -1, -1):
@@ -523,7 +541,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 6
     #
-    shelf = models.Store.objects.get(id=6)
+    shelf = models.Store.objects.get(id=firstShelf.id+5)
 
     # 2020
     stockStats = models.Stock.objects.get(
@@ -555,7 +573,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 7
     #
-    shelf = models.Store.objects.get(id=7)
+    shelf = models.Store.objects.get(id=firstShelf.id+6)
 
     # 2020
     for i in range(10, -1, -1):
@@ -570,7 +588,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 8
     #
-    shelf = models.Store.objects.get(id=8)
+    shelf = models.Store.objects.get(id=firstShelf.id+7)
 
     # 2020
     for i in range(10, -1, -1):
@@ -585,7 +603,7 @@ def fill_in_statistics():
     #
     # Store obj with id = 9
     #
-    shelf = models.Store.objects.get(id=9)
+    shelf = models.Store.objects.get(id=firstShelf.id+8)
 
     # 2020
     stockStats = models.Stock.objects.get(

@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager
-from . import models
+from . import models, forms
 from collections import defaultdict
 import json
+import os.path
 import math
 
 
@@ -52,7 +53,10 @@ def about(request):
 
 def products(request):
     if request.method == 'POST':
-        return helpers.handleAction(request, products_manager)
+        if request.FILES.get('img', False):
+            return HttpResponse(products_manager.handleChangeImage(request))
+        else:
+            return helpers.handleAction(request, products_manager)
     else:
         products = models.Product.objects.all()
         rowsCount = math.ceil(products.count() / 3)

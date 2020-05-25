@@ -15,3 +15,32 @@ function ajaxRequest (url, action, payload, resultHandler) {
     success: resultHandler
   })
 }
+
+
+function ajaxRequestFile (url, data, resultHandler) {
+  let csrftoken = Cookies.get('csrftoken')
+  $.ajaxSetup({
+    beforeSend: function (xhr, settings) {
+      if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+      }
+    }
+  })
+  $.ajax({
+    url,
+    type: "POST",
+    cache: false,
+    contentType: false,
+    processData: false,
+    data,
+    success: resultHandler
+  })
+}
+
+
+function genericResultHandler (result, successHandler, failureHandler) {
+  result = JSON.parse(result)
+  result.success
+    ? successHandler(result.success)
+    : failureHandler(result.failure)
+}

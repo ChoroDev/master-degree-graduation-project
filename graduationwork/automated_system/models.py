@@ -52,13 +52,27 @@ class Failure(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=30, blank=True)
     digit_code = models.CharField(max_length=9, blank=True)
-    shelf_life = models.DateTimeField(null=True)
+    shelf_life = models.IntegerField(default=0)
     width = models.FloatField(default=0.0)
     height = models.FloatField(default=0.0)
     length = models.FloatField(default=0.0)
     weight = models.FloatField(default=0.0)
     price = models.FloatField(default=0.0)
     stackable = models.BooleanField(default=False)
+
+    def toJSON(self):
+        return('{ '
+               + '"id": "' + str(self.id)
+               + '", "name": "' + str(self.name)
+               + '", "digit_code": "' + str(self.digit_code)
+               + '", "shelf_life": "' + str(self.shelf_life)
+               + '", "width": "' + str(self.width)
+               + '", "height": "' + str(self.height)
+               + '", "length": "' + str(self.length)
+               + '", "weight": "' + str(self.weight)
+               + '", "price": "' + str(self.price)
+               + '", "stackable": "' + str(self.stackable)
+               + '"}')
 
 
 class Storage(models.Model):
@@ -76,7 +90,7 @@ class Storage(models.Model):
 
 
 class Store(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product_count = models.IntegerField(default=0)
     width = models.FloatField(default=0.0)
@@ -89,7 +103,7 @@ class Store(models.Model):
 
 
 class Stock(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     stock_price = models.FloatField(default=0.0)
     start_timestamp = models.DateTimeField()
     end_timestamp = models.DateTimeField()
