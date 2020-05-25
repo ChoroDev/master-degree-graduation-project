@@ -15,6 +15,12 @@ class User(models.Model):
     )
     group = models.CharField(max_length=1, choices=USER_GROUPS, default='P')
 
+    def toJSON(self):
+        return ('{ '
+                + '"id": "' + str(self.id)
+                + '", "group": "' + str(self.group)
+                + '"}')
+
 
 @receiver(post_save, sender=BaseUser)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -47,6 +53,19 @@ class Failure(models.Model):
     stack_trace = models.TextField(blank=True)
     is_solved = models.BooleanField(default=False)
     assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    def toJSON(self):
+        return ('{ '
+                + '"id": "' + str(self.id)
+                + '", "severity": "' + str(self.severity)
+                + '", "timestamp": "' + str(self.timestamp)
+                + '", "possible_cause": "' + str(self.possible_cause)
+                + '", "possible_solution": "' + str(self.possible_solution)
+                + '", "stack_trace": "' + str(self.stack_trace)
+                + '", "is_solved": "' + str(self.is_solved)
+                + '", "assignee_id": "' +
+                str((self.assignee and self.assignee.id) or "")
+                + '"}')
 
 
 class Product(models.Model):

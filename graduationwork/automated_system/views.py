@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager
+from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager, failures as failures_manager
 from . import models, forms
 from collections import defaultdict
 import json
@@ -127,31 +127,34 @@ def profile(request):
 
 
 def failures(request):
-    solvedTasks = list()
-    unsolvedTasks = list()
-    for task in models.Failure.objects.all():
-        if request.user.profile.group == "P":
-            if task.assignee == request.user.profile:
+    if request.method == 'POST':
+        return helpers.handleAction(request, failures_manager)
+    else:
+        solvedTasks = list()
+        unsolvedTasks = list()
+        for task in models.Failure.objects.all():
+            if request.user.profile.group == "P":
+                if task.assignee == request.user.profile:
+                    if not task.is_solved:
+                        unsolvedTasks.append(task)
+                    else:
+                        solvedTasks.append(task)
+            else:
                 if not task.is_solved:
                     unsolvedTasks.append(task)
                 else:
                     solvedTasks.append(task)
-        else:
-            if not task.is_solved:
-                unsolvedTasks.append(task)
-            else:
-                solvedTasks.append(task)
 
-    return render(
-        request,
-        "failures.html",
-        {
-            "failures_is_active": is_active,
-            "solvedTasks": solvedTasks,
-            "unsolvedTasks": unsolvedTasks,
-            "availableUsers": models.BaseUser.objects.all().select_related('profile')
-        }
-    )
+        return render(
+            request,
+            "failures.html",
+            {
+                "failures_is_active": is_active,
+                "solvedTasks": solvedTasks,
+                "unsolvedTasks": unsolvedTasks,
+                "availableUsers": models.BaseUser.objects.all().select_related('profile')
+            }
+        )
 
 
 def analytics(request):

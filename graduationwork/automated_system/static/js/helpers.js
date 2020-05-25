@@ -38,9 +38,13 @@ function ajaxRequestFile (url, data, resultHandler) {
 }
 
 
-function genericResultHandler (result, successHandler, failureHandler) {
+function genericResultHandler (result, successHandler = genericSuccess, failureHandler = genericFailure) {
   result = JSON.parse(result)
   result.success
     ? successHandler(result.success)
     : failureHandler(result.failure)
 }
+
+
+function genericSuccess (result) { console.log(`success: ${result}`) }
+function genericFailure (result) { console.log(`failure: ${result}`) }

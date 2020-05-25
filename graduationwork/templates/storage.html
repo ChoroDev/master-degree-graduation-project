@@ -18,7 +18,7 @@
       const url = '{% url "storage" %}'
 
       function addProductsResultHandler (result) {
-        genericResultHandler(result, addProductsSuccess, addProductsFailure)
+        genericResultHandler(result, addProductsSuccess)
       }
 
       function addProductsSuccess (result) {
@@ -36,11 +36,6 @@
         tt = (tt === 'pm.') ? 'p.m.' : 'a.m.'
         deliveryTimestampDOM.innerText = `"${lastCharge.substring(0, lastCharge.length - 3) + tt}"`
 
-        return false
-      }
-
-      function addProductsFailure (result) {
-        console.log(`failure: ${result}`)
         return false
       }
 
@@ -73,7 +68,6 @@
         result
           ? console.log(`failure: ${result}`)
           : console.log('failure: количество элементов не может быть меньше нуля')
-        return false
       }
 
       function saveProductsCount (storageElemId) {

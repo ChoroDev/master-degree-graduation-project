@@ -18,20 +18,15 @@
       <script type="text/javascript">
         const url = '{% url "products" %}'
 
-        function changeImageResultHandler (result) {
-          genericResultHandler(result, changeImageSuccess, changeImageFailure)
-        }
-
-
         function changeImageSuccess (result) {
           console.log('success')
           const productImageDOM = document.getElementById(`product_${result.id}_image`)
           productImageDOM.src = '/static/images/' + result.name + "?" + new Date().now
         }
 
-
-        function changeImageFailure (result) { console.log('failure') }
-
+        function changeImageResultHandler (result) {
+          genericResultHandler(result, changeImageSuccess)
+        }
 
         function changeImage (productId) {
           const productImageDOM = document.getElementById(`${productId}_image`)
@@ -72,12 +67,7 @@
           productStackableDOM.value = result.stackable == 'True' ? 'Да' : 'Нет'
         }
 
-
-        function saveChangesFailure (result) { console.log(`failure: ${result}`) }
-
-
-        function saveChangesResultHandler (result) { genericResultHandler(result, saveChangesSuccess, saveChangesFailure)}
-
+        function saveChangesResultHandler (result) { genericResultHandler(result, saveChangesSuccess)}
 
         function saveChanges (productId) {
           const productNameDOM = document.getElementById(`product_${productId}_name`)
@@ -114,12 +104,7 @@
           cardDOM.remove()
         }
 
-
-        function removeProductFailure (result) { console.log(`failure: ${result}`) }
-
-
-        function removeProductResultHandler (result) { genericResultHandler(result, removeProductSuccess, removeProductFailure )}
-
+        function removeProductResultHandler (result) { genericResultHandler(result, removeProductSuccess)}
 
         function removeProduct (productId) {
           const cardDOM = document.getElementById(`product_${productId}_card`)
@@ -197,12 +182,7 @@
           productsParentDOM.insertBefore(newProductCard, productsParentLastCardDOM)
         }
 
-
-        function addProductCardFailure (result) { console.log(`failure: ${result}`) }
-
-
-        function addProductCardResultHandler (result) { genericResultHandler(result, addProductCardSuccess, addProductCardFailure)}
-
+        function addProductCardResultHandler (result) { genericResultHandler(result, addProductCardSuccess)}
 
         function addProductCard () {
           ajaxRequest(url, "addProductCard", {}, addProductCardResultHandler)

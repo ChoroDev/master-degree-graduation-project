@@ -2,6 +2,7 @@ from .. import models
 from datetime import datetime
 from datetime import date
 from datetime import timedelta
+from django.contrib.auth.models import User
 import random
 
 
@@ -631,3 +632,18 @@ def fill_in_statistics():
                 failures_count=random.randint(0, 2),
                 price_that_day=shelf.product.price
             )
+
+
+def getAllAvailableUsersJSON():
+    users = User.objects.all()
+    availableUsers = '"availableUsers": {'
+    for user in users:
+        userGroup = models.User.objects.get(user=user).group
+        availableUsers += ('"' + str(user.id) + '": {' +
+                           '"first_name":"' + user.first_name +
+                           '", "last_name":"' + user.last_name +
+                           '", "group":"' + userGroup +
+                           '", "profile_id":"' + str(user.profile.id) +
+                           '"},')
+    availableUsers = availableUsers[:-1] + '}'
+    return availableUsers
