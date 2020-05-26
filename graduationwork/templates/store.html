@@ -52,12 +52,67 @@
       }
 
 
+      function changeParamSuccess (result) {
+        console.log('success')
+        const outElem = document.getElementById(`store_${result.id}_${result.paramName}_out`)
+        if (outElem) outElem.innerText = result[result.paramName]
+        const outElem_1 = document.getElementById(`store_${result.id}_${result.paramName}_out_1`)
+        if (outElem_1) outElem_1.innerText = result[result.paramName]
+      }
+
+      function changeParamResultHandler (result) { genericResultHandler(result, changeParamSuccess) }
+
       function changeParam (storeElemId, paramName) {
+        const paramValue = document.getElementById(`store_${storeElemId}_${paramName}`).value
         const data = {
           storeElem_id: storeElemId,
-          paramName
+          paramName,
+          paramValue
         }
+
+        ajaxRequest(url, "changeParam", data, changeParamResultHandler)
       }
+
+
+      function removeShelfSuccess (result) {
+        console.log('success')
+
+        document.getElementById(`store_${result.id}_shelfNameRow`).remove()
+        document.getElementById(`store_${result.id}_shelfButtonRow`).remove()
+        document.getElementById(`store_${result.id}_shelfParamsTitleRow`).remove()
+        document.getElementById(`store_${result.id}_shelfParamsRow`).remove()
+        document.getElementById(`store_${result.id}_shelfInside`).remove()
+      }
+
+      function removeShelfResultHander (result) { genericResultHandler(result, removeShelfSuccess) }
+
+      function removeShelf(shelfElemId) {
+        const data = {
+          shelfElem_id: shelfElemId
+        }
+        ajaxRequest(url, "removeShelf", data, removeShelfResultHander)
+      }
+
+
+      function removeSectionSuccess (result) {
+        console.log('success')
+
+        document.getElementById(`store_${result.id}_sectionNameRow`).remove()
+        document.getElementById(`store_${result.id}_sectionButtonRow`).remove()
+        document.getElementById(`store_${result.id}_sectionInside`).remove()
+      }
+
+      function removeSectionResultHandler (result) { genericResultHandler(result, removeSectionSuccess) }
+
+      function removeSection (shelfElemId) {
+        const data = {
+          shelfElem_id: shelfElemId
+        }
+        ajaxRequest(url, "removeSection", data, removeSectionResultHandler)
+      }
+
+
+
       {% endif %}
 
 
@@ -96,94 +151,118 @@
     </script>
     {% if storeSections %}
       <div class="jumbotron border pb-0 pt-5">
+        {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <button class="btn btn-success btn-block" type="button" onclick="addSection()">Добавить секцию</button>
+            </div>
+          </div>
+        {% endif %}
         {% for sectionSet in storeSections %}
           {% with sectionSet|first as sectionHeader %}
             {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-              <div class="input-group mb-3">
+              <div class="input-group mb-3" id="store_{{ sectionHeader.id }}_sectionNameRow">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="">Название секции: </span>
                 </div>
-                <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" id="store_{{ section.id }}_sectionName" value="{{ sectionHeader.section_name }}">
+                <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" id="store_{{ sectionHeader.id }}_section_name" value="{{ sectionHeader.section_name }}">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'section_name')">Сохранить</button>
+                  <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ sectionHeader.id }}', 'section_name')">Сохранить</button>
                 </div>
               </div>
             {% endif %}
-            <div class="row">
+            <div class="row" id="store_{{ sectionHeader.id }}_sectionButtonRow">
               <div class="col-md-12">
-                <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#{{ sectionHeader.section_name }}" aria-expanded="false" aria-controls="{{ sectionHeader.section_name }}">Секция: {{ sectionHeader.section_name }}</button>
+                <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#{{ sectionHeader.section_name }}" aria-expanded="false" aria-controls="{{ sectionHeader.section_name }}">Секция: <a id="store_{{ sectionHeader.id }}_section_name_out">{{ sectionHeader.section_name }}</a></button>
               </div>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-3" id="store_{{ sectionHeader.id }}_sectionInside">
               <div class="col">
                 <div class="collapse multi-collapse" id="{{ sectionHeader.section_name }}">
                   <div class="card card-body pb-0">
                     {% for section in sectionSet %}
                       {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-                        <div class="input-group mb-3 mt-4">
+                        <div class="row mb-3">
+                          <div class="col-md-12">
+                            <button class="btn btn-danger btn-block" type="button" onclick="removeSection('{{ sectionHeader.id }}')">Удалить секцию</button>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-12">
+                            <button class="btn btn-success btn-block" type="button" onclick="addShelf('{{ section.id }}')">Добавить полку</button>
+                          </div>
+                        </div>
+                        <div class="input-group mb-3 mt-4" id="store_{{ section.id }}_shelfNameRow">
                           <div class="input-group-prepend">
-                            <span class="input-group-text" id="">Название полки: </span>
+                            <span class="input-group-text">Название полки: </span>
                           </div>
-                          <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" value="{{ section.shelf_name }}">
+                          <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" id="store_{{ section.id }}_shelf_name" value="{{ section.shelf_name }}">
                           <div class="input-group-append">
-                            <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                            <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'shelf_name')">Сохранить</button>
                           </div>
                         </div>
                       {% endif %}
-                      <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#{{ section.shelf_name }}" aria-expanded="false" aria-controls="{{ section.shelf_name }}">Полка: {{ section.shelf_name }}</button>
+                      <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#{{ section.shelf_name }}" aria-expanded="false" aria-controls="{{ section.shelf_name }}"  id="store_{{ section.id }}_shelfButtonRow">Полка: <a id="store_{{ section.id }}_shelf_name_out">{{ section.shelf_name }}</a></button>
                       {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-                        <b class="my-3">Параметры полки {{ section.shelf_name }}:</b>
-                        <div class="row">
+                        <b class="my-3" id="store_{{ section.id}}_shelfParamsTitleRow">Параметры полки <a id="store_{{ section.id }}_shelf_name_out_1">{{ section.shelf_name }}</a>:</b>
+                        <div class="row" id="store_{{ section.id }}_shelfParamsRow">
                           <div class="col-md-6">
                             <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                                <span class="input-group-text" id="">Ширина (мм): </span>
+                                <span class="input-group-text">Ширина (мм): </span>
                               </div>
-                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.width }}">
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" id="store_{{ section.id }}_width" value="{{ section.width }}">
                               <div class="input-group-append">
-                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'width')">Сохранить</button>
                               </div>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                                <span class="input-group-text" id="">Высота (мм): </span>
+                                <span class="input-group-text">Высота (мм): </span>
                               </div>
-                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.height }}">
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.height }}" id="store_{{ section.id }}_height">
                               <div class="input-group-append">
-                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'height')">Сохранить</button>
                               </div>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                                <span class="input-group-text" id="">Длина (мм): </span>
+                                <span class="input-group-text">Длина (мм): </span>
                               </div>
-                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.length }}">
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.length }}" id="store_{{ section.id }}_length">
                               <div class="input-group-append">
-                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'length')">Сохранить</button>
                               </div>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                                <span class="input-group-text" id="">Макс. вес (г): </span>
+                                <span class="input-group-text">Макс. вес (г): </span>
                               </div>
-                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.carrying_capacity }}">
+                              <input type="text" class="form-control" aria-describedby="basic-addon2" value="{{ section.carrying_capacity }}"id="store{{ section.id }}_carrying_capacity">
                               <div class="input-group-append">
-                                <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'carrying_capacity')">Сохранить</button>
                               </div>
                             </div>
                           </div>
                         </div>
                       {% endif %}
-                      <div class="row mt-3 mb-3">
+                      <div class="row mt-3 mb-3" id="store_{{ section.id }}_shelfInside">
                         <div class="col">
                           <div class="collapse multi-collapse" id="{{ section.shelf_name }}">
                             <div class="card card-body">
+                              {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                                <div class="row mb-3">
+                                  <div class="col-md-12">
+                                    <button class="btn btn-danger btn-block" type="button" onclick="removeShelf('{{ section.id }}')">Удалить полку</button>
+                                  </div>
+                                </div>
+                              {% endif %}
                               <div class="row bg-white my-2 p-2">
                                 <div class="col-md-2 text-center">
                                   {% with 'images/'|add:section.product.name|add:'.png' as image_static %}
