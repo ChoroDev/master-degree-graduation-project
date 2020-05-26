@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager, failures as failures_manager
+from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager
+from .mgmt import failures as failures_manager, store as store_manager
 from . import models, forms
 from collections import defaultdict
 import json
@@ -16,28 +17,31 @@ def index(request):
 
 
 def store(request):
-    userGroups = list()
-    for group in request.user.groups.all():
-        userGroups.append(group.name)
-    userGroup = "Персонал"
-    if userGroups:
-        if userGroups[0] == "SystemAdministrators":
-            userGroup = "Системные администраторы"
-        elif userGroups[0] == "Management":
-            userGroup = "Менеджеры"
-        else:
-            userGroup = "Персонал"
+    if request.method == 'POST':
+        return helpers.handleAction(request, store_manager)
+    else:
+        userGroups = list()
+        for group in request.user.groups.all():
+            userGroups.append(group.name)
+        userGroup = "Персонал"
+        if userGroups:
+            if userGroups[0] == "SystemAdministrators":
+                userGroup = "Системные администраторы"
+            elif userGroups[0] == "Management":
+                userGroup = "Менеджеры"
+            else:
+                userGroup = "Персонал"
 
-    storeSectionsRaw = defaultdict(list)
-    for shelf in models.Store.objects.all():
-        if userGroup == "Персонал":
-            if shelf.user == request.user.profile:
+        storeSectionsRaw = defaultdict(list)
+        for shelf in models.Store.objects.all():
+            if userGroup == "Персонал":
+                if shelf.user == request.user.profile:
+                    storeSectionsRaw[shelf.section_name].append(shelf)
+            else:
                 storeSectionsRaw[shelf.section_name].append(shelf)
-        else:
-            storeSectionsRaw[shelf.section_name].append(shelf)
-    sectionsNames = storeSectionsRaw.keys()
-    storeSections = storeSectionsRaw.values()
-    return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeSections, "sectionsNames": sectionsNames})
+        sectionsNames = storeSectionsRaw.keys()
+        storeSections = storeSectionsRaw.values()
+        return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeSections, "sectionsNames": sectionsNames})
 
 
 def storage(request):

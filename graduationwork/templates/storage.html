@@ -53,6 +53,7 @@
       }
 
 
+      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
       function saveProductsCountResultHandler (result) {
         genericResultHandler(result, saveProductsCountSuccess, saveProductsCountSuccess)
       }
@@ -84,6 +85,7 @@
 
         ajaxRequest(url, "saveProductsCount", data, saveProductsCountResultHandler)
       }
+      {% endif %}
     </script>
     {% if storage.count > 0 %}
       <div class="container-md">

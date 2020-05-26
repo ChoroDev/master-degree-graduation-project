@@ -7,6 +7,93 @@
 {% block content %}
 
   {% if user.is_authenticated %}
+    <script src="{% static 'js/helpers.js'%}" type="text/javascript">
+      /*
+        Available funcitons in helpers.js:
+        * ajaxRequest (url, action, payload, resultHandler)
+        * ajaxRequestFile (url, data, resultHandler)
+        * genericResultHandler (result, successHandler, failureHandler)
+      */
+    </script>
+    <script type="text/javascript">
+      const url = '{% url "store" %}'
+
+      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+      function saveProductsCountResultHandler (result) {
+        genericResultHandler(result, saveProductsCountSuccess, saveProductsCountSuccess)
+      }
+
+      function saveProductsCountSuccess (result) {
+        console.log('success')
+        const productsCountDOM = document.getElementById(`store_${result.id}_productsCount`)
+        productsCountDOM.value = `${result.product_count}`
+        return false
+      }
+
+      function saveProductsCountFailure (result) {
+        result
+          ? console.log(`failure: ${result}`)
+          : console.log('failure: количество элементов не может быть меньше нуля')
+      }
+
+      function saveProductsCount (storeElemId) {
+        const productsCountDOM = document.getElementById(`store_${storeElemId}_productsCount`)
+
+        if (productsCountDOM.value < 0) {
+          saveProductsCountFailure()
+          return
+        }
+        const data = {
+          storeElem_id: storeElemId,
+          productsCount: productsCountDOM.value
+        }
+
+        ajaxRequest(url, "saveProductsCount", data, saveProductsCountResultHandler)
+      }
+
+
+      function changeParam (storeElemId, paramName) {
+        const data = {
+          storeElem_id: storeElemId,
+          paramName
+        }
+      }
+      {% endif %}
+
+
+      function addProductsResultHandler (result) { genericResultHandler(result, addProductsSuccess) }
+
+      function addProductsSuccess (result) {
+        console.log('success')
+
+        const productsCountDOM = document.getElementById(`store_${result.id}_productsCount`)
+        const lastChargeDOM = document.getElementById(`store_${result.id}_lastCharge`)
+
+        productsCountDOM.nodeName === 'A'
+          ? productsCountDOM.innerText = `${result.product_count}`
+          : productsCountDOM.value = `${result.product_count}`
+
+        const lastCharge = new Date(result.last_charge).format("mmmm d, yyyy, h:MM tt.")
+        tt = lastCharge.substring(lastCharge.length - 3)
+        tt = (tt === 'pm.') ? 'p.m.' : 'a.m.'
+        lastChargeDOM.innerText = `"${lastCharge.substring(0, lastCharge.length - 3) + tt}"`
+
+        return false
+      }
+
+      function addProducts (storeElemId) {
+        const addProductsCountDOM = document.getElementById(`store_${storeElemId}_addProductCount`)
+        const addProductsCountString = addProductsCountDOM.value
+        addProductsCountDOM.value = 0
+
+        const data = {
+          storeElem_id: storeElemId,
+          addCount: addProductsCountString
+        }
+
+        ajaxRequest(url, "addProducts", data, addProductsResultHandler)
+      }
+    </script>
     {% if storeSections %}
       <div class="jumbotron border pb-0 pt-5">
         {% for sectionSet in storeSections %}
@@ -16,9 +103,9 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="">Название секции: </span>
                 </div>
-                <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" value="{{ sectionHeader.section_name }}">
+                <input type="text" class="form-control" placeholder="Введите название" aria-label="Введите название" aria-describedby="basic-addon2" id="store_{{ section.id }}_sectionName" value="{{ sectionHeader.section_name }}">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-primary" type="button">Сохранить</button>
+                  <button class="btn btn-outline-primary" type="button" onclick="changeParam('{{ section.id }}', 'section_name')">Сохранить</button>
                 </div>
               </div>
             {% endif %}
@@ -108,39 +195,35 @@
                                     <div class="col-md-10">
                                       <b>Продукт: </b>"{{ section.product.name }}"
                                       <br>
-                                      <b>Последнее заполнение: </b>"{{ section.last_charge }}"
+                                      <b>Последнее заполнение: </b><a id="store_{{ section.id }}_lastCharge">"{{ section.last_charge }}"</a>
                                       <br>
                                     </div>
                                   </div>
                                   {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
                                     <div class="row">
                                       <div class="col-md-6">
-                                        <label for="product-count" class="font-weight-bold">Количество единиц продажи на полке: </label>
+                                        <label for="store_{{ section.id }}_productsCount" class="font-weight-bold">Количество единиц продажи на полке: </label>
                                         <div class="input-group mb-1">
-                                          <input type=text id="product-count" class="form-control input-sm" value="{{ section.product_count }}">
+                                          <input type=text id="store_{{ section.id }}_productsCount" class="form-control input-sm" value="{{ section.product_count }}">
                                           <div class="input-group-append">
-                                            <button class="btn btn-success" type="button">Сохранить изменения</button>
+                                            <button class="btn btn-success" type="button" onclick="saveProductsCount('{{ section.id }}')">Сохранить изменения</button>
                                           </div>
                                         </div>
                                       </div>
                                       <div class="col-md-6">
-                                        <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
+                                  {% endif %}
+                                  {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
+                                        <b>Количество единиц продажи на полке: </b>{{ section.product_count }}
+                                        <br>
+                                  {% endif %}
+                                        <label for="store_{{ section.id }}_addProductCount" class="font-weight-bold">Добавить количество единиц продажи: </label>
                                         <div class="input-group mb-1">
-                                          <input type=text id="product-count" class="form-control input-sm" value="0">
+                                          <input type=text id="store_{{ section.id }}_addProductCount" class="form-control input-sm" value="0">
                                           <div class="input-group-append">
-                                            <button class="btn btn-success" type="button">Добавить</button>
+                                            <button class="btn btn-success" type="button" onclick="addProducts('{{ section.id }}')">Добавить</button>
                                           </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  {% else %}
-                                    <b>Количество единиц продажи на полке: </b>{{ section.product_count }}
-                                    <br>
-                                    <label for="product-delivered-count" class="font-weight-bold">Добавить количество единиц продажи: </label>
-                                    <div class="input-group mb-1">
-                                      <input type=text id="product-count" class="form-control input-sm" value="0">
-                                      <div class="input-group-append">
-                                        <button class="btn btn-success" type="button">Добавить</button>
+                                  {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
                                       </div>
                                     </div>
                                   {% endif %}

@@ -120,6 +120,22 @@ class Store(models.Model):
     section_name = models.CharField(max_length=30, blank=True)
     last_charge = models.DateTimeField(auto_now=True)
 
+    def toJSON(self):
+        return ('{ '
+                + '"id": "' + str(self.id)
+                + '", "product_id": "' + str(self.product.id)
+                + '", "profile_id": "' +
+                str((self.user and self.user.id) or "")
+                + '", "product_count": "' + str(self.product_count)
+                + '", "width": "' + str(self.width)
+                + '", "height": "' + str(self.height)
+                + '", "length": "' + str(self.length)
+                + '", "carrying_capacity": "' + str(self.carrying_capacity)
+                + '", "shelf_name": "' + str(self.shelf_name)
+                + '", "section_name": "' + str(self.section_name)
+                + '", "last_charge": "' + str(self.last_charge)
+                + '"}')
+
 
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
