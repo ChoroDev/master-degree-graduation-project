@@ -27,7 +27,7 @@ def solveTask(payload):
     result = helpers.getEmptyResultObject()
 
     task = models.Failure.objects.get(id=taskId)
-    # task.is_solved = True
+    task.is_solved = True
     task.save()
     taskJSON = task.toJSON()[:-1]
     users = User.objects.all()

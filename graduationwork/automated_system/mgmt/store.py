@@ -37,7 +37,15 @@ def changeParam(payload):
     paramValue = payload['paramValue']
     result = helpers.getEmptyResultObject()
 
-    storeElem = models.Store.objects.get(id=storeElemId)
+    sectionWithNoProducts = False
+    storeElem = ''
+    try:
+        storeElem = models.Store.objects.get(id=storeElemId)
+    except models.Store.DoesNotExist:
+        sectionWithNoProducts = True
+    if sectionWithNoProducts:
+        result['failure'] = '"сначала надо добавить продукты"'
+        return result
     if paramName == 'section_name':
         hasDuplicates = True
         try:
@@ -68,8 +76,8 @@ def removeShelf(payload):
     shelfElemId = payload['shelfElem_id']
     result = helpers.getEmptyResultObject()
     removedShelf = models.Store.objects.get(id=shelfElemId)
-    removeShelf.delete()
-    result['success'] = removeShelf.toJSON()
+    result['success'] = removedShelf.toJSON()
+    removedShelf.delete()
     return result
 
 
@@ -84,4 +92,59 @@ def removeSection(payload):
     for storeElemInQuery in storeElems:
         storeElemInQuery.delete()
     result['success'] = storeElemJSON
+    return result
+
+
+def addSection(payload):
+    lastStoreElem = models.Store.objects.order_by('id').last()
+    result = helpers.getEmptyResultObject()
+    sectionName = 'section_'
+    try:
+        while True:
+            models.Store.objects.get(section_name=sectionName)
+            sectionName += "1"
+    except models.Store.DoesNotExist:
+        pass
+    result['success'] = lastStoreElem.toJSON()[:-1] + ', "newSectionName": "' + \
+        sectionName + '"}'
+    return result
+
+
+def addShelf(payload):
+    sectionId = payload['storeElem_id']
+    sectionName = payload['sectionName']
+    result = helpers.getEmptyResultObject()
+
+    newStoreElem = models.Store.objects.create(
+        product=models.Product.objects.all().first(),
+        product_count=1,
+        width=0.0,
+        height=0.0,
+        length=0.0,
+        carrying_capacity=0.0,
+        shelf_name='NewShelf',
+        section_name=sectionName
+    )
+    result['success'] = newStoreElem.toJSON(
+    )[:-1] + ', "sectionId": "' + sectionId + '", "productName": "' + newStoreElem.product.name + '"}'
+    return result
+
+
+def changeProduct(payload):
+    storeElemId = payload['storeElem_id']
+    productName = payload['productName']
+    result = helpers.getEmptyResultObject()
+
+    storeProduct = ""
+    storeElem = models.Store.objects.get(id=storeElemId)
+    print(productName)
+    try:
+        storeProduct = models.Product.objects.get(name=productName)
+    except models.Product.DoesNotExist:
+        result['failure'] = '"такого продукта не существует"'
+        return result
+    storeElem.product = storeProduct
+    storeElem.save()
+    result['success'] = storeElem.toJSON()[:-1] + ', "productName": "' + \
+        storeElem.product.name + '"}'
     return result
