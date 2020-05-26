@@ -429,16 +429,18 @@
               <div class="col">
                 <div class="collapse multi-collapse" id="{{ sectionHeader.section_name }}">
                   <div class="card card-body pb-0">
-                    <div class="row mb-3">
-                      <div class="col-md-12">
-                        <button class="btn btn-danger btn-block" type="button" onclick="removeSection('{{ sectionHeader.id }}')">Удалить секцию</button>
+                    {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                      <div class="row mb-3">
+                        <div class="col-md-12">
+                          <button class="btn btn-danger btn-block" type="button" onclick="removeSection('{{ sectionHeader.id }}')">Удалить секцию</button>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row mb-3">
-                      <div class="col-md-12">
-                        <button class="btn btn-success btn-block" type="button" id="addShelfButton" onclick="addShelf('{{ sectionHeader.id }}')">Добавить полку</button>
+                      <div class="row mb-3" id="addShelfButton">
+                        <div class="col-md-12">
+                          <button class="btn btn-success btn-block" type="button" onclick="addShelf('{{ sectionHeader.id }}')">Добавить полку</button>
+                        </div>
                       </div>
-                    </div>
+                    {% endif %}
                     {% for section in sectionSet %}
                       {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
                         <div class="input-group mb-3 mt-4" id="store_{{ section.id }}_shelfNameRow">

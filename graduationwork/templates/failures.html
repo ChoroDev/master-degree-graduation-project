@@ -138,8 +138,8 @@
           : '<b>Владелец задачи: </b>не назначен'
 
         const taskButtonDOM = document.getElementById(`taskButton_${result.id}`)
-        taskButtonDOM.classList.remove('btn-danger')
-        taskButtonDOM.classList.add('btn-success')
+        taskButtonDOM.classList.remove('btn-outline-danger')
+        taskButtonDOM.classList.add('btn-outline-success')
 
         const reassignButtonColDOM = document.getElementById(`reassignButtonCol_${result.id}`)
         if (reassignButtonColDOM) reassignButtonColDOM.remove()
@@ -183,7 +183,7 @@
                 {% for task in unsolvedTasks %}
                   <div class="row" id="taskButtonRow_{{ task.id }}">
                     <div class="col-md-12">
-                      <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}" id="taskButton_{{ task.id }}">{{ task.text }}</button>
+                      <button class="btn btn-outline-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}" id="taskButton_{{ task.id }}">{{ task.text }}</button>
                     </div>
                   </div>
                   <div class="row my-2" id="taskButtonDropdown_{{ task.id }}">
@@ -301,7 +301,7 @@
                 {% for task in solvedTasks %}
                   <div class="row">
                     <div class="col-md-12">
-                      <button class="btn btn-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                      <button class="btn btn-outline-success btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
                     </div>
                   </div>
                   <div class="row my-2">

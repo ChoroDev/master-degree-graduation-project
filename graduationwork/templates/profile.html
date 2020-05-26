@@ -6,6 +6,211 @@
 {% block content %}
 
   {% if user.is_authenticated %}
+    <script src="{% static 'js/helpers.js'%}" type="text/javascript">
+      /*
+        Available funcitons in helpers.js:
+        * ajaxRequest (url, action, payload, resultHandler)
+        * ajaxRequestFile (url, data, resultHandler)
+        * genericResultHandler (result, successHandler, failureHandler)
+      */
+    </script>
+    <script type="text/javascript">
+      const url = '{% url "profile" %}'
+
+      {% if not request.user.profile.group == "P" %}
+      const availableUsers = '{{ availableUsers }}'
+
+      function assignTaskSuccess (result) {
+        console.log('success')
+
+        const assigneeId = Object.keys(result.availableUsers).find(userId => result.availableUsers[userId].profile_id == result.assignee_id) || {}
+        const assignee = result.availableUsers[assigneeId]
+        const assignTaskButtonDOM = document.getElementById(`assignTaskButton_${result.id}`)
+        let dropdownHTML = `
+          <div class="dropdown">
+            <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_${result.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
+            <div class="dropdown-menu" aria-labelledby="assign_${result.id}">`
+        Object.keys(result.availableUsers).forEach(userId => {
+          const nextUser = result.availableUsers[userId]
+          if (nextUser.group === 'P' && nextUser.profile_id != result.assignee_id) {
+            dropdownHTML += `
+              <a class="dropdown-item" onclick="reassignTask('${result.id}', '${nextUser.profile_id}')">${nextUser.last_name} ${nextUser.first_name}</a>`
+          }
+        })
+        dropdownHTML += `
+              <a class="dropdown-item" onclick="reassignTask('${result.id}')">Убрать владельца</a>
+              <a class="dropdown-item" onclick="solveAssignedTask('${result.id}')">Отметить как решенную</a>
+            </div>
+          </div>`
+        assignTaskButtonDOM.innerHTML = dropdownHTML
+
+        let assigneeTasksDOM = document.getElementById(`assigneeTasks_${result.assignee_id}`)
+        let allAssignedTasksDOM = document.getElementById('assignedTasks')
+        if (!assigneeTasksDOM) {
+          assigneeTasksDOM = document.createElement('div')
+          assigneeTasksDOM.classList.add('row', 'mb-2')
+          assigneeTasksDOM.innerHTML = `
+            <div class="col-md">
+              <b id="assigneeTasks_${result.assignee_id}">Задачи сотрудника ${assignee.last_name} ${assignee.first_name}:</b>
+            </div>`
+          if (!allAssignedTasksDOM) {
+            allAssignedTasksDOM = document.createElement('div')
+            allAssignedTasksDOM.classList.add('my-1', 'px-3', 'py-1')
+            allAssignedTasksDOM.id = 'assignedTasks'
+            document.getElementById('allTasks').appendChild(allAssignedTasksDOM)
+          }
+          allAssignedTasksDOM.appendChild(assigneeTasksDOM)
+          allAssignedTasksDOM.appendChild(assignTaskButtonDOM.parentNode.parentNode.parentNode.parentNode.previousSibling.previousSibling)
+          allAssignedTasksDOM.appendChild(assignTaskButtonDOM.parentNode.parentNode.parentNode.parentNode)
+        } else {
+          assigneeTasksDOM.appendChild(assignTaskButtonDOM.parentNode.parentNode.parentNode.parentNode.previousSibling.previousSibling)
+          assigneeTasksDOM.appendChild(assignTaskButtonDOM.parentNode.parentNode.parentNode.parentNode)
+        }
+      }
+
+      function assignTaskResultHandler (result) { genericResultHandler(result, assignTaskSuccess) }
+
+      function assignTask (taskId, profileId) {
+        const data = {
+          task_id: taskId,
+          assignee_id: profileId
+        }
+        ajaxRequest(url, "assignTask", data, assignTaskResultHandler)
+      }
+
+      // удалить этот endif при раскомменчивании
+      {% endif %}
+      /* function reassignTaskSuccess (result) {
+        console.log('success')
+
+        const assigneeId = Object.keys(result.availableUsers).find(userId => result.availableUsers[userId].profile_id == result.assignee_id) || {}
+        const assignee = result.availableUsers[assigneeId]
+        const assignButtonRowDOM = document.getElementById(`assignButtonRow_${result.id}`)
+        const assignButtonColDOM = document.getElementById(`assignButtonCol_${result.id}`)
+        if (assignee) {
+          assignButtonColDOM.innerHTML = `<b>Владелец задачи: </b>${assignee.last_name} ${assignee.first_name}`
+          let dropdownInnerHTML = `
+            <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_${result.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
+            <div class="dropdown-menu" aria-labelledby="assign_${result.id}">`
+          Object.keys(result.availableUsers).forEach(userId => {
+            const nextUser = result.availableUsers[userId]
+            if (nextUser.group === 'P' && nextUser.profile_id != result.assignee_id) {
+              dropdownInnerHTML += `
+              <a class="dropdown-item" onclick="reassignTask('${result.id}', '${nextUser.profile_id}')">${nextUser.last_name} ${nextUser.first_name}</a>`
+            }
+          })
+          dropdownInnerHTML += `
+              <a class="dropdown-item" onclick="reassignTask('${result.id}')">Убрать владельца</a>
+              <a class="dropdown-item" onclick="solveAssignedTask('${result.id}')">Отметить как решенную</a>
+            </div>`
+          const dropdown = document.getElementById(`parentDropdown_${result.id}`)
+          dropdown.innerHTML = dropdownInnerHTML
+        } else {
+          assignButtonColInnerHTML = `
+            <div class="dropdown" id="parentDropdown_${result.id}">
+              <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_${result.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить задачу</button>
+              <div class="dropdown-menu" aria-labelledby="assign_${result.id}">`
+          Object.keys(result.availableUsers).forEach(userId => {
+            const nextUser = result.availableUsers[userId]
+            if (nextUser.group === 'P') {
+              assignButtonColInnerHTML += `
+                <a class="dropdown-item" onclick="assignTask('${result.id}', '${nextUser.profile_id}')">${nextUser.last_name} ${nextUser.first_name}</a>`
+            }
+          })
+          assignButtonColInnerHTML += `
+                <a class="dropdown-item" onclick="solveTask('${result.id}')">Отметить как решенную</a>
+              </div>
+            </div>`
+          assignButtonColDOM.innerHTML = assignButtonColInnerHTML
+          const reassignButtonColDOM = document.getElementById(`reassignButtonCol_${result.id}`)
+          reassignButtonColDOM.remove()
+        }
+      }
+
+      function reassignTaskResultHandler (result) { genericResultHandler(result, reassignTaskSuccess) }
+
+      function reassignTask (taskId, profileId = "") {
+        const data = {
+          task_id: taskId,
+          assignee_id: profileId
+        }
+        ajaxRequest(url, "assignTask", data, reassignTaskResultHandler)
+      }
+      {% endif %}
+
+
+      function solveTaskSuccess (result) {
+        console.log('success')
+
+        const statusDOM = document.getElementById(`status_${result.id}`)
+        statusDOM.color = "green"
+        statusDOM.innerHTML = "решена"
+
+        const assigneeId = Object.keys(result.availableUsers).find(userId => result.availableUsers[userId].profile_id == result.assignee_id) || {}
+        const assignee = result.availableUsers[assigneeId]
+        const assignButtonColDOM = document.getElementById(`assignButtonCol_${result.id}`)
+        assignButtonColDOM.innerHTML = assignee
+          ? `<b>Владелец задачи: </b>${assignee.last_name} ${assignee.first_name}`
+          : '<b>Владелец задачи: </b>не назначен'
+
+        const taskButtonDOM = document.getElementById(`taskButton_${result.id}`)
+        taskButtonDOM.classList.remove('btn-outline-danger')
+        taskButtonDOM.classList.add('btn-outline-success')
+
+        const reassignButtonColDOM = document.getElementById(`reassignButtonCol_${result.id}`)
+        if (reassignButtonColDOM) reassignButtonColDOM.remove()
+
+        const taskButtonRowDOM = document.getElementById(`taskButtonRow_${result.id}`)
+        const taskButtonDropdownDOM = document.getElementById(`taskButtonDropdown_${result.id}`)
+
+        const solvedTasksDOM = document.getElementById(`solvedTasks`)
+        solvedTasksDOM.appendChild(taskButtonRowDOM)
+        solvedTasksDOM.appendChild(taskButtonDropdownDOM)
+
+        const noSolvedDOM = document.getElementById(`noSolved`)
+        if (noSolvedDOM) noSolvedDOM.remove()
+        const unsolvedTasksDOM = document.getElementById(`unsolvedTasks`)
+        if (unsolvedTasks.childElementCount == 0) unsolvedTasks.innerHTML = `
+          <div class="row" id="noUnsolved">
+            <div class="col-md-12">
+              <h3 class="text-center" style="color: red;">Нет нерешенных задач</h3>
+            </div>
+          </div>`
+      }
+
+      function solveTaskResultHandler (result) { genericResultHandler(result, solveTaskSuccess) }
+
+      function solveTask (taskId) {
+        const data = { task_id: taskId }
+        ajaxRequest(url, "solveTask", data, solveTaskResultHandler)
+      } */
+
+
+      function saveChangesSuccess (result) { console.log('success') }
+
+      function saveChangesResultHander (result) { genericResultHandler(result, saveChangesSuccess) }
+
+      function saveChanges(profileId) {
+        const firstNameDOM = document.getElementById('first_name')
+        const lastNameDOM = document.getElementById('last_name')
+        const emailDOM = document.getElementById('email')
+        {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+          const groupDOM = document.getElementById('group')
+        {% endif %}
+        const data = {
+          profile_id: profileId,
+          firstName: firstNameDOM.value,
+          lastName: lastNameDOM.value,
+          {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+            email: emailDOM.value,
+            group: groupDOM.value
+          {% else %}
+            email: emailDOM.value
+          {% endif %}
+        }
+        ajaxRequest(url, "saveChanges", data, saveChangesResultHander)
+      }
+    </script>
     <div class="jumbotron border">
       <div class="container-md">
         <div class="row">
@@ -40,12 +245,17 @@
                 <input type=text id="group" class="form-control input-sm" value="{{ userGroup }}">
               </div>
             {% else %}
-              <b>Группа: </b>{{ userGroup }}
+              <b>Группа: </b><a id="group">{{ userGroup }}</a>
             {% endif %}
           </div>
         </div>
         <div class="row mt-2">
           <div class="col-md">
+            <button class="btn btn-success float-right" type="button" onclick="saveChanges({{ request.user.profile.id }})">Сохранить изменения</button>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md" id="allTasks">
             {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
               <b>Распределение заданий:</b>
               {% if unassignedTasks %}
@@ -53,46 +263,42 @@
                   <div class="row mb-2"><div class="col-md"><b>Нераспределенные задачи:</b></div></div>
                   {% for unassignedTask in unassignedTasks %}
                     <div class="row">
-                      <div class="col-md">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
+                      <div class="col-md-12">
+                        <button class="btn btn-outline-danger btn-block" type="button" data-toggle="collapse" data-target="#unassignedTask_{{ unassignedTask.id }}" aria-expanded="false" aria-controls="unassignedTask_{{ unassignedTask.id }}">{{ unassignedTask.text }}</button>
+                      </div>
+                    </div>
+                    <div class="row my-2">
+                      <div class="col">
+                        <div class="collapse multi-collapse" id="unassignedTask_{{ unassignedTask.id }}">
+                          <div class="row">
+                            <div class="col-md-8"><b>Возможная причина: </b>{{ unassignedTask.possible_cause }}</div>
+                            <div class="col-md-4">
+                              <b>Серьезность ошибки: </b>
+                              {% if unassignedTask.severity < 2 %}
+                                <font color=green><b>{{ unassignedTask.severity }}</b></font>
+                              {% elif unassignedTask.severity < 4 %}
+                                <font color=orange><b>{{ unassignedTask.severity }}</b></font>
+                              {% else %}
+                                <font color=red><b>{{ unassignedTask.severity }}</b></font>
+                              {% endif %}
+                            </div>
                           </div>
-                        </div>
-                        <div class="row my-2">
-                          <div class="col">
-                            <div class="collapse multi-collapse" id="unassignedTask_{{ unassignedTask.id }}">
-                              <div class="row">
-                                <div class="col-md-8"><b>Возможная причина: </b>{{ unassignedTask.possible_cause }}</div>
-                                <div class="col-md-4">
-                                  <b>Серьезность ошибки: </b>
-                                  {% if unassignedTask.severity < 2 %}
-                                    <font color=green><b>{{ unassignedTask.severity }}</b></font>
-                                  {% elif unassignedTask.severity < 4 %}
-                                    <font color=orange><b>{{ unassignedTask.severity }}</b></font>
-                                  {% else %}
-                                    <font color=red><b>{{ unassignedTask.severity }}</b></font>
-                                  {% endif %}
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-8"><b>Возможное решение: </b>{{ unassignedTask.possible_solution}}</div>
-                                <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-8"><b>Дата возникновения: </b>{{ unassignedTask.timestamp }}</div>
-                                <div class="col-md-4">
-                                  <div class="dropdown">
-                                    <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ unassignedTask.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить задачу</button>
-                                    <div class="dropdown-menu" aria-labelledby="assign_{{ unassignedTask.id }}">
-                                      {% for user in availableUsers %}
-                                        {% if user.profile.group == "P" %}
-                                          <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
-                                        {% endif %}
-                                      {% endfor %}
-                                      <a class="dropdown-item" href="#">Отметить как решенную</a>
-                                    </div>
-                                  </div>
+                          <div class="row">
+                            <div class="col-md-8"><b>Возможное решение: </b>{{ unassignedTask.possible_solution}}</div>
+                            <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-8"><b>Дата возникновения: </b>{{ unassignedTask.timestamp }}</div>
+                            <div class="col-md-4" id="assignTaskButton_{{ unassignedTask.id }}">
+                              <div class="dropdown">
+                                <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ unassignedTask.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Назначить задачу</button>
+                                <div class="dropdown-menu" aria-labelledby="assign_{{ unassignedTask.id }}">
+                                  {% for user in availableUsers %}
+                                    {% if user.profile.group == "P" %}
+                                      <a class="dropdown-item" onclick="assignTask('{{ unassignedTask.id }}', '{{ user.profile.id }}')" id="unassignedUser_{{ user.profile.id }}">{{ user.last_name }} {{ user.first_name }}</a>
+                                    {% endif %}
+                                  {% endfor %}
+                                  <a class="dropdown-item" onclick="solveTask('{{ unassignedTask.id }}')">Отметить как решенную</a>
                                 </div>
                               </div>
                             </div>
@@ -108,7 +314,7 @@
               {% if not request.user|has_group:'Management' and not request.user|has_group:'SystemAdministrators' %}
                 <p class="mb-2"><b>Задачи:</b></p>
               {% endif %}
-              <div class="jumbotron my-1 px-3 py-1">
+              <div class="jumbotron my-1 px-3 py-1" id="assignedTasks">
                 {% for tasksList in tasks %}
                   {% with tasksList|first as firstTask %}
                     {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
@@ -116,7 +322,7 @@
                         <div class="col-md">
                           {% for user in availableUsers %}
                             {% if user.profile == firstTask.assignee %}
-                              <b>Задачи сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
+                              <b id="assigneeTasks_{{ user.profile.id }}">Задачи сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
                             {% endif %}
                           {% endfor %}
                         </div>
@@ -124,52 +330,49 @@
                     {% endif %}
                     {% for task in tasksList %}
                       <div class="row">
-                        <div class="col-md">
-                          <div class="row">
-                            <div class="col-md-12">
-                              <button class="btn btn-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                        <div class="col-md-12">
+                          <button class="btn btn-outline-danger btn-block" type="button" data-toggle="collapse" data-target="#task_{{ task.id }}" aria-expanded="false" aria-controls="task_{{ task.id }}">{{ task.text }}</button>
+                        </div>
+                      </div>
+                      <div class="row my-2">
+                        <div class="col">
+                          <div class="collapse multi-collapse" id="task_{{ task.id }}">
+                            <div class="row">
+                              <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
+                              <div class="col-md-4">
+                                <b>Серьезность ошибки: </b>
+                                {% if task.severity < 2 %}
+                                  <font color=green><b>{{ task.severity }}</b></font>
+                                {% elif task.severity < 4 %}
+                                  <font color=orange><b>{{ task.severity }}</b></font>
+                                {% else %}
+                                  <font color=red><b>{{ task.severity }}</b></font>
+                                {% endif %}
+                              </div>
                             </div>
-                          </div>
-                          <div class="row my-2">
-                            <div class="col">
-                              <div class="collapse multi-collapse" id="task_{{ task.id }}">
-                                <div class="row">
-                                  <div class="col-md-8"><b>Возможная причина: </b>{{ task.possible_cause }}</div>
-                                  <div class="col-md-4">
-                                    <b>Серьезность ошибки: </b>
-                                    {% if task.severity < 2 %}
-                                      <font color=green><b>{{ task.severity }}</b></font>
-                                    {% elif task.severity < 4 %}
-                                      <font color=orange><b>{{ task.severity }}</b></font>
-                                    {% else %}
-                                      <font color=red><b>{{ task.severity }}</b></font>
-                                    {% endif %}
+                            <div class="row">
+                              <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
+                              <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
+                              <div class="col-md-4" id="assignTaskButton_{{ task.id }}">
+                                {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                                  <div class="dropdown">
+                                    <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
+                                    <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
+                                      {% for user in availableUsers %}
+                                        {% if user.profile.group == "P" and not user.profile == task.assignee %}
+                                          <a class="dropdown-item" href="#" id="assignedUser_{{ user.profile.id }}">{{ user.last_name }} {{ user.first_name }}</a>
+                                        {% endif %}
+                                      {% endfor %}
+                                      <a class="dropdown-item" onclick="reassignTask('{{ task.id }}')">Убрать владельца</a>
+                                      <a class="dropdown-item" onclick="solveTask('{{ task.id }}')">Отметить как решенную</a>
+                                    </div>
                                   </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-8"><b>Возможное решение: </b>{{ task.possible_solution}}</div>
-                                  <div class="col-md-4"><b>Статус: <font color=red>не решена</font></b></div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-8"><b>Дата возникновения: </b>{{ task.timestamp }}</div>
-                                  <div class="col-md-4">
-                                    {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-                                      <div class="dropdown">
-                                        <button class="btn-sm btn-block btn-primary dropdown-toggle" type="button" id="assign_{{ task.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Переназначить задачу</button>
-                                        <div class="dropdown-menu" aria-labelledby="assign_{{ task.id }}">
-                                          {% for user in availableUsers %}
-                                            {% if user.profile.group == "P" and not user.profile == task.assignee %}
-                                              <a class="dropdown-item" href="#">{{ user.last_name }} {{ user.first_name }}</a>
-                                            {% endif %}
-                                          {% endfor %}
-                                          <a class="dropdown-item" href="#">Отметить как решенную</a>
-                                        </div>
-                                      </div>
-                                    {% else %}
-                                      <button class="btn-sm btn-block btn-primary" type="button">Отметить как решенную</button>
-                                    {% endif %}
-                                  </div>
-                                </div>
+                                {% else %}
+                                  <button class="btn-sm btn-block btn-primary" type="button">Отметить как решенную</button>
+                                {% endif %}
                               </div>
                             </div>
                           </div>
@@ -249,7 +452,7 @@
                         <div class="col-md">
                           {% for user in availableUsers %}
                             {% if user.profile == firstShelf.user %}
-                              <b>Полки сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
+                              <b id="assignee_{{ user.profile.id }}">Полки сотрудника {{ user.last_name }} {{ user.first_name }}:</b>
                             {% endif %}
                           {% endfor %}
                         </div>
@@ -306,11 +509,6 @@
                 нет доступных полок.
               {% endif %}
             {% endif %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md">
-            <button class="btn btn-success float-right" type="button">Сохранить изменения</button>
           </div>
         </div>
       </div>

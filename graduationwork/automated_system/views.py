@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager
-from .mgmt import failures as failures_manager, store as store_manager
+from .mgmt import failures as failures_manager, store as store_manager, profile as profile_manager
 from . import models, forms
 from collections import defaultdict
 import json
@@ -76,58 +76,61 @@ def products(request):
 
 
 def profile(request):
-    userGroups = list()
-    for group in request.user.groups.all():
-        userGroups.append(group.name)
-    userGroup = "Персонал"
-    if userGroups:
-        if userGroups[0] == "SystemAdministrators":
-            userGroup = "Системные администраторы"
-        elif userGroups[0] == "Management":
-            userGroup = "Менеджеры"
-        else:
-            userGroup = "Персонал"
-
-    tasksByUsersDict = defaultdict(list)
-    unassignedTasks = list()
-    for task in models.Failure.objects.all():
-        if not task.is_solved:
-            if request.user.profile.group == "P":
-                if task.assignee == request.user.profile:
-                    tasksByUsersDict[request.user.profile.id].append(task)
+    if request.method == 'POST':
+        return helpers.handleAction(request, profile_manager)
+    else:
+        userGroups = list()
+        for group in request.user.groups.all():
+            userGroups.append(group.name)
+        userGroup = "Персонал"
+        if userGroups:
+            if userGroups[0] == "SystemAdministrators":
+                userGroup = "Системные администраторы"
+            elif userGroups[0] == "Management":
+                userGroup = "Менеджеры"
             else:
-                if task.assignee:
-                    tasksByUsersDict[task.assignee.id].append(task)
+                userGroup = "Персонал"
+
+        tasksByUsersDict = defaultdict(list)
+        unassignedTasks = list()
+        for task in models.Failure.objects.all():
+            if not task.is_solved:
+                if request.user.profile.group == "P":
+                    if task.assignee == request.user.profile:
+                        tasksByUsersDict[request.user.profile.id].append(task)
                 else:
-                    unassignedTasks.append(task)
-    tasks = tasksByUsersDict.values()
+                    if task.assignee:
+                        tasksByUsersDict[task.assignee.id].append(task)
+                    else:
+                        unassignedTasks.append(task)
+        tasks = tasksByUsersDict.values()
 
-    shelvesByUsersDict = defaultdict(list)
-    unassignedShelves = list()
-    for shelf in models.Store.objects.all():
-        if request.user.profile.group == "P":
-            if shelf.user == request.user.profile:
-                shelvesByUsersDict[request.user.profile.id].append(shelf)
-        else:
-            if shelf.user:
-                shelvesByUsersDict[shelf.user.id].append(shelf)
+        shelvesByUsersDict = defaultdict(list)
+        unassignedShelves = list()
+        for shelf in models.Store.objects.all():
+            if request.user.profile.group == "P":
+                if shelf.user == request.user.profile:
+                    shelvesByUsersDict[request.user.profile.id].append(shelf)
             else:
-                unassignedShelves.append(shelf)
-    shelves = shelvesByUsersDict.values()
+                if shelf.user:
+                    shelvesByUsersDict[shelf.user.id].append(shelf)
+                else:
+                    unassignedShelves.append(shelf)
+        shelves = shelvesByUsersDict.values()
 
-    return render(
-        request,
-        "profile.html",
-        {
-            "profile_is_active": is_active,
-            "userGroup": userGroup,
-            "tasks": tasks,
-            "unassignedTasks": unassignedTasks,
-            "shelves": shelves,
-            "unassignedShelves": unassignedShelves,
-            "availableUsers": models.BaseUser.objects.all().select_related('profile')
-        }
-    )
+        return render(
+            request,
+            "profile.html",
+            {
+                "profile_is_active": is_active,
+                "userGroup": userGroup,
+                "tasks": tasks,
+                "unassignedTasks": unassignedTasks,
+                "shelves": shelves,
+                "unassignedShelves": unassignedShelves,
+                "availableUsers": models.BaseUser.objects.all().select_related('profile')
+            }
+        )
 
 
 def failures(request):

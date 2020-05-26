@@ -16,9 +16,13 @@ class User(models.Model):
     group = models.CharField(max_length=1, choices=USER_GROUPS, default='P')
 
     def toJSON(self):
+        user = BaseUser.objects.get(profile=self)
         return ('{ '
                 + '"id": "' + str(self.id)
                 + '", "group": "' + str(self.group)
+                + '", "first_name": "' + str(user.first_name)
+                + '", "last_name": "' + str(user.last_name)
+                + '", "email": "' + str(user.email)
                 + '"}')
 
 
