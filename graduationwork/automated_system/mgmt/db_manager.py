@@ -440,6 +440,17 @@ def fill_in_statistics():
                 price_that_day=shelf.product.price
             )
 
+    # 2019
+    for i in range(10, -1, -1):
+        models.Statistics.objects.create(
+            day=date.today() - timedelta(days=366+i),
+            shelf=shelf,
+            sold_count=random.randint(6, 14),
+            stock=stockStats,
+            failures_count=random.randint(1, 3),
+            price_that_day=shelf.product.price * 0.9
+        )
+
     #
     # Store obj with id = 3
     #

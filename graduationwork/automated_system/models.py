@@ -160,3 +160,15 @@ class Statistics(models.Model):
     def statYear(self):
         "Returns year of statistic record"
         return self.day.strftime('%Y')
+
+    def toJSON(self):
+        return ('{ '
+                + '"id": "' + str(self.id)
+                + '", "day": "' + str(self.day)
+                + '", "shelf_id": "' + str(self.shelf.id)
+                + '", "sold_count": "' + str(self.sold_count)
+                + '", "stock_id": "' +
+                str((self.stock and self.stock.id) or "")
+                + '", "failures_count": "' + str(self.failures_count)
+                + '", "price_that_day": "' + str(self.price_that_day)
+                + '"}')

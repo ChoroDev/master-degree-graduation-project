@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager
+from .mgmt import db_manager, helpers, storage as storage_manager, products as products_manager, analytics as analytics_manager
 from .mgmt import failures as failures_manager, store as store_manager, profile as profile_manager
 from . import models, forms
 from collections import defaultdict
@@ -194,60 +194,15 @@ def analytics(request):
     # db_manager.fill_in_stocks()
     # db_manager.fill_in_statistics()
 
-    storeShelves = models.Store.objects.all()
-    fullStatsRaw = models.Statistics.objects.order_by('day')
-
-    years = list(
-        map(
-            lambda singleYearRaw: singleYearRaw.strftime('%Y'),
-            models.Statistics.objects.all().dates('day', 'year')
+    if request.method == 'POST':
+        return helpers.handleAction(request, analytics_manager)
+    else:
+        fullStatsForEachShelf = analytics_manager.getFullStats()
+        return render(
+            request,
+            "analytics.html",
+            {
+                "analytics_is_active": is_active,
+                "fullStatsForEachShelf": fullStatsForEachShelf
+            }
         )
-    )
-
-    fullStatsForEachShelf = []
-    for storeShelf in storeShelves:
-        soldInYear = {}
-        incomeInYear = {}
-        failuresInYear = {}
-        for year in years:
-            soldInYear[year] = []
-            incomeInYear[year] = []
-            failuresInYear[year] = 0
-
-        for dailyStats in fullStatsRaw:
-            if storeShelf == dailyStats.shelf:
-                year = dailyStats.statYear
-                soldInYear[year].append(
-                    [dailyStats.day.strftime(
-                        '%m/%d'), dailyStats.sold_count]
-                )
-                if dailyStats.stock:
-                    incomeInYear[year].append(
-                        [dailyStats.day.strftime(
-                            '%m/%d'), dailyStats.sold_count * dailyStats.stock.stock_price]
-                    )
-                else:
-                    incomeInYear[year].append(
-                        [dailyStats.day.strftime(
-                            '%m/%d'), dailyStats.sold_count * dailyStats.price_that_day]
-                    )
-                failuresInYear[year] += dailyStats.failures_count
-        availableStats = {}
-        if soldInYear:
-            availableStats["soldEveryDay"] = soldInYear
-        if incomeInYear:
-            availableStats["incomeEveryDay"] = incomeInYear
-        if failuresInYear:
-            availableStats["failuresInYear"] = failuresInYear
-        fullStatsForEachShelf.append(
-            [storeShelf, availableStats]
-        )
-
-    return render(
-        request,
-        "analytics.html",
-        {
-            "analytics_is_active": is_active,
-            "fullStatsForEachShelf": fullStatsForEachShelf
-        }
-    )

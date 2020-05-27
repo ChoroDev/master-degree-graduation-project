@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 {% load auth_filter %}
 {% load googlecharts %}
+{% load static %}
 
 {% block title %}Аналитика{% endblock title %}
 
 {% block content %}
   {% if user.is_authenticated %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="{% static 'js/helpers.js'%}" type="text/javascript">
+      /*
+        Available funcitons in helpers.js:
+        * ajaxRequest (url, action, payload, resultHandler)
+        * ajaxRequestFile (url, data, resultHandler)
+        * genericResultHandler (result, successHandler, failureHandler)
+      */
+    </script>
     <script type="text/javascript">
+      const url = '{% url "analytics" %}'
+
       google.charts.load('current', {'packages':['corechart']})
       google.charts.setOnLoadCallback(drawCharts)
 
@@ -139,6 +150,28 @@
       }
 
       $(window).resize(function() { drawCharts() })
+
+
+      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+      function handleNewDataSuccess (result) {
+        console.log('success')
+        location.reload()
+      }
+
+      function handleNewDataResultHandler (result) { genericResultHandler(result, handleNewDataSuccess)}
+
+      function handleNewData(shelfElemId) {
+        const data = {
+          storeElem_id: shelfElemId,
+          day: document.getElementById(`stat_${shelfElemId}_day`).value,
+          sold_count: document.getElementById(`stat_${shelfElemId}_sold_count`).value,
+          stock_id: document.getElementById(`stat_${shelfElemId}_stock_id`).value,
+          failures_count: document.getElementById(`stat_${shelfElemId}_failures_count`).value,
+          price_that_day: document.getElementById(`stat_${shelfElemId}_price_that_day`).value
+        }
+        ajaxRequest(url, "handleNewData", data, handleNewDataResultHandler)
+      }
+      {% endif %}
     </script>
 
     <div class="container-md">
@@ -172,19 +205,19 @@
                     <div class="col-md-4">
                       <label for="product-name" class="font-weight-bold">Дата: </label>
                       <div class="input-group mb-1">
-                        <input type="text" class="form-control input-sm" placeholder="Пример: 2020/01/13" value="">
+                        <input type="text" class="form-control input-sm" placeholder="Пример: 2020/01/13" value="" id="stat_{{ shelfProps.id }}_day">
                       </div>
                     </div>
                     <div class="col-md-4">
                       <label for="product-name" class="font-weight-bold">Количество проданных товаров: </label>
                       <div class="input-group mb-1">
-                        <input type="text" class="form-control input-sm" value="">
+                        <input type="text" class="form-control input-sm" value="0" id="stat_{{ shelfProps.id }}_sold_count">
                       </div>
                     </div>
                     <div class="col-md-4">
                       <label for="product-name" class="font-weight-bold">Идентификатор акции (опционально): </label>
                       <div class="input-group mb-1">
-                        <input type="text" class="form-control input-sm" value="">
+                        <input type="text" class="form-control input-sm" value="" id="stat_{{ shelfProps.id }}_stock_id">
                       </div>
                     </div>
                   </div>
@@ -192,19 +225,19 @@
                     <div class="col-md-4">
                       <label for="product-name" class="font-weight-bold">Количество ошибок: </label>
                       <div class="input-group mb-1">
-                        <input type="text" class="form-control input-sm" value="">
+                        <input type="text" class="form-control input-sm" value="0" id="stat_{{ shelfProps.id }}_failures_count">
                       </div>
                     </div>
                     <div class="col-md-4">
                       <label for="product-name" class="font-weight-bold">Цена продукта в этот день: </label>
                       <div class="input-group mb-1">
-                        <input type="text" class="form-control input-sm" value="">
+                        <input type="text" class="form-control input-sm" value="0.0" id="stat_{{ shelfProps.id }}_price_that_day">
                       </div>
                     </div>
                     <div class="col-md-4">
                       <label for="product-name" class="font-weight-bold"></label>
                       <div class="input-group mt-2">
-                        <button type="button" class="btn btn-primary btn-block">Добавить</button>
+                        <button type="button" class="btn btn-primary btn-block" onclick="handleNewData('{{ shelfProps.id }}')">Добавить</button>
                       </div>
                     </div>
                   </div>
