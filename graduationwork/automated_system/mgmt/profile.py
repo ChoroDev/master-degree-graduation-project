@@ -72,3 +72,18 @@ def solveTask(payload):
     resultJSON = taskJSON + ', ' + db_manager.getAllAvailableUsersJSON() + '}'
     result['success'] = resultJSON
     return result
+
+
+def assignShelf(payload):
+    storeElemId = payload['shelf_id']
+    profileId = payload['profileId']
+    result = helpers.getEmptyResultObject()
+
+    storeElem = models.Store.objects.get(id=storeElemId)
+    profile = None
+    if profileId:
+        profile = models.User.objects.get(id=profileId)
+    storeElem.user = profile
+    storeElem.save()
+    result['success'] = storeElem.toJSON()
+    return result
