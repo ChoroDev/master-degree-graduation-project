@@ -1,6 +1,7 @@
 from .. import models
-from . import helpers
+from . import helpers, failures as failures_manager
 import datetime
+from collections import defaultdict
 from django.db.models import Q
 
 
@@ -12,6 +13,7 @@ def saveProductsCount(payload):
     storeElem.save()
     result = helpers.getEmptyResultObject()
     result['success'] = storeElem.toJSON()
+    failures_manager.checkForFailures(storeElemId)
     return result
 
 
@@ -26,6 +28,7 @@ def addProducts(payload):
         storeElem.last_charge = datetime.datetime.now()
         storeElem.save()
         result['success'] = storeElem.toJSON()
+        failures_manager.checkForFailures(storeElemId)
     else:
         result['failure'] = '"количество забираемых элементов не может превышать количество элементов на складе"'
     return result
@@ -148,3 +151,28 @@ def changeProduct(payload):
     result['success'] = storeElem.toJSON()[:-1] + ', "productName": "' + \
         storeElem.product.name + '"}'
     return result
+
+
+def getStoreElems(request):
+    userGroups = list()
+    for group in request.user.groups.all():
+        userGroups.append(group.name)
+    userGroup = "Персонал"
+    if userGroups:
+        if userGroups[0] == "SystemAdministrators":
+            userGroup = "Системные администраторы"
+        elif userGroups[0] == "Management":
+            userGroup = "Менеджеры"
+        else:
+            userGroup = "Персонал"
+
+    storeSectionsRaw = defaultdict(list)
+    for shelf in models.Store.objects.all():
+        if userGroup == "Персонал":
+            if shelf.user == request.user.profile:
+                storeSectionsRaw[shelf.section_name].append(shelf)
+        else:
+            storeSectionsRaw[shelf.section_name].append(shelf)
+    sectionsNames = storeSectionsRaw.keys()
+    storeSections = storeSectionsRaw.values()
+    return [storeSections, sectionsNames]

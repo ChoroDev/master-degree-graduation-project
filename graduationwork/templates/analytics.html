@@ -151,6 +151,24 @@
 
       $(window).resize(function() { drawCharts() })
 
+      function calculateNextDaySuccess (result) {
+        Object.keys(result).forEach(shelfId => {
+          document.getElementById(`min_recommended_${shelfId}`).innerText = result[shelfId].min_products
+          document.getElementById(`avg_recommended_${shelfId}`).innerText = result[shelfId].avg_recommended
+          document.getElementById(`max_recommended_${shelfId}`).innerText = result[shelfId].max_products
+        })
+      }
+
+      function calculateNextDayResultHandler (result) { genericResultHandler(result, calculateNextDaySuccess) }
+
+      function calculateNextDay () {
+        ajaxRequest(url, "calculateNextDay", {}, calculateNextDayResultHandler)
+      }
+
+      window.addEventListener('load', () => {
+        calculateNextDay()
+      })
+
 
       {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
       function handleNewDataSuccess (result) {
@@ -173,7 +191,6 @@
       }
       {% endif %}
     </script>
-
     <div class="container-md">
       {% for fullStatsForSingleShelf in fullStatsForEachShelf %}
         {% with fullStatsForSingleShelf|first as shelfProps %}
@@ -199,7 +216,18 @@
                     {% endif %}
                   {% endfor %}
                 </div>
+                <div class="row border mt-4">
+                  <div class="col-md">
+                    <p><b>Рекомендуемые параметры на сегодня:</b></p>
+                    <div class="row">
+                      <div class="col-md-4"><b>Минимум рекомендуется: </b><a id="min_recommended_{{ shelfProps.id }}"></a></div>
+                      <div class="col-md-4"><b>Среднее рекомендуется: </b><a id="avg_recommended_{{ shelfProps.id }}"></a></div>
+                      <div class="col-md-4"><b>Максимум рекомендуется: </b><a id="max_recommended_{{ shelfProps.id }}"></a></div>
+                    </div>
+                  </div>
+                </div>
                 {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
+                  <br>
                   <p><b>Добавить данные:</b></p>
                   <div class="row">
                     <div class="col-md-4">

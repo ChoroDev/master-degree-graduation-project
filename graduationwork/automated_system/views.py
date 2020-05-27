@@ -20,28 +20,8 @@ def store(request):
     if request.method == 'POST':
         return helpers.handleAction(request, store_manager)
     else:
-        userGroups = list()
-        for group in request.user.groups.all():
-            userGroups.append(group.name)
-        userGroup = "Персонал"
-        if userGroups:
-            if userGroups[0] == "SystemAdministrators":
-                userGroup = "Системные администраторы"
-            elif userGroups[0] == "Management":
-                userGroup = "Менеджеры"
-            else:
-                userGroup = "Персонал"
-
-        storeSectionsRaw = defaultdict(list)
-        for shelf in models.Store.objects.all():
-            if userGroup == "Персонал":
-                if shelf.user == request.user.profile:
-                    storeSectionsRaw[shelf.section_name].append(shelf)
-            else:
-                storeSectionsRaw[shelf.section_name].append(shelf)
-        sectionsNames = storeSectionsRaw.keys()
-        storeSections = storeSectionsRaw.values()
-        return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeSections, "sectionsNames": sectionsNames})
+        storeElems = store_manager.getStoreElems(request)
+        return render(request, "store.html", {"store_is_active": is_active, "storeSections": storeElems[0], "sectionsNames": storeElems[1]})
 
 
 def storage(request):
