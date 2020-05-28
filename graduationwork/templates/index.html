@@ -7,31 +7,6 @@
   {% if user.is_authenticated %}
     <div class="jumbotron border">
       <h1 style="text-align: center;">Добро пожаловать в автоматизированную систему управления полочным пространством супермаркета!</h1>
-      <!-- <p>System status: </p>
-      {% if current_status.store.status == "fine" %}
-        <p style="color: green"><b>{{ current_status.store.data }}</b></p>
-      {% elif current_status.store.status == "warning" %}
-        <p style="color: orange"><b>{{ current_status.store.data }}</b></p>
-      {% else %}
-        <p style="color: red"><b>{{ current_status.store.data }}</b></p>
-      {% endif %}
-      {% if current_status.storage.status == "fine" %}
-        <p style="color: green"><b>{{ current_status.storage.data }}</b></p>
-      {% elif current_status.storage.status == "warning" %}
-        <p style="color: orange"><b>{{ current_status.storage.data }}</b></p>
-      {% else %}
-        <p style="color: red"><b>{{ current_status.storage.data }}</b></p>
-      {% endif %}
-      {% if current_status.equipment.status == "fine" %}
-        <p style="color: green"><b>{{ current_status.equipment.data }}</b></p>
-      {% elif current_status.equipment.status == "warning" %}
-        <p style="color: orange"><b>{{ current_status.equipment.data }}</b></p>
-      {% else %}
-        <p style="color: red"><b>{{ current_status.equipment.data }}</b></p>
-      {% endif %}
-      {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
-        <p>Documents awaiting signature:</p>
-      {% endif %} -->
     </div>
   {% endif %}
 

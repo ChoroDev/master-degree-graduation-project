@@ -6,7 +6,6 @@ from _datetime import timedelta
 
 
 def getFullStats():
-
     storeShelves = models.Store.objects.all()
     fullStatsRaw = models.Statistics.objects.order_by('day')
 

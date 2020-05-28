@@ -55,7 +55,7 @@ def checkForFailures(shelfId):
     for failure in models.Failure.objects.all():
         shelfAlreadyInFailures = bool(re.match(shelfElem.shelf_name, failure.text)) and bool(
             re.match(shelfElem.section_name, failure.text))
-        if shelfAlreadyInFailures:
+        if shelfAlreadyInFailures and not failure.is_solved:
             break
         else:
             shelfAlreadyInFailures = False
