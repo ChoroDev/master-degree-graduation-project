@@ -26,7 +26,7 @@ SECRET_KEY = 't0fr@o3b@1b1(#x+3a0-&am*#kym2q-fb#+4b7nvh%!lu*3k)7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 ALLOWED_HOSTS += ['192.168.{}.{}'.format(i, j)
                   for i in range(256) for j in range(256)]
 
