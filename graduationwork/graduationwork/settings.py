@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+from socket import gethostname, gethostbyname
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -26,7 +27,8 @@ SECRET_KEY = 't0fr@o3b@1b1(#x+3a0-&am*#kym2q-fb#+4b7nvh%!lu*3k)7'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS += ['192.168.{}.{}'.format(i, j)
+                  for i in range(256) for j in range(256)]
 
 # Application definition
 

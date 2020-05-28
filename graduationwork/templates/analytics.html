@@ -172,7 +172,7 @@
 
       {% if request.user|has_group:'Management' or request.user|has_group:'SystemAdministrators' %}
       function handleNewDataSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
         location.reload()
       }
 

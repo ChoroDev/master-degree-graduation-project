@@ -30,6 +30,12 @@
 python manage.py graph_models -a -o myapp_models.png
 ```
 
+## Debug on mobile
+
+```
+python manage.py runserver 0.0.0.0:8000
+```
+
 ## Users and passwords
 
 `Login` == `Password`  

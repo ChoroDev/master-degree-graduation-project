@@ -22,7 +22,7 @@
       const availableUsers = '{{ availableUsers }}'
 
       function assignTaskSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const assigneeId = Object.keys(result.availableUsers).find(userId => result.availableUsers[userId].profile_id == result.assignee_id) || {}
         const assignee = result.availableUsers[assigneeId]
@@ -65,7 +65,7 @@
 
 
       function reassignTaskSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const assigneeId = Object.keys(result.availableUsers).find(userId => result.availableUsers[userId].profile_id == result.assignee_id) || {}
         const assignee = result.availableUsers[assigneeId]
@@ -124,7 +124,7 @@
 
 
       function solveTaskSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const statusDOM = document.getElementById(`status_${result.id}`)
         statusDOM.color = "green"

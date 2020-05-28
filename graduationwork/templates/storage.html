@@ -22,7 +22,7 @@
       }
 
       function addProductsSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const productsCountDOM = document.getElementById(`storageElem_${result.id}_productCount`)
         const deliveryTimestampDOM = document.getElementById(`storageElem_${result.id}_deliveryTimestamp`)
@@ -59,7 +59,7 @@
       }
 
       function saveProductsCountSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
         const productsCountDOM = document.getElementById(`storageElem_${result.id}_productCount`)
         productsCountDOM.value = `${result.product_count}`
         return false

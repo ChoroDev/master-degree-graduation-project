@@ -21,7 +21,7 @@
       const availableUsers = '{{ availableUsers }}'
 
       function assignTaskSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const assigneeId = Object.keys(result.availableUsers).find(userId => result.availableUsers[userId].profile_id == result.assignee_id) || {}
         const assignee = result.availableUsers[assigneeId]
@@ -157,7 +157,7 @@
 
 
       function solveTaskSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const assignTaskButtonDOM = document.getElementById(`assignTaskButton_${result.id}`)
         const prevAssigneeDOM = assignTaskButtonDOM.parentNode.parentNode.parentNode.parentNode.previousSibling.previousSibling.previousSibling.previousSibling
@@ -182,7 +182,7 @@
       }
 
 
-      function saveChangesSuccess (result) { console.log('success') }
+      function saveChangesSuccess (result) { genericSuccess(result) }
 
       function saveChangesResultHander (result) { genericResultHandler(result, saveChangesSuccess) }
 
@@ -209,7 +209,7 @@
 
 
       function assignShelfSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         location.reload()
       }

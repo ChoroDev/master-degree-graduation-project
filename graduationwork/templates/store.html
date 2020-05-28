@@ -24,7 +24,7 @@
       }
 
       function saveProductsCountSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
         const productsCountDOM = document.getElementById(`store_${result.id}_productsCount`)
         productsCountDOM.value = `${result.product_count}`
         return false
@@ -53,7 +53,7 @@
 
 
       function changeParamSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
         const outElem = document.getElementById(`store_${result.id}_${result.paramName}_out`)
         if (outElem) outElem.innerText = result[result.paramName]
         const outElem_1 = document.getElementById(`store_${result.id}_${result.paramName}_out_1`)
@@ -75,7 +75,7 @@
 
 
       function removeShelfSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         document.getElementById(`store_${result.id}_shelfNameRow`).remove()
         document.getElementById(`store_${result.id}_shelfButtonRow`).remove()
@@ -96,7 +96,7 @@
 
 
       function removeSectionSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         document.getElementById(`store_${result.id}_sectionNameRow`).remove()
         document.getElementById(`store_${result.id}_sectionButtonRow`).remove()
@@ -114,7 +114,7 @@
 
 
       function addSectionSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const newSectionId = 1 + result.id
         const newSectionName = result.newSectionName
@@ -176,7 +176,7 @@
 
 
       function addShelfSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const shelfNameRowDOM = document.createElement('div')
         shelfNameRowDOM.classList.add('input-group', 'mb-3', 'mt-4')
@@ -334,7 +334,7 @@
 
 
       function changeProductSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const productImageDOM = document.getElementById(`store_${result.id}_productImage`)
         productImageDOM.src = '/static/images/' + result.productName + ".png" + "?" + new Date().now
@@ -368,7 +368,7 @@
       function addProductsResultHandler (result) { genericResultHandler(result, addProductsSuccess) }
 
       function addProductsSuccess (result) {
-        console.log('success')
+        genericSuccess(result)
 
         const productsCountDOM = document.getElementById(`store_${result.id}_productsCount`)
         const lastChargeDOM = document.getElementById(`store_${result.id}_lastCharge`)

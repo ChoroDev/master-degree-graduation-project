@@ -9,6 +9,16 @@
     height: 250px;
     background-color: rgb(255, 255, 255);
   }
+  #success-alert-box {
+    top: 50px;
+    right: 10px;
+    left: calc(50% + (160px/2)) ;
+  }
+  #failure-alert-box {
+    top: 50px;
+    right: 10px;
+    left: calc(50% + (160px/2)) ;
+  }
 }
 
 /* на sm */
@@ -45,4 +55,20 @@ body {
   background-color: white;
   padding-top: 30px;
   padding-bottom: 30px;
+}
+
+#success-alert-box {
+  z-index: 9998;
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  left: calc(50% + (160px/2)) ;
+}
+
+#failure-alert-box {
+  z-index: 9999;
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  left: calc(50% + (160px/2)) ;
 }

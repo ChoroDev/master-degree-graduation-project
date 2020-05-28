@@ -19,7 +19,7 @@
         const url = '{% url "products" %}'
 
         function changeImageSuccess (result) {
-          console.log('success')
+          genericSuccess(result)
           const productImageDOM = document.getElementById(`product_${result.id}_image`)
           productImageDOM.src = '/static/images/' + result.name + "?" + new Date().now
         }
@@ -45,7 +45,7 @@
 
 
         function saveChangesSuccess (result) {
-          console.log('success')
+          genericSuccess(result)
           const productNameDOM = document.getElementById(`product_${result.id}_name`)
           const productPriceDOM = document.getElementById(`product_${result.id}_price`)
           const productDigitCodeDOM = document.getElementById(`product_${result.id}_digitCode`)
@@ -98,7 +98,7 @@
 
 
         function removeProductSuccess (result) {
-          console.log('success')
+          genericSuccess(result)
           console.log(result)
           const cardDOM = document.getElementById(`product_${result.id}_card`)
           cardDOM.remove()
@@ -116,7 +116,7 @@
 
 
         function addProductCardSuccess (result) {
-          console.log('success')
+          genericSuccess(result)
           const productsParentDOM = document.getElementById('productsParent')
           const productsParentLastCardDOM = productsParentDOM.lastChild.previousElementSibling
           const newProductCard = document.createElement('div')

@@ -46,5 +46,60 @@ function genericResultHandler (result, successHandler = genericSuccess, failureH
 }
 
 
-function genericSuccess (result) { console.log(`success: ${result}`) }
-function genericFailure (result) { console.log(`failure: ${result}`) }
+let successTimeout = undefined
+
+function genericSuccess (result) {
+  const successInnerHTML = `
+    Успех
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>`
+
+  const prevFailureBox = document.getElementById('failure-alert-box')
+  if (prevFailureBox) { prevFailureBox.remove() }
+
+  clearTimeout(successTimeout)
+
+  const prevSuccessBox = document.getElementById('success-alert-box')
+  if (prevSuccessBox) {
+    prevSuccessBox.innerHTML = successInnerHTML
+  } else {
+    const mainBodyDOM = document.getElementById('main-body')
+    const successBox = document.createElement('div')
+    successBox.classList.add('alert', 'alert-success', 'fixed-top')
+    successBox.role = "alert"
+    successBox.id = 'success-alert-box'
+    successBox.innerHTML = successInnerHTML
+    mainBodyDOM.insertBefore(successBox, mainBodyDOM.firstChild)
+  }
+  successTimeout = setTimeout(() => {
+    $(".alert").alert('close')
+    successTimeout = undefined
+  }, 3000)
+}
+
+function genericFailure (result) {
+  const failureInnerHTML = `
+    ${result}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>`
+
+  const prevSuccessBox = document.getElementById('success-alert-box')
+  if (prevSuccessBox) { prevSuccessBox.remove() }
+
+  clearTimeout(successTimeout)
+
+  const prevFailureBox = document.getElementById('failure-alert-box')
+  if (prevFailureBox) {
+    prevFailureBox.innerHTML = failureInnerHTML
+  } else {
+    const mainBodyDOM = document.getElementById('main-body')
+    const failureBox = document.createElement('div')
+    failureBox.classList.add('alert', 'alert-danger', 'fixed-top')
+    failureBox.role = "alert"
+    failureBox.id = 'failure-alert-box'
+    failureBox.innerHTML = failureInnerHTML
+    mainBodyDOM.insertBefore(failureBox, mainBodyDOM.firstChild)
+  }
+}
