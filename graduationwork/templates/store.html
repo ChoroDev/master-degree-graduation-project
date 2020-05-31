@@ -101,6 +101,7 @@
         document.getElementById(`store_${result.id}_sectionNameRow`).remove()
         document.getElementById(`store_${result.id}_sectionButtonRow`).remove()
         document.getElementById(`store_${result.id}_sectionInside`).remove()
+        document.getElementById(`store_${result.id}_traillingBR`).remove()
       }
 
       function removeSectionResultHandler (result) { genericResultHandler(result, removeSectionSuccess) }
@@ -161,6 +162,7 @@
           </div>`
 
         const newLine = document.createElement('br')
+        newLine.id = `store_${newSectionId}_traillingBR`
         const addSectionButtonRowDOM = document.getElementById('addSectionButtonRow')
         addSectionButtonRowDOM.parentNode.insertBefore(newLine, addSectionButtonRowDOM.nextSibling)
         addSectionButtonRowDOM.parentNode.insertBefore(sectionInsideDOM, addSectionButtonRowDOM.nextSibling)
@@ -585,8 +587,8 @@
                 </div>
               </div>
             </div>
+            <br id="store_{{ sectionHeader.id }}_traillingBR">
           {% endwith %}
-          <br>
         {% endfor %}
       </div>
     {% else %}

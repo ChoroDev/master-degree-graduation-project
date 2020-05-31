@@ -88,13 +88,16 @@ def removeSection(payload):
     shelfElemId = payload['shelfElem_id']
     result = helpers.getEmptyResultObject()
 
-    storeElem = models.Store.objects.get(id=shelfElemId)
-    storeElemJSON = storeElem.toJSON()
-    storeElems = models.Store.objects.filter(
-        section_name=storeElem.section_name)
-    for storeElemInQuery in storeElems:
-        storeElemInQuery.delete()
-    result['success'] = storeElemJSON
+    try:
+        storeElem = models.Store.objects.get(id=shelfElemId)
+        storeElemJSON = storeElem.toJSON()
+        storeElems = models.Store.objects.filter(
+            section_name=storeElem.section_name)
+        for storeElemInQuery in storeElems:
+            storeElemInQuery.delete()
+        result['success'] = storeElemJSON
+    except models.Store.DoesNotExist:
+        result['success'] = '{"id":"' + shelfElemId + '"}'
     return result
 
 
