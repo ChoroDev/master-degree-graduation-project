@@ -1,0 +1,13 @@
+https://docs.microsoft.com/ru-ru/azure/architecture/reference-architectures/migration/modernize-mainframe-data-to-azure
+https://www.microfocus.com/ru-ru/products/enterprise-suite/overview
+https://www.connect-wit.ru/to-chto-nado-znat-o-mejnfrejmah.html
+https://nestor.minsk.by/sr/2003/09/30910.html
+
+Что предлагается:
+1. Azure Services
+2. Micro Focus Enterprise
+3. Внутренние разработки IBM и связанных компаний
+
+Как предлагается...
+Достоинства и недостатки...
+Что делаю я и моя команда...
